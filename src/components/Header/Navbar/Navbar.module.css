@@ -1,0 +1,121 @@
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-frame-text);
+  height: 32px;
+  width: 32px;
+  padding: 0;
+}
+
+.mobileMenuClose {
+  display: none;
+  color: white;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+}
+
+.logo, .logoLux {
+    display: none;
+}
+
+.navbarList {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbarItem a {
+    color: var(--color-frame-text);
+    padding: 0 10px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.mobileMenuControl {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .navbarList {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -100%;            /* oculto fuera de pantalla */
+    height: 100vh;
+    width: 100vw;            /* ancho del drawer */
+    background-color: var(--color-primary);
+    gap: 1.5rem;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+  }
+
+  .navbarItem {
+    width: 93%;
+  }
+
+  .logo, .logoLux {
+    display: block;
+    margin: 0;
+  }
+
+  .mobileMenuClose {
+    display: block;
+    background: transparent;
+    border: none;
+  }
+
+  .mobileMenuControl {
+    width: 93%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 115px;
+  }
+
+  .navbarItem a {
+    padding: 0;
+  }
+
+  .navbarBotonLogout {
+    margin-top: auto;
+    margin-bottom: 25px;
+  }
+}
+
+.navbarListOpen {
+  right: 0;
+  margin: 0;
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 122.08px;
+    height: 90.92px;
+}
+
+.logoLux {
+    width: 122.08px;
+    height: 52.78px;
+}
+
+.navbarBotonLogout {
+  height: 32px;
+}

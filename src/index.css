@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --color-primary:        #002244;   /* Azul oscuro institucional */
+  --color-primary-light:  #225599;   /* Azul más claro para hover, border o resaltados */
+  --color-accent:         #3399FF;   /* Celeste */
+  --color-accent-dark:    #2277bb;   /* Celeste más oscuro (hover) */
+  --color-background:     #023559;   /* Azul muy claro para fondo general y formularios */
+  --color-form:           #002244;   /* Azul oscuro para formularios/cards */
+  --color-surface:        #004183;   /* Blanco para cards y elementos flotantes */
+  --color-border:         #345067;   /* Gris azulado para bordes */
+  --color-text:           #E6F0FA;   /* Azul oscuro para textos principales */
+  --color-frame-text:     #E6F0FA;
+  --color-text-invert:    #003366;   /* Blanco para textos sobre fondo oscuro */
+  --color-success:        #36d399;
+  --color-warning:        #f59e42;
+  --color-error:          #ef4444;
+}
+
+body {
+  background-color: var(--color-background);
+  color:            var(--color-text);
+  margin:           0;
+  font-family:      'Montserrat', sans-serif;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+input, select, textarea {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #66b2ff;
+  box-shadow: 0 0 0 1px #66b2ff;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+hr {
+  width: 100%;
+}
+
+button {
+  font-family: 'Montserrat', sans-serif;
+}

@@ -1,0 +1,108 @@
+.preinscripcionForm {
+  max-width: 900px;
+  margin: 0 auto;
+  border: none;
+}
+
+.seccionDatosAcademicos,
+.seccionDatosDomicilio,
+.seccionDatosPersonales {
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.campoFila {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.campoColumna {
+  flex: 1;
+}
+
+.anchoCompleto {
+  flex: 1 1 100%;
+}
+
+.botonera {
+  text-align: right;
+  margin-top: 1.5rem;
+}
+
+.btnPrimary {
+  background-color: #3F89C7;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+legend {
+  font-weight: 600;
+}
+
+.obsAviso {
+  font-weight: 500;
+}
+
+.campoObservaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===========================
+   Responsive para pantallas
+   de hasta 768px
+   =========================== */
+
+@media (max-width: 768px) {
+  /* Hacemos que cada fila apile sus columnas en lugar de alinearlas en fila */
+  .campoFila {
+    flex-direction: column;
+    gap: 0.75rem; /* Opcional: menos separación vertical */
+    margin-bottom: 0.75rem;
+  }
+
+  /* Cada columna ocupará todo el ancho */
+  .campoColumna {
+    flex: 1 1 100%;
+  }
+
+  /* Si tienes algún contenedor de fieldset que defina ancho o padding, 
+     podrías ajustar márgenes internos para que quede más cómodo en móvil */
+  .seccionDatosPersonales,
+  .seccionDatosDomicilio,
+  .seccionDatosAcademicos {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Opcional: reducir márgenes del formulario general para pantallas pequeñas */
+  .preinscripcionForm {
+    padding: 0 1rem;
+  }
+
+  /* Ajuste del botón para que ocupe el 100% o quede centrado */
+  .botonera {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .btnPrimary {
+    width: 100%;
+    max-width: 320px; /* opcional: para no saturar espacios muy estrechos */
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+}
