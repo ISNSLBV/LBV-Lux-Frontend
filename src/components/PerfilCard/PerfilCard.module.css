@@ -1,0 +1,8 @@
+.container{
+    border: 1px solid white;
+    display:flex;
+    flex-direction: column;
+    width: 500px;
+    border-radius: 6px;
+    font-weight: 600;
+}

@@ -7,6 +7,7 @@ import Preinscripcion from './screens/Preinscripcion/Preinscripcion'
 import RutaPrivada from './components/RutaPrivada/RutaPrivada'
 import Administrador from './screens/Administrador/Administrador'
 import Dashboard from './screens/Dashboard/Dashboard'
+import Perfil from './screens/Perfil/Perfil'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route element={<Layout />}>
               {/* ---- Ruta usuario ---- */}
               <Route index element={<Dashboard />} />
+              <Route path='mi-perfil' element={<Perfil />} />
               {/* ---- Ruta Administrador ---- */}
               <Route element={<RutaPrivada roles={['Administrador']} />}>
                 <Route path='/panel-preinscriptos' element={<Administrador />} />
