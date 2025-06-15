@@ -1,0 +1,4 @@
+.titleSuccess { color: #2e7d32; }
+.titleError { color: #c62828; }
+.volverBtn { margin-top: 1.5rem; padding: 0.6rem 1.4rem; border: none; border-radius: 6px; background: #1976d2; color: #fff; cursor: pointer; }
+.volverBtn:hover { background: #1565c0; }

@@ -1,10 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export default function RutaPrivada({ roles = [] }) {
     const { user, checking } = useAuth();
 
-    if (checking) return <div className="spinner">Cargando…</div>;
+    if (checking) return <LinearProgress color="secondary" sx={{ height: 4, borderRadius: 2 }} />;
 
     if (!user) return <Navigate to="/login" replace />;
 

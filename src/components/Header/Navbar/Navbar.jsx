@@ -5,9 +5,15 @@ import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import logo from '../../../assets/logo.png'
 import BotonLogout from '../../BotonLogout/BotonLogout'
+import { useAuth } from '../../../contexts/AuthContext'
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { user } = useAuth();
+
+    const esAdmin = user?.roles.includes('Administrador');
+    const esProfesor = user?.roles.includes('Profesor');
+    const esAlumno = user?.roles.includes('Alumno');
 
     return (
         <nav className={styles.navbar}>
@@ -29,11 +35,16 @@ const Navbar = () => {
                         <X size={32} strokeWidth={3} />
                     </button>
                 </li>
+                { esAdmin && (
+                    <li className={styles.navbarItem}>
+                        <Link onClick={() => setIsOpen(false)} className={styles.navbarLink} to="/admin/">Panel de Administrador</Link>
+                    </li>
+                )}
                 <li className={styles.navbarItem}>
-                    <Link className={styles.navbarLink}>Preguntas frecuentes</Link>
+                    <Link onClick={() => setIsOpen(false)} className={styles.navbarLink}>Preguntas frecuentes</Link>
                 </li>
                 <li className={styles.navbarItem}>
-                    <Link className={styles.navbarLink}>Ayuda</Link>
+                    <Link onClick={() => setIsOpen(false)} className={styles.navbarLink}>Ayuda</Link>
                 </li>
                 <li className={`${styles.navbarItem} ${styles.navbarBotonLogout}`}>
                     <BotonLogout />

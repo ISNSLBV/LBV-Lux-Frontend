@@ -37,6 +37,34 @@ claro */
   color: #025373;
 }
 
+.success {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.success:hover {
+  background-color: #218838;
+}
+
+.cancel {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel:hover {
+  background-color: #c82333;
+}
+
 .fullWidth {
   width: 100%;
 }

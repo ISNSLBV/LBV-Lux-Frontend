@@ -35,6 +35,7 @@
     padding: 0 10px;
     font-weight: 500;
     text-decoration: none;
+    font-size: 17px;
 }
 
 .mobileMenuControl {
@@ -52,7 +53,7 @@
     position: fixed;
     top: 0;
     right: -100%;            /* oculto fuera de pantalla */
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;            /* ancho del drawer */
     background-color: var(--color-primary);
     gap: 1.5rem;
@@ -118,4 +119,10 @@
 
 .navbarBotonLogout {
   height: 32px;
+}
+
+.navbarItem {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
 }

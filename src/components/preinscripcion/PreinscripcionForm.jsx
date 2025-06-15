@@ -1,5 +1,5 @@
 // components/preinscripcion/PreinscripcionForm.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -10,8 +10,10 @@ import SeccionDatosAcademicos from './SeccionDatosAcademicos';
 import { schemaPreinscripcion } from './utils/schemaPreinscripcion';
 import './estilos/PreinscripcionForm.css'
 import Boton from '../Boton/Boton';
+import PreinscripcionEnviada from './PreinscripcionEnviada/PreinscripcionEnviada';
 
 const PreinscripcionForm = () => {
+  const [resultado, setResultado] = useState(null);
   const formik = useFormik({
     initialValues: {
       numeroDocumento: '',
@@ -29,6 +31,7 @@ const PreinscripcionForm = () => {
       localidad: '',
       provincia: '',
       carrera: '',
+      telefono: '',
     },
     validationSchema: schemaPreinscripcion, // definido en utils/schemaPreinscripcion.js
     onSubmit: async (values, { setSubmitting, resetForm }) => {
@@ -38,18 +41,32 @@ const PreinscripcionForm = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(values)
         });
-        if (!res.ok) throw new Error(await res.text());
-        const data = await res.json();
-        alert(`Preinscripción OK. ID Persona: ${data.personaId}`);
+        if (!res.ok) {
+          const msg = await res.text();
+          setResultado({ exito: false, mensaje: msg || 'No se pudo enviar la preinscripción.' });
+          return;
+        }
+        setResultado({
+          exito: true,
+          mensaje: "Preinscripción enviada con éxito. Te enviaremos un email con los pasos a seguir para completar tu inscripción."
+        });
         resetForm();
       } catch (err) {
-        console.error(err);
-        alert('Error al enviar la preinscripción');
+        setResultado({
+          exito: false,
+          mensaje: 'Ocurrió un error inesperado. Intentá nuevamente en unos minutos.'
+        });
       } finally {
         setSubmitting(false);
       }
     },
   });
+
+  if (resultado) {
+    return (
+      <PreinscripcionEnviada exito={resultado.exito} mensaje={resultado.mensaje} />
+    );
+  }
 
   return (
     <form onSubmit={formik.handleSubmit} className="preinscripcionForm">
