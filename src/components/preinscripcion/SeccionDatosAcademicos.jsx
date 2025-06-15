@@ -4,6 +4,8 @@ import SelectField from '../FormCampos/SelectField';
 import InputField from '../FormCampos/InputField';
 
 const SeccionDatosAcademicos = ({ formik }) => {
+  const MAX_LENGTH_OBS = 70;
+
   return (
     <fieldset className="seccionDatosAcademicos">
       <legend>Datos Académicos</legend>
@@ -29,10 +31,14 @@ const SeccionDatosAcademicos = ({ formik }) => {
           <InputField
             label="Observaciones"
             name="observaciones"
+            maxLength={MAX_LENGTH_OBS}
             placeholder=""
             formik={formik}
             type="text"
           />
+          <div className="contador-caracteres">
+            {(formik.values.observaciones || '').length} / {MAX_LENGTH_OBS}
+          </div>
           <span className='obsAviso'>
             Podes solicitar equivalencias por materias que hayas aprobado en otra institución y/o indicar si deseás inscribirte
             como alumno oyente o itinerante. Este campo es opcional

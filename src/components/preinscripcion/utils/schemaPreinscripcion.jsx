@@ -30,5 +30,7 @@ export const schemaPreinscripcion = Yup.object().shape({
   telefono: Yup.string()
     .matches(/^\d{7,11}$/, 'Número de teléfono inválido')
     .required('El número de teléfono es obligatorio'),
-  // …y así sucesivamente para cada campo
+  observaciones: Yup.string()
+    .max(70, 'Máximo 70 caracteres')
+    .nullable(),
 });

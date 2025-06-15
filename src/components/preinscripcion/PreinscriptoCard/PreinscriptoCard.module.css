@@ -1,0 +1,67 @@
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 90%;
+    gap: 10px;
+    border: 1px solid white;
+    border-radius: 25px;
+    padding: 15px 0;
+    margin-bottom: 15px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5px;
+}
+
+.datosGenerales {
+    display: flex;
+    gap: 15px;
+}
+
+.datosPersonales, .datosContacto, .datosAcademicos {
+    display: flex;
+    flex-direction: column;
+}
+
+.datosPersonales .titulo, .datosContacto .titulo, .datosAcademicos .titulo {
+    margin-bottom: 5px;
+}
+
+.observaciones {
+    display: block;
+    overflow-wrap: break-word;
+    max-width: 350px;
+    margin: 0;
+}
+
+.acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 15px 10px;
+    }
+
+    .datosGenerales {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .datosPersonales, .datosContacto, .datosAcademicos {
+        align-items: center;
+        text-align: center;
+    }
+}

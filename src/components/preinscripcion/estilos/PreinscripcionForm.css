@@ -51,6 +51,12 @@ legend {
   font-weight: 600;
 }
 
+.contador-caracteres {
+  font-size: 0.85em;
+  color: #888;
+  margin-top: 2px;
+}
+
 .obsAviso {
   font-weight: 500;
 }
