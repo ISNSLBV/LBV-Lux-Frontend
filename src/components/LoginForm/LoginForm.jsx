@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import logo from '../../assets/logo.png';
 import styles from './LoginForm.module.css';
@@ -12,8 +12,7 @@ import InputField from '../FormCampos/InputField';
 import SelectorRol from './SelectorRol/SelectorRol';
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const [pending, setPending] = useState(null);   // { token, roles }
+  const [pending, setPending] = useState(null);
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
@@ -28,21 +27,19 @@ const LoginForm = () => {
           window.location.href = '/';
         }
       } catch (err) {
-        alert(err.response?.data?.message || 'Error de red'); // ← feedback
+        alert(err.response?.data?.message || 'Error de red');
       } finally {
         helpers.setSubmitting(false);
       }
     }
   });
 
-  // Handler cuando el usuario elige un rol
-  const handleRoleSelect = async (role) => {
+  const handleRoleSelect = async (rol) => {
     try {
-      await api.post('/api/auth/select-role', { role }); // cookie actualizada
+      await api.post('/api/auth/seleccionar-rol', { rol });
       window.location.href = '/';
-      // navigate('/');
     } catch (err) {
-      alert(err.response?.data?.message || 'Error al elegir rol');
+      alert(err.response?.data?.message || 'Error al seleccionar rol');
     }
   };
 

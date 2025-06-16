@@ -9,6 +9,10 @@ import PanelAdministrador from './screens/Administrador/PanelAdministrador/Panel
 import Dashboard from './screens/Dashboard/Dashboard'
 import Perfil from './screens/Perfil/Perfil'
 import GestionPreinscriptos from './screens/Administrador/GestionPreinscriptos/GestionPreinscriptos'
+import GestionCarreras from './screens/Administrador/GestionCarreras/GestionCarreras'
+import GestionMaterias from './screens/Administrador/GestionMaterias/GestionMaterias'
+import GestionPlanes from './screens/Administrador/GestionPlanes/GestionPlanes'
+import { RutaPublica } from './components/RutaPublica/RutaPublica'
 
 function App() {
 
@@ -17,8 +21,15 @@ function App() {
       <AuthProvider>
         <Routes>
           {/* Rutas públicas */}
-          <Route path='/preinscripcion' element={<Preinscripcion />} />
-          <Route path='/login' element={<Login />} />
+          <Route path='/preinscripcion' element={
+            <RutaPublica>
+              <Preinscripcion />
+            </RutaPublica>} />
+          <Route path='/login' element={
+            <RutaPublica>
+              <Login />
+            </RutaPublica>
+            } />
           {/* Rutas privadas */}
           <Route element={<RutaPrivada />}>
             {/* Index */}
@@ -30,6 +41,9 @@ function App() {
               <Route path='admin' element={<RutaPrivada roles={['Administrador']} />}>
                 <Route index element={<PanelAdministrador />} />
                 <Route path='gestion-preinscriptos' element={<GestionPreinscriptos />} />
+                <Route path='gestion-carreras' element={<GestionCarreras />} />
+                <Route path='gestion-planes' element={<GestionPlanes />} />
+                <Route path='gestion-materias' element={<GestionMaterias />} />
               </Route>
             </Route>
           </Route>
