@@ -11,9 +11,9 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useAuth();
 
-    const esAdmin = user?.roles.includes('Administrador');
-    const esProfesor = user?.roles.includes('Profesor');
-    const esAlumno = user?.roles.includes('Alumno');
+    const esAdmin = user?.rol === 'Administrador';
+    const esProfesor = user?.rol === 'Profesor';
+    const esAlumno = user?.rol === 'Alumno';
 
     return (
         <nav className={styles.navbar}>

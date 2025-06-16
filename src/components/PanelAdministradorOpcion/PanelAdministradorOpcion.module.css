@@ -10,31 +10,25 @@
 .panel {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     border-radius: 30px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 2px solid white;
     width: 550px;
-    padding: 0 16px;
+    padding: 16px;
 }
 
-.contenido h2 {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
+h2 {
+    margin: 0;
 }
 
 .accion {
     height: 32px;
-    margin-bottom: auto;
-    margin-top: 10px;
 }
 
 @media (max-width: 768px) {
     .panel {
         width: 85vw;
-        padding: 0 12px;
     }
 }
 

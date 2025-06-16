@@ -1,6 +1,5 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from 'react';
-import api from '../api/axios'; // instancia con withCredentials:true
+import api from '../api/axios';
 
 const AuthCtx = createContext(null);
 
@@ -9,9 +8,8 @@ export const AuthProvider = ({ children }) => {
     const [checking, setChecking] = useState(true);
 
     useEffect(() => {
-        // golpe rápido para saber si hay cookie válida
         api.get('/api/auth/me')
-        .then(r => setUser(r.data))           // { id, username, roles:[…] }
+        .then(r => setUser(r.data))
         .catch(() => setUser(null))
         .finally(() => setChecking(false));
     }, []);
@@ -19,6 +17,7 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         await api.post('/api/auth/logout');
         setUser(null);
+        window.location.href = "/login";
     }
 
   return (

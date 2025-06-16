@@ -6,7 +6,7 @@ import Boton from '../../../components/Boton/Boton';
 
 export default function GestionPreinscriptos() {
   const [personas, setPersonas] = useState([]);
-  const [form, setForm] = useState({});   // datos del popup
+  const [form, setForm] = useState({});
   const [personaSeleccionada, setPersonaSeleccionada] = useState(null);
   const [showAceptarModal, setShowAceptarModal] = useState(false);
 
