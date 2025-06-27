@@ -18,9 +18,10 @@ import GestionMateriasGenericas from './screens/Administrador/GestionMaterias/Ma
 import GestionMateriasPlan from './screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan'
 import GestionMateriasPlanCiclo from './screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo'
 import { ToastContainer } from 'react-toastify'
+import PreguntasFrecuentes from './screens/PreguntasFrecuentes/PreguntasFrecuentes';
+import { RutaPublicaSinRedireccion } from './components/RutaPublica/RutaPublicaSinRedireccion';
 
 function App() {
-
   return (
     <Router basename="/alumnos2025">
       <AuthProvider>
@@ -33,22 +34,37 @@ function App() {
         />
         <Routes>
           {/* Rutas públicas */}
-          <Route path='/preinscripcion' element={
-            <RutaPublica>
-              <Preinscripcion />
-            </RutaPublica>} />
-          <Route path='/login' element={
-            <RutaPublica>
-              <Login />
-            </RutaPublica>
-            } />
+          <Route
+            path="/preinscripcion"
+            element={
+              <RutaPublica>
+                <Preinscripcion />
+              </RutaPublica>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RutaPublica>
+                <Login />
+              </RutaPublica>
+            }
+          />
+          <Route
+            path="/preguntas-frecuentes"
+            element={
+              <RutaPublicaSinRedireccion>
+                <PreguntasFrecuentes />
+              </RutaPublicaSinRedireccion>
+            }
+          />
           {/* Rutas privadas */}
           <Route element={<RutaPrivada />}>
             {/* Index */}
             <Route element={<Layout />}>
               {/* ---- Ruta usuario ---- */}
               <Route index element={<Dashboard />} />
-              <Route path='mi-perfil' element={<Perfil />} />
+              <Route path="mi-perfil" element={<Perfil />} />
               {/* ---- Ruta Administrador ---- */}
               <Route path='admin' element={<RutaPrivada rol={['Administrador']} />}>
                 <Route index element={<PanelAdministrador />} />
@@ -68,7 +84,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
