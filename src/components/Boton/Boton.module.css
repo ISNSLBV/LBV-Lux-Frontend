@@ -7,6 +7,16 @@
 #F4FAFA
 claro */
 
+.boton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.icono {
+  height: 24px;
+}
 
 .primary {
   color: white;

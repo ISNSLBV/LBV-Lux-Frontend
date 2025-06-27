@@ -1,0 +1,164 @@
+.container {
+    padding: 0 24px;
+}
+
+.titulo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 32px 0;
+}
+
+.datos {
+    display: flex;
+    gap: 16px;
+}
+
+.barraAcciones {
+    display: flex;
+    gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 24px;
+}
+
+.barraBusqueda {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.listaMaterias {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.botonAgregar {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+    .datos {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .barraAcciones {
+        flex-direction: column;
+    }
+
+    .botonAgregar button {
+        width: 100%;
+    }
+}
+
+.datos, .barraAcciones {
+    margin-bottom: 32px;
+}
+
+/* Overlay del modal: ocupa toda la pantalla y centra el contenido */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Por encima de otros elementos */
+}
+
+/* Contenedor del contenido del modal */
+.modalContent {
+  background: var(--color-form);
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Encabezado del modal: título y botón de cierre */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Estilo para el botón de cerrar (ícono X) */
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  color: white;
+}
+
+/* Campo de formulario con margen inferior */
+.modalContent form .mb-4 {
+  margin-bottom: 1rem;
+}
+
+/* Input de texto dentro del modal */
+.modalContent input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Botones en el pie del modal */
+.modalContent .flex {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modalActions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 16px;
+}
+
+.tabla {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tabla th {
+  color: rgba(255, 255, 255, 0.77);
+  height: 48px;
+  padding: 0 16px;
+}
+
+.tabla tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tablaFila {
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.tablaFila td {
+  padding: 16px;
+}
+
+.tabla tr:last-child td {
+  border-bottom: none; /* No border en la última fila */
+} 

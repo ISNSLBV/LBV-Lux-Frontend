@@ -13,12 +13,24 @@ import GestionCarreras from './screens/Administrador/GestionCarreras/GestionCarr
 import GestionMaterias from './screens/Administrador/GestionMaterias/GestionMaterias'
 import GestionPlanes from './screens/Administrador/GestionPlanes/GestionPlanes'
 import { RutaPublica } from './components/RutaPublica/RutaPublica'
+import GestionMateriasMenu from './screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu'
+import GestionMateriasGenericas from './screens/Administrador/GestionMaterias/MateriasGenericas/GestionMateriasGenericas'
+import GestionMateriasPlan from './screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan'
+import GestionMateriasPlanCiclo from './screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
 
   return (
-    <Router>
+    <Router basename="/alumnos2025">
       <AuthProvider>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={1500}
+          hideProgressBar={false}
+          theme="dark"
+          closeOnClick={true}
+        />
         <Routes>
           {/* Rutas públicas */}
           <Route path='/preinscripcion' element={
@@ -38,12 +50,17 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path='mi-perfil' element={<Perfil />} />
               {/* ---- Ruta Administrador ---- */}
-              <Route path='admin' element={<RutaPrivada roles={['Administrador']} />}>
+              <Route path='admin' element={<RutaPrivada rol={['Administrador']} />}>
                 <Route index element={<PanelAdministrador />} />
                 <Route path='gestion-preinscriptos' element={<GestionPreinscriptos />} />
                 <Route path='gestion-carreras' element={<GestionCarreras />} />
                 <Route path='gestion-planes' element={<GestionPlanes />} />
-                <Route path='gestion-materias' element={<GestionMaterias />} />
+                <Route path='gestion-materias' element={<GestionMaterias />}>
+                  <Route index element={<GestionMateriasMenu />} />
+                  <Route path='materias-base' element={<GestionMateriasGenericas />} />
+                  <Route path='materias-por-plan' element={<GestionMateriasPlan />} />
+                  <Route path='materias-por-ciclo' element={<GestionMateriasPlanCiclo />} />
+                </Route>
               </Route>
             </Route>
           </Route>
