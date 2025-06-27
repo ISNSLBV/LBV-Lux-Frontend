@@ -19,7 +19,6 @@ export default function BotonLogout() {
 
   return (
     <button className={styles.boton} onClick={handleLogout}>
-      <LogOut size={32} />
       <span className={styles.texto}>Cerrar sesión</span>
     </button>
   );

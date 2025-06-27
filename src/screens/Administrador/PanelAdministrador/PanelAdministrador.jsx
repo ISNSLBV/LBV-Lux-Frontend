@@ -28,7 +28,7 @@ const PanelAdministrador = () => {
   
   return (
     <div className={styles.container}>
-      <h1>Panel de Administrador</h1>
+      <h1>Panel de Administrador - Menú</h1>
       <div className={styles.panel}>
         {opciones.map((opcion, index) => (
           <PanelAdministradorOpcion key={index} {...opcion} />

@@ -82,7 +82,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 115px;
+    height: 90px;
   }
 
   .navbarItem a {
@@ -104,17 +104,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
 }
 
 .logo {
-    width: 122.08px;
-    height: 90.92px;
-}
-
-.logoLux {
-    width: 122.08px;
-    height: 52.78px;
+    width: 95px;
+    height: 71px;
 }
 
 .navbarBotonLogout {

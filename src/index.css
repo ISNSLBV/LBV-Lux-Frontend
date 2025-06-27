@@ -15,6 +15,14 @@
   --color-success:        #36d399;
   --color-warning:        #f59e42;
   --color-error:          #ef4444;
+  --toastify-color-dark:  #002244;
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {

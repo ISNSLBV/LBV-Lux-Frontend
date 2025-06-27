@@ -1,0 +1,23 @@
+.container {
+    position: relative;
+}
+
+.icono {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.input {
+    display: flex;
+    padding: 8px 12px 8px 40px;
+    border-radius: 8px;
+    border: 1px solid white;
+    height: 40px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: rgb(255, 255, 255, 0.1);
+    min-width: 0;
+}
