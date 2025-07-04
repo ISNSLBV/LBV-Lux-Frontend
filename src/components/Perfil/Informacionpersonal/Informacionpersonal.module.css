@@ -34,6 +34,7 @@
   font-size: 1rem;
   color: #111;
 }
+
 @media (max-width: 600px) {
   .info {
     grid-template-columns: 1fr;
