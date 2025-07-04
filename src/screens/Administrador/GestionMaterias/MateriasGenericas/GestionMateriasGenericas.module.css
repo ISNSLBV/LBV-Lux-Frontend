@@ -1,12 +1,12 @@
 .container {
-    padding: 0 24px;
+    padding: 32px 16px;
 }
 
 .titulo {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 32px 0;
+    margin-bottom: 32px;
 }
 
 .datos {
@@ -40,21 +40,6 @@
 
 .botonAgregar {
     flex: 0 0 auto;
-}
-
-@media (max-width: 768px) {
-    .datos {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .barraAcciones {
-        flex-direction: column;
-    }
-
-    .botonAgregar button {
-        width: 100%;
-    }
 }
 
 .datos, .barraAcciones {
@@ -161,4 +146,94 @@
 
 .tabla tr:last-child td {
   border-bottom: none; /* No border en la última fila */
-} 
+}
+
+.cards {
+  display: none;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.cards > :not(:first-child) {
+  margin-top: 16px;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  padding-bottom: 12px;
+}
+
+.cardHeaderContent {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.cardHeaderTitle {
+  flex: 1 1 0%;
+}
+
+.cardHeaderTitle h3 {
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.45px;
+}
+
+.cardHeaderTitle p {
+  font-size: 14px;
+  color: rgb(191 219 254 / 1);
+}
+
+.cardHeaderStatus {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 2px 10px;
+}
+
+.cardHeaderStatus svg {
+  height: 12px;
+  width: 12px;
+  margin-right: 4px;
+}
+
+.cardContent {
+  padding: 24px;
+  padding-top: 0;
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .datos {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .barraAcciones {
+        flex-direction: column;
+    }
+
+    .botonAgregar button {
+        width: 100%;
+    }
+
+    .tabla {
+      display: none;
+    }
+
+    .cards {
+      display: block;
+    }
+}

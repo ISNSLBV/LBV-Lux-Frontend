@@ -1,11 +1,16 @@
 .contenedor {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto;
-  padding: 0 20px;
 }
+
 .item {
   margin-bottom: 10px;
 }
+
+.titulo {
+  font-size: 15px;
+}
+
 .pregunta {
   width: 100%;
   text-align: left;
@@ -21,9 +26,11 @@
   cursor: pointer;
   transition: background 0.3s;
 }
+
 .pregunta:hover {
   background-color: var(--color-surface);
 }
+
 .respuesta {
   background-color: var(--color-background);
   color: var(--color-text);
@@ -33,9 +40,11 @@
   border-radius: 0 5px 5px 5px;
   white-space: pre-wrap;
 }
+
 .flecha {
   transition: transform 0.3s ease;
 }
+
 .flecha.abierto {
   transform: rotate(90deg);
 }

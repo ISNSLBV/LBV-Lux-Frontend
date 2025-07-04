@@ -1,39 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-  --color-primary:        #002244;   /* Azul oscuro institucional */
-  --color-primary-light:  #225599;   /* Azul más claro para hover, border o resaltados */
-  --color-accent:         #3399FF;   /* Celeste */
-  --color-accent-dark:    #2277bb;   /* Celeste más oscuro (hover) */
-  --color-background:     #023559;   /* Azul muy claro para fondo general y formularios */
-  --color-form:           #002244;   /* Azul oscuro para formularios/cards */
-  --color-surface:        #004183;   /* Blanco para cards y elementos flotantes */
-  --color-border:         #345067;   /* Gris azulado para bordes */
-  --color-text:           #E6F0FA;   /* Azul oscuro para textos principales */
+  --color-primary:        #002244; 
+  --color-primary-light:  #225599;
+  --color-accent:         #3399FF;
+  --color-accent-dark:    #2277bb;  
+  --color-background:     #023559; 
+  --color-form:           #002244;
+  --color-surface:        #004183;
+  --color-border:         #345067;
+  --color-text:           #E6F0FA;
   --color-frame-text:     #E6F0FA;
-  --color-text-invert:    #003366;   /* Blanco para textos sobre fondo oscuro */
+  --color-text-invert:    #003366;
   --color-success:        #36d399;
   --color-warning:        #f59e42;
   --color-error:          #ef4444;
   --toastify-color-dark:  #002244;
 }
 
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 
 body {
   background-color: var(--color-background);
-  color:            var(--color-text);
-  margin:           0;
-  font-family:      'Montserrat', sans-serif;
+  color: var(--color-text);
 }
 
 a {
-  color: var(--color-accent);
   text-decoration: none;
 }
 

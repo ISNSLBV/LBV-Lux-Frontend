@@ -2,80 +2,96 @@ import React from 'react'
 import DatoCard from '../../../../components/Dato/DatoCard'
 import styles from './GestionMateriasGenericas.module.css'
 import SearchBar from '../../../../components/SearchBar/SearchBar'
-import { Plus, X } from 'lucide-react'
+import { Plus, BookOpen, Check, X, TriangleAlert, SquarePen, Trash2 } from 'lucide-react'
 import Boton from '../../../../components/Boton/Boton'
 import { useEffect, useState } from 'react'
 import api from '../../../../api/axios'
 import { toast } from 'react-toastify'
 
 const GestionMateriasGenericas = () => {
-    const datos = [
-        {
-            titulo: 'Materias Genericas',
-            icono: '📚',
-            dato: '10',
-            descripcion: 'Total de materias genericas registradas'
-        },
-        {
-            titulo: 'Materias Activas',
-            icono: '✅',
-            dato: '8',
-            descripcion: 'Materias genericas activas actualmente'
-        },
-        {
-            titulo: 'Materias Inactivas',
-            icono: '❌',
-            dato: '2',
-            descripcion: 'Materias genericas inactivas actualmente'
-        }
-    ]
+    const [datos, setDatos] = useState([
+      {
+        titulo: 'Materias Genericas',
+        icono: <BookOpen />,
+        dato: '0',
+        descripcion: 'Total de materias genericas registradas'
+      },
+      {
+        titulo: 'Materias Activas',
+        icono: <Check />,
+        dato: '0',
+        descripcion: 'Materias genericas activas actualmente'
+      },
+      {
+        titulo: 'Materias Inactivas',
+        icono: <TriangleAlert />,
+        dato: '0',
+        descripcion: 'Materias genericas inactivas actualmente'
+      }
+    ])
 
-    // Estado para mostrar/ocultar modal
     const [modalOpen, setModalOpen] = useState(false)
-    // Estado para el nombre que ingresa el usuario
     const [nuevoNombre, setNuevoNombre] = useState('')
-    // Estado para la lista de materias
     const [materias, setMaterias] = useState([])
-    // Estado para el texto de búsqueda
     const [filtro, setFiltro] = useState('')
 
-     useEffect(() => {
-         cargarMaterias()
-     }, [])
+    useEffect(() => {
+      cargarMaterias()
+    }, [])
 
-     const cargarMaterias = async () => {
-         try {
-         const { data } = await api.get('/api/admin/materia/listar-materias') 
-         setMaterias(data)
-         } catch (err) {
-         console.error('Error al cargar materias:', err)
-         }
-     }
+    const cargarMaterias = async () => {
+      try {
+        const { data } = await api.get('/api/admin/materia/listar-materias');
+        setMaterias(data);
+        const total = data.length;
+        const activas = data.filter(m => m.activa).length;
+        const inactivas = total - activas;
 
-     // Contador de materias
-
+        setDatos([
+          {
+            titulo: 'Materias Genericas',
+            icono: <BookOpen />,
+            dato: total.toString(),
+            descripcion: 'Total de materias genericas registradas'
+          },
+          {
+            titulo: 'Materias Activas',
+            icono: <Check />,
+            dato: activas.toString(),
+            descripcion: 'Materias genericas activas actualmente'
+          },
+          {
+            titulo: 'Materias Inactivas',
+            icono: <TriangleAlert />,
+            dato: inactivas.toString(),
+            descripcion: 'Materias genericas inactivas actualmente'
+          }
+        ])
+      } catch (err) {
+        console.error('Error al cargar materias:', err)
+      }
+    }
 
     const registrarMateriaGenerica = async (nombre) => {
-        try {
-            await api.post('/api/admin/materia/registrar-materia', { nombre });
-            await cargarMaterias();
-            toast.success('Materia registrada correctamente');
-        } catch (error) {
-            toast.error('Error al registrar la materia', error);
-        }
+      try {
+        await api.post('/api/admin/materia/registrar-materia', { nombre });
+        await cargarMaterias();
+        toast.success('Materia registrada correctamente');
+      } catch (error) {
+        toast.error('Error al registrar la materia', error);
+      }
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (!nuevoNombre.trim()) return
-        await registrarMateriaGenerica(nuevoNombre.trim())
-        setNuevoNombre('')
-        setModalOpen(false)
+      e.preventDefault()
+      if (!nuevoNombre.trim()) return
+      await registrarMateriaGenerica(nuevoNombre.trim())
+      setNuevoNombre('')
+      setModalOpen(false)
     }
 
-    // Filtrado sencillo
     const materiasFiltradas = materias.filter(m =>
-        m.nombre.toLowerCase().includes(filtro.toLowerCase())
+      m.nombre.toLowerCase().includes(filtro.toLowerCase())
     )
 
   return (
@@ -135,13 +151,77 @@ const GestionMateriasGenericas = () => {
                         <td>{m.plan_estudio.map(p => p.nombre).join(', ')}</td>
                         <td>{m.carrera.map(c => c.nombre).join(', ')}</td>
                         <td>
-                        <button className="btn btn-primary">Editar</button>
-                        <button className="btn btn-danger">Eliminar</button>
+                          <Boton
+                            variant='onlyIcon'
+                            icono={<SquarePen />}
+                          />
+                          <Boton
+                            variant='onlyIcon'
+                            icono={<Trash2 />}
+                          />
+                          {/* <button className="btn btn-primary">Editar</button>
+                          <button className="btn btn-danger">Eliminar</button> */}
                         </td>
                     </tr>
                     ))}
                 </tbody>
             </table>
+            <div className={styles.cards}>
+              {materiasFiltradas.map(m => (
+                <div className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardHeaderContent}>
+                      <div className={styles.cardHeaderTitle}>
+                        <h3>{m.nombre}</h3>
+                        <p>ID: {m.id}</p>
+                      </div>
+                      <div className={styles.cardHeaderStatus}>
+                        {m.activa ? 
+                          (<>
+                            <Check /> En uso
+                          </>)
+                            : 
+                          (<> 
+                            <TriangleAlert /> Sin asignar
+                          </>)
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.cardContent}>
+                    <div>
+                      <div>
+                        <h4>Plan(es) de estudio</h4>
+                        <p>{m.plan_estudio.map(p => p.nombre).join(', ')}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h4>Carreras</h4>
+                      <div>
+                        {m.carrera.map(c => (
+                          <div>
+                            {c.nombre}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className={styles.cardActions}>
+                      <Boton
+                        fullWidth
+                        icono={<SquarePen />}
+                        variant='primary'
+                      >
+                        Editar
+                      </Boton>
+                      <Boton 
+                        variant='cancel'
+                        icono={<Trash2 />}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
         </div>
               {/* Modal de creación */}
       {modalOpen && (

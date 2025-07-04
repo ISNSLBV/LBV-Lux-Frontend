@@ -1,4 +1,3 @@
-// components/preinscripcion/campos/SelectField.jsx
 import React from 'react';
 import styles from './estilos/SelectField.module.css'
 

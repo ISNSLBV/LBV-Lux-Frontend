@@ -12,7 +12,7 @@ const PreguntasFrecuentesDesplegable = ({ items }) => {
       {items.map((item, i) => (
         <div key={i} className={estilos.item}>
           <button className={estilos.pregunta} onClick={() => alternar(i)}>
-            <span>{item.titulo}</span>
+            <span className={estilos.titulo}>{item.titulo}</span>
             <span
               className={`${estilos.flecha} ${
                 activo === i ? estilos.abierto : ""

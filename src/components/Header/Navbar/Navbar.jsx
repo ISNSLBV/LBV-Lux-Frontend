@@ -15,10 +15,6 @@ const Navbar = () => {
   const esProfesor = user?.rol === "Profesor";
   const esAlumno = user?.rol === "Alumno";
 
-  console.log("checking:", checking);
-  console.log("user:", user);
-  console.log("esAdmin:", user?.rol === "Administrador");
-
   return (
     <nav className={styles.navbar}>
       <button
@@ -68,9 +64,11 @@ const Navbar = () => {
             Ayuda
           </Link>
         </li>
-        <li className={`${styles.navbarItem} ${styles.navbarBotonLogout}`}>
-          <BotonLogout />
-        </li>
+        {!checking && user && (
+          <li className={`${styles.navbarItem} ${styles.navbarBotonLogout}`}>
+            <BotonLogout />
+          </li>
+        )}
       </ul>
     </nav>
   );

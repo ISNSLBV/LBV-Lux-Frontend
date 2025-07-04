@@ -1,9 +1,15 @@
 .main {
   padding: 20px;
 }
+
 .titulo {
   text-align: center;
-  font-size: 2rem;
+  font-size: 32px;
   color: var(--color-accent);
-  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .titulo {
+    font-size: 29px;
+  }
 }

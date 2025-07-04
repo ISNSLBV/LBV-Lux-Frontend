@@ -1,7 +1,5 @@
-// src/components/BotonLogout.jsx
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogOut } from 'lucide-react';
 import styles from './BotonLogout.module.css';
 
 export default function BotonLogout() {
@@ -10,10 +8,10 @@ export default function BotonLogout() {
 
   const handleLogout = async () => {
     try {
-      await logout();          // llama al backend y limpia el contexto
-      navigate('/login');      // redirige al login
+      await logout();
+      navigate('/alumnos2025/login');
     } catch (err) {
-      console.error('Logout falló', err);
+      console.error('Error al cerrar sesión', err);
     }
   };
 

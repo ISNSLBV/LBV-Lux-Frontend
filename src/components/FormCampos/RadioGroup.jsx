@@ -1,4 +1,3 @@
-// components/preinscripcion/campos/RadioGroup.jsx
 import React from 'react';
 import styles from './estilos/RadioGroup.module.css'
 

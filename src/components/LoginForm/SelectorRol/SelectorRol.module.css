@@ -1,42 +1,36 @@
 .modalBackdrop {
-  position: fixed;          /* Fijo a la ventana */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;             /* Cubre todo el ancho */
-  height: 100vh;            /* Cubre todo el alto */
-  background-color: rgba(0, 0, 0, 0.5);  /* Negro semitransparente */
-  display: flex;            /* Para centrar el contenido del modal */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;            /* Por encima de todo lo demás */
+  z-index: 1000;
 }
 
 .modal {
     width: 340px;
     height: 280px;
     border-radius: 6px;
-    background-color: var(--color-surface);
+    background-color: var(--color-form);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 15px;
+    gap: 8px;
 }
 
-.botonRol {
-    padding: 8px 16px;
-    font-size: 1rem;
+.modal h3 {
+    font-size: 20px;
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    margin: 3px 0;
-    border: none;
-    border-radius: 6px;
-    background-color: var(--color-accent-dark);
-    color: white;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-
-.botonRol:hover {
-    background-color: var(--color-accent);
+    gap: 8px;
 }
