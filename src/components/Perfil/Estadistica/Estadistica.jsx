@@ -6,8 +6,10 @@ const Estadistica = ({ icono, label, valor }) => {
       <div className={styles.container}>
         <div className={styles.card}>
           <div className={styles.icono}>{icono}</div>
-          <div className={styles.label}>{label}</div>
-          <div className={styles.valor}>{valor}</div>
+          <div className={styles.datos}>
+            <span className={styles.label}>{label}</span>
+            <span className={styles.valor}>{valor}</span>
+          </div>
         </div>
       </div>
 

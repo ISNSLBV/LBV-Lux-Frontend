@@ -1,0 +1,7 @@
+.containerEstadisticas {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 24px;
+    gap: 1rem;
+}
