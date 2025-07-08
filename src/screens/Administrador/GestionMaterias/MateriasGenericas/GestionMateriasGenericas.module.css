@@ -12,6 +12,7 @@
 .datos {
     display: flex;
     gap: 16px;
+    margin-bottom: 32px;
 }
 
 .barraAcciones {
@@ -21,6 +22,7 @@
     border-radius: 8px;
     background-color: rgba(255, 255, 255, 0.05);
     padding: 24px;
+    margin-bottom: 32px;
 }
 
 .barraBusqueda {
@@ -40,10 +42,6 @@
 
 .botonAgregar {
     flex: 0 0 auto;
-}
-
-.datos, .barraAcciones {
-    margin-bottom: 32px;
 }
 
 /* Overlay del modal: ocupa toda la pantalla y centra el contenido */
