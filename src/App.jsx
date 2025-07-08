@@ -20,6 +20,7 @@ import GestionMateriasPlanCiclo from './screens/Administrador/GestionMaterias/Ma
 import { ToastContainer } from 'react-toastify'
 import PreguntasFrecuentes from './screens/PreguntasFrecuentes/PreguntasFrecuentes';
 import { RutaPublicaSinRedireccion } from './components/RutaPublica/RutaPublicaSinRedireccion';
+import AyudaAlumno from './screens/AyudaAlumno/AyudaAlumno'
 
 function App() {
   return (
@@ -65,6 +66,14 @@ function App() {
               {/* ---- Ruta usuario ---- */}
               <Route index element={<Dashboard />} />
               <Route path="mi-perfil" element={<Perfil />} />
+              {/* ---- Ruta Alumno ---- */}
+              <Route path='alumno' element={<RutaPrivada rol={['Alumno']} />}>
+                <Route path='ayuda' element={<AyudaAlumno />} />
+              </Route>
+              {/* ---- Ruta Profesor ---- */}
+              <Route path='profesor' element={<RutaPrivada rol={['Profesor']} />}>
+
+              </Route>
               {/* ---- Ruta Administrador ---- */}
               <Route path='admin' element={<RutaPrivada rol={['Administrador']} />}>
                 <Route index element={<PanelAdministrador />} />

@@ -10,7 +10,7 @@ const DatoCard = ({ titulo, icono, dato, descripcion }) => {
         </div>
         <div className={styles.content}>
             <div>{dato}</div>
-            <p>{descripcion}</p>
+            {descripcion && <p>{descripcion}</p>}
         </div>
     </div>
   )

@@ -1,6 +1,6 @@
 .card {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    height: 125px;
+    height: auto;
     border-radius: 8px;
     background-color: rgb(255, 255, 255, 0.05);
     max-width: none;

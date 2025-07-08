@@ -15,6 +15,8 @@ const Navbar = () => {
   const esProfesor = user?.rol === "Profesor";
   const esAlumno = user?.rol === "Alumno";
 
+  const pathAyuda = esAdmin ? '/admin/ayuda' : esAlumno ? '/alumno/ayuda' : '/profesor/ayuda'
+
   return (
     <nav className={styles.navbar}>
       <button
@@ -60,7 +62,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li className={styles.navbarItem}>
-          <Link onClick={() => setIsOpen(false)} className={styles.navbarLink}>
+          <Link
+            onClick={() => setIsOpen(false)} 
+            className={styles.navbarLink} 
+            to={pathAyuda}
+          >
             Ayuda
           </Link>
         </li>

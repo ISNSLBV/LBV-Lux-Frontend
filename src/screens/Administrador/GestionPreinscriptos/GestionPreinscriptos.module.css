@@ -1,9 +1,12 @@
 .container {
+    padding: 32px 16px;
+}
+
+.titulo {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+    gap: 8px;
+    margin-bottom: 32px;
 }
 
 .modal {
@@ -36,4 +39,55 @@
     flex-direction: column;
     margin-top: 20px;
     gap: 10px;
+}
+
+.datos {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.barraAcciones {
+    display: flex;
+    gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.barraBusqueda {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.filtros {
+    display: flex;
+    gap: 16px;
+}
+
+.filtros select {
+    width: 192px;
+    padding: 8px;
+}
+
+@media (max-width: 768px) {
+    .datos {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .barraAcciones {
+        flex-direction: column;
+    }
+
+    .filtros {
+        flex-direction: column;
+    }
+
+    .filtros select {
+        width: 100%;
+    }
 }
