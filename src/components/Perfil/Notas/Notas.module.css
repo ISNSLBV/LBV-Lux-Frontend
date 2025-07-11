@@ -1,5 +1,5 @@
 .container {
-  background-color: white;
+  --color-primary-light:  #225599; 
   padding: 2rem;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
@@ -20,13 +20,13 @@
 
 .promedio {
   font-size: 2.5rem;
-  color: #2563eb; /* Azul fuerte */
+  color: #ffffff; /* Azul fuerte */
   font-weight: 700;
   margin: 0;
 }
 
 .promedioLabel {
-  color: #6b7280;
+  color: #ffffff;
   font-size: 0.95rem;
 }
 
@@ -45,5 +45,5 @@
 
 .nota {
   font-weight: bold;
-  color: #2563eb;
+  color: #ffffff;
 }

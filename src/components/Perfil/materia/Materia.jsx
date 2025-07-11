@@ -9,7 +9,7 @@ const Materia = ({ materia }) => {
         <p className={styles.cuatrimestre}>{materia.cuatrimestre}</p>
       </div>
       <div className={styles.infoDerecha}>
-        <span className={`${styles.estado} ${styles[materia.estado.toLowerCase()]}`}>
+        <span className={`${styles.estado} ${styles[materia.estado]}`}>
           {materia.estado}
         </span>
         <p>{materia.horario}</p>

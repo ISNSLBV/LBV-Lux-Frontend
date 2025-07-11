@@ -1,5 +1,5 @@
 .container {
-  background-color: #f9f9f9;
+  --color-primary-light:  #225599; 
   border: 1px solid #eee;
   padding: 1.5rem;
   border-radius: 10px;
@@ -7,25 +7,16 @@
   margin: 0 auto;
 }
 
-.card {
-  background-color: #fff;
-  border: 1px solid #e3e3e3;
-  border-radius: 10px;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-
 .nombre {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #111;
+  color: #ffffff;
   margin-bottom: 0.3rem;
 }
 
 .profesor {
   font-size: 0.95rem;
-  color: #555;
+  color: #ffffff;
   margin-bottom: 0.5rem;
 }
 
@@ -34,11 +25,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
+  color: #ffffff;
 }
 
 .horario::before {
   content: '🕒';
   font-size: 1rem;
-  color: #666;
+  color: #ffffff;
 }

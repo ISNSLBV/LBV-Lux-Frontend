@@ -1,6 +1,7 @@
 import React from 'react'
+import styles from './Notas.module.css'
 
-const Notas = () => {
+const Notas = ({ promedio }) => {
   return (
   <div className={styles.container}>
       <h2 className={styles.titulo}>Resumen de Calificaciones</h2>
