@@ -64,3 +64,25 @@ hr {
 button {
   font-family: 'Montserrat', sans-serif;
 }
+
+main {
+  padding: 24px;
+}
+
+.formikFieldErrorText {
+  color: #e74c3c;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.formikFieldError {
+  border-color: #e74c3c;
+}
+
+.formikField {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 1rem;
+}

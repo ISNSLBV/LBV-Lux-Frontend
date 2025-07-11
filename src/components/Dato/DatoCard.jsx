@@ -1,7 +1,8 @@
 import React from 'react'
 import styles from './DatoCard.module.css'
+import CircularProgress from '@mui/material/CircularProgress'
 
-const DatoCard = ({ titulo, icono, dato, descripcion }) => {
+const DatoCard = ({ titulo, icono, dato, descripcion, loading }) => {
   return (
     <div className={styles.card}>
         <div className={styles.header}>
@@ -9,7 +10,10 @@ const DatoCard = ({ titulo, icono, dato, descripcion }) => {
             {icono}
         </div>
         <div className={styles.content}>
-            <div>{dato}</div>
+            {loading
+              ? <CircularProgress size={24} color='inherit' />
+              : <div>{dato}</div>
+            }
             {descripcion && <p>{descripcion}</p>}
         </div>
     </div>
