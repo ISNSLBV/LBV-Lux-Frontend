@@ -18,7 +18,7 @@ export default function GestionPreinscriptos() {
   const [visibilityFilter, setVisibilityFilter] = useState('1');
 
   useEffect(() => {
-    api.get('/api/admin/preinscripcion')
+    api.get('/admin/preinscripcion')
       .then(r => {
         setAllPersonas(r.data);
         setPersonasFiltradas(r.data);
@@ -95,21 +95,20 @@ export default function GestionPreinscriptos() {
     const carreraId = personaSeleccionada.preinscripcions?.[0]?.id_carrera;
 
     try {
-      await api.post(`/api/admin/preinscripcion/${personaSeleccionada.id}/aceptar`, {
+      await api.post(`/admin/preinscripcion/${personaSeleccionada.id}/aceptar`, {
         tipoAlumnoId, carreraId
       });
       setAllPersonas((prev) => prev.filter(x => x.id !== personaSeleccionada.id));
       setShowAceptarModal(false);
       setPersonaSeleccionada(null);
     } catch (e) {
-      // Mostrar error en un pequeño componente o snackbar si querés
       alert(e.response?.data?.message || 'Error');
     }
   };
 
   const ocultar = async (p) => {
     try {
-      await api.post(`/api/admin/preinscripcion/${p.id}/ocultar`);
+      await api.post(`/admin/preinscripcion/${p.id}/ocultar`);
       setAllPersonas((prev) => prev.filter(x => x.id !== p.id));
     } catch (e) {
       alert(e.response?.data?.message || 'Error');

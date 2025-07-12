@@ -18,7 +18,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const fetchMaterias = async () => {
-  const { data } = await api.get("/api/admin/materia/listar-materias");
+  const { data } = await api.get("/admin/materia/listar-materias");
   return data;
 };
 

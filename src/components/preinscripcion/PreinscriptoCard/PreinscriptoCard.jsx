@@ -7,11 +7,22 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar, onRechazar }) => {
   const observacion = persona.preinscripcions[0]?.comentario;
   const idCarrera = persona.preinscripcions[0]?.id_carrera;
   const idPreinscripcion = persona.preinscripcions[0]?.id;
+  const estado = persona.preinscripcions[0]?.estado;
 
   return (
     <div className={styles.card}>
       <div className={styles.info}>
         <span><strong>Preinscripción Nº {idPreinscripcion}</strong></span>
+        <span 
+          className={styles.estado}
+          style={
+            (estado === 'Aprobada') ? { backgroundColor: 'green' } :
+            (estado === 'Rechazada') ? { backgroundColor: 'red' } :
+            { backgroundColor: 'yellow', color: 'black' }
+          }
+        >
+            {estado}
+        </span>
       </div>
       <div className={styles.datosGenerales}>
         <div className={styles.datosPersonales}>
@@ -75,12 +86,16 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar, onRechazar }) => {
           </div>
         </div>
       </div>
-      <hr />
-      <div className={styles.acciones}>
-        <Boton icono={<EyeOff />} onClick={onOcultar}>Ocultar</Boton>
-        <Boton variant='success' icono={<Check />} onClick={onAceptar}>Aceptar</Boton>
-        <Boton variant='cancel' icono={<X />} onClick={onRechazar}>Rechazar</Boton>
-      </div>
+      {estado === 'Pendiente' && (
+        <>
+          <hr />
+          <div className={styles.acciones}>
+            <Boton icono={<EyeOff />} onClick={onOcultar}>Ocultar</Boton>
+            <Boton variant='success' icono={<Check />} onClick={onAceptar}>Aceptar</Boton>
+            <Boton variant='cancel' icono={<X />} onClick={onRechazar}>Rechazar</Boton>
+          </div>
+        </>
+      )}
     </div>
   )
 }

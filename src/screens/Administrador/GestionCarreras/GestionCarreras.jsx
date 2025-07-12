@@ -31,7 +31,7 @@ const schemaCarrera = Yup.object().shape({
 });
 
 const fetchCarreras = async () => {
-  const { data } = await api.get("/api/admin/carrera/listar-carreras");
+  const { data } = await api.get("/admin/carrera/listar-carreras");
   return data;
 };
 
@@ -82,7 +82,7 @@ const GestionCarreras = () => {
 
   const registrarCarrera = useMutation({
     mutationFn: ({ nombre, duracion }) =>
-      api.post("/api/admin/carrera/registrar-carrera", { nombre, duracion }),
+      api.post("/admin/carrera/registrar-carrera", { nombre, duracion }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["carreras"] });
       toast.success("Carrera registrada");
@@ -92,7 +92,7 @@ const GestionCarreras = () => {
 
   const editarCarrera = useMutation({
     mutationFn: ({ id, nombre, duracion }) =>
-      api.put(`/api/admin/carrera/${id}`, { nombre, duracion }),
+      api.put(`/admin/carrera/${id}`, { nombre, duracion }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["carreras"] });
       toast.success("Carrera editada");
@@ -100,19 +100,6 @@ const GestionCarreras = () => {
     },
     onError: () => toast.error("Error al editar la carrera"),
   });
-
-  const handleEditar = async (e) => {
-    e.preventDefault();
-    if (!carreraEditada.nombre.trim() && !carreraEditada.duracion.trim())
-      return;
-    editarCarrera.mutate({
-      id: carreraEditada.id,
-      nombre: carreraEditada.nombre.trim(),
-      duracion: carreraEditada.duracion.trim(),
-    });
-    setCarreraEditada({ id: "", nombre: "", duracion: "" });
-    setEdicion(false);
-  };
 
   const carrerasFiltradas = carreras.filter((c) =>
     c.nombre.toLowerCase().includes(filtro.toLowerCase())

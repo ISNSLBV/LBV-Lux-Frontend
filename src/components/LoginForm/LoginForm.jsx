@@ -6,6 +6,7 @@ import Boton from '../Boton/Boton';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 
 import { validacionSchema } from './utils/validacionSchema';
 import InputField from '../FormCampos/InputField';
@@ -21,10 +22,15 @@ const LoginForm = () => {
       try {
         const { roles } = await api.post('/api/auth/login', values).then(r => r.data);
 
-        if (roles.length > 1) {
-          setPending({ roles });
-        } else {
+        if (!roles || roles.length === 0) {
+          toast.error('Este usuario no tiene un rol asignado')
+          return;
+        }
+        if (roles.length === 1) {
+          await api.post('/api/auth/seleccionar-rol', { rol: roles[0] });
           window.location.href = '/';
+        } else {
+          setPending({ roles });
         }
       } catch (err) {
         alert(err.response?.data?.message || 'Error de red');

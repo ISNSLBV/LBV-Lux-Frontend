@@ -1,27 +1,55 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import api from '../api/axios';
+import { createContext, useContext, useEffect } from "react";
+import api from "../api/axios";
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useLocation } from "react-router-dom";
 
 const AuthCtx = createContext(null);
 
+const fetchUser = async () => {
+  const { data } = await api.get('/auth/me')
+  return data
+}
+
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [checking, setChecking] = useState(true);
+  const queryClient = useQueryClient();
+  const location = useLocation();
 
-    useEffect(() => {
-        api.get('/api/auth/me')
-        .then(r => setUser(r.data))
-        .catch(() => setUser(null))
-        .finally(() => setChecking(false));
-    }, []);
+  const { data: user, isLoading, refetch } = useQuery({
+    queryKey: ['user'],
+    queryFn: fetchUser,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    retry: false
+  })
 
-    const logout = async () => {
-        await api.post('/api/auth/logout');
-        setUser(null);
-        window.location.href = "/alumnos2025/login";
+  useEffect (() => {
+    refetch();
+  }, [location.pathname]);
+
+  const login = async (username, password) => {
+    try {
+      const { data } = await api.post("/auth/login", { username, password });
+      await refetch();
+      return { success: true, roles: data.roles };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Error al iniciar sesión",
+      };
     }
+  };
+
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+      queryClient.removeQueries(['user']);
+    } finally {
+      window.location.href = "/alumnos2025/login";
+    }
+  };
 
   return (
-    <AuthCtx.Provider value={{ user, checking, logout }}>
+    <AuthCtx.Provider value={{ user, checking: isLoading, logout, login }}>
       {children}
     </AuthCtx.Provider>
   );
