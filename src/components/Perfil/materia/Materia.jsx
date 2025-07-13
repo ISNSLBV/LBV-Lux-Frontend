@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './Materia.module.css'
+
 const Materia = ({ materia }) => {
   return (
     <div className={styles.card}>

@@ -36,7 +36,7 @@ const PreinscripcionForm = () => {
     validationSchema: schemaPreinscripcion, // definido en utils/schemaPreinscripcion.js
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/preinscripcion`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/preinscripcion`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(values)

@@ -1,32 +1,44 @@
 .card {
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 90%;
+    flex-direction: column;
     gap: 10px;
-    border: 1px solid white;
-    border-radius: 25px;
-    padding: 15px 0;
-    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
 }
 
 .info {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
     gap: 5px;
+    justify-content: space-between;
+}
+
+.estado {
+    border-radius: 9999px;
+    padding: 5px 10px;
+    font-weight: 600;
 }
 
 .datosGenerales {
     display: flex;
-    gap: 15px;
+    justify-content: space-evenly;
+    gap: 24px;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .datosPersonales, .datosContacto, .datosAcademicos {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    gap: 8px;
 }
 
 .datosPersonales .titulo, .datosContacto .titulo, .datosAcademicos .titulo {
@@ -42,26 +54,21 @@
 
 .acciones {
     display: flex;
-    flex-direction: column;
+    justify-content: end;
     gap: 10px;
 }
 
 @media (max-width: 768px) {
     .card {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
         padding: 15px 10px;
     }
 
     .datosGenerales {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
     }
 
-    .datosPersonales, .datosContacto, .datosAcademicos {
-        align-items: center;
-        text-align: center;
+    .acciones {
+        flex-direction: column;
     }
 }

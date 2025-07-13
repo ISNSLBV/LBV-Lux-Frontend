@@ -1,0 +1,11 @@
+.titulo {
+  text-align: center;
+  font-size: 32px;
+  color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .titulo {
+    font-size: 29px;
+  }
+}

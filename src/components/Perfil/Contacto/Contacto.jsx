@@ -1,7 +1,8 @@
 import React from 'react'
-import {Mail,Phone,House}from 'lucide-react'
+import { Mail, Phone, House }from 'lucide-react'
 import styles from './Contacto.module.css'
-const Contacto = ({correoElectronico,telefono,direccion}) => {
+
+const Contacto = ({ correoElectronico, telefono, direccion }) => {
   return (
     <div>
         <div className={styles.titulo}>

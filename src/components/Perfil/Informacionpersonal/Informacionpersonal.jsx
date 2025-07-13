@@ -1,8 +1,8 @@
 import React from 'react'
-import styles from './Informacionpersonal.module.css'
+import styles from './InformacionPersonal.module.css'
 import { User } from 'lucide-react'
 
-const Informacionpersonal = ({fechaNacimiento, dni, ingreso }) => {
+const InformacionPersonal = ({ fechaNacimiento, dni, ingreso }) => {
   return (
     <div className={styles.card}>
         <div className={styles.titulo}>
@@ -25,4 +25,4 @@ const Informacionpersonal = ({fechaNacimiento, dni, ingreso }) => {
   )
 }
 
-export default Informacionpersonal
+export default InformacionPersonal

@@ -1,4 +1,3 @@
-// components/preinscripcion/SeccionDatosPersonales.jsx
 import React from 'react'
 import InputField from '../FormCampos/InputField'
 import RadioGroup from '../FormCampos/RadioGroup'
@@ -9,7 +8,6 @@ const SeccionDatosPersonales = ({ formik }) => {
     <fieldset className="seccionDatosPersonales">
       <legend>Datos Personales</legend>
 
-      {/* Número de DNI */}
       <div className="campoFila">
         <div className="campoColumna">
           <InputField
@@ -21,7 +19,6 @@ const SeccionDatosPersonales = ({ formik }) => {
         </div>
       </div>
 
-      {/* Nombre + Apellido */}
       <div className="campoFila">
         <div className="campoColumna">
           <InputField
@@ -41,7 +38,6 @@ const SeccionDatosPersonales = ({ formik }) => {
         </div>
       </div>
 
-      {/* Sexo */}
       <div className="campoFila">
         <div className="campoColumna">
           <RadioGroup
@@ -57,7 +53,6 @@ const SeccionDatosPersonales = ({ formik }) => {
         </div>
       </div>
 
-      {/* Nacionalidad */}
       <div className="campoFila">
         <div className="campoColumna">
           <DatePickerField
@@ -68,7 +63,6 @@ const SeccionDatosPersonales = ({ formik }) => {
         </div>
       </div>
 
-      {/*Email*/}
       <div className="campoFila">
         <div className="campoColumna">
             <InputField 
@@ -88,7 +82,6 @@ const SeccionDatosPersonales = ({ formik }) => {
         </div>
       </div>
 
-      {/*Teléfono*/}
       <div className="campoFila">
         <div className="campoColumna">
           <InputField 
@@ -99,7 +92,6 @@ const SeccionDatosPersonales = ({ formik }) => {
           />
         </div>
       </div>
-      {/* …continúa con Profesión, País de residencia, País de nacimiento, Email, etc. */}
     </fieldset>
   );
 };

@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
   ],
+  base: '/alumnos2025',
   css: {
     modules: {
       generateScopedName:

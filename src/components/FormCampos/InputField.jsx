@@ -1,4 +1,3 @@
-// components/preinscripcion/campos/InputField.jsx
 import React from 'react';
 import styles from './estilos/InputField.module.css'
 
@@ -10,8 +9,6 @@ const InputField = ({ label, name, placeholder = '', formik, type = 'text' }) =>
     <div className={styles.inputFieldGroup}>
       <label htmlFor={name}>
         {label}
-        {/* si querés marcar los obligatorios: */}
-        {/* <span className="required">*</span> */}
       </label>
       <input
         id={name}

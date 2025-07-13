@@ -7,6 +7,16 @@
 #F4FAFA
 claro */
 
+.boton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.icono {
+  height: 24px;
+}
 
 .primary {
   color: white;
@@ -86,4 +96,20 @@ claro */
 .lg {
   padding: 12px 24px;
   font-size: 1.2rem;
+}
+
+.onlyIcon {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.onlyIcon:hover {
+  color: rgb(180, 180, 180);
+}
+
+.noBackground {
+  background-color: transparent;
 }

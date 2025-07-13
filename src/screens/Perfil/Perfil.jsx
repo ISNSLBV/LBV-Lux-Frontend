@@ -109,4 +109,5 @@ const promedioGeneral = 8.3;
   )
 }
 
+
 export default Perfil
