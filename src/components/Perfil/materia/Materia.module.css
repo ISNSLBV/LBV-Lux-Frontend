@@ -9,10 +9,10 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  --color-primary-light:#225599; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  min-height: 110px;
 }
 
 .nombre {
@@ -40,17 +40,15 @@
 }
 
 .Aprobada {
-  background-color: black;
-  color: white;
+  background-color: green;
 }
 
 .Cursando {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: yellow;
+  color: black;
 }
 
 .nota {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ffffff;
 }

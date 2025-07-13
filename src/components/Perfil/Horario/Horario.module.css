@@ -1,22 +1,18 @@
 .container {
-  --color-primary-light:  #225599; 
-  border: 1px solid #eee;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.07);
   padding: 1.5rem;
   border-radius: 10px;
-  max-width: 700px;
-  margin: 0 auto;
 }
 
 .nombre {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ffffff;
   margin-bottom: 0.3rem;
 }
 
 .profesor {
   font-size: 0.95rem;
-  color: #ffffff;
   margin-bottom: 0.5rem;
 }
 
@@ -25,11 +21,8 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #ffffff;
 }
 
-.horario::before {
-  content: '🕒';
-  font-size: 1rem;
-  color: #ffffff;
+.horario svg {
+  color: rgba(255, 255, 255, 0.7);
 }

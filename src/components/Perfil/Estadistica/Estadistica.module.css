@@ -1,31 +1,26 @@
-.estadisticasContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px;
-  width: 100%;
-}
-
 .card {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 16px;
   width: 100%;
-  max-width: 320px;
-  padding: 20px;
-  --color-primary-light:  #225599; 
-  border-radius: 12px;
-  box-shadow: 0 0 0 1px #eee;
-  transition: all 0.2s ease-in-out;
+  max-width: calc(50% - 8px);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgb(255, 255, 255, 0.05);
+}
+
+.icono {
+  background: rgba(255, 255, 255, 0.077);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .icono svg {
-  width: 24px;
-  height: 24px; 
-  color: rgb(255, 255, 255); /* o cualquier otro color */
+  display: block;
 }
-
 
 .label {
   font-size: 14px;
@@ -33,7 +28,16 @@
 }
 
 .valor {
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffffff;
+  font-weight: 600;
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .card {
+    max-width: 100%;
+  }
 }

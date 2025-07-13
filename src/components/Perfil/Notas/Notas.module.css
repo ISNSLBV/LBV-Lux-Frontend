@@ -1,10 +1,8 @@
 .container {
-  --color-primary-light:  #225599; 
-  padding: 2rem;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  max-width: 900px;
-  margin: auto;
+  padding: 16px ;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.07);
 }
 
 .titulo {

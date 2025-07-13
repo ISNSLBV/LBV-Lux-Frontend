@@ -1,7 +1,13 @@
-.containerEstadisticas {
+.estadisticas {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin: 0 24px;
     gap: 1rem;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+    .estadisticas {
+        flex-direction: column;
+    }
 }

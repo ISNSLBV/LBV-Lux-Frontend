@@ -1,30 +1,20 @@
-import React, { useState } from 'react';
-import Informacionpersonal from '../Informacionpersonal/Informacionpersonal';
-import Materia             from '../Materia/Materia';
-import Notas               from '../Notas/Notas';
-import Horarios            from '../Horario/Horario';
-import styles              from './Navbar.module.css';
+import React, { useState } from "react";
+import InformacionPersonal from "../InformacionPersonal/InformacionPersonal";
+import Materia from "../Materia/Materia";
+import Notas from "../Notas/Notas";
+import Horarios from "../Horario/Horario";
+import styles from "./Navbar.module.css";
 
-const Navbar = ({ infoPersonal, materias, notasPromedio, horarios }) => {
-  const [activeTab, setActiveTab] = useState('info');
+const Navbar = ({ informacionPersonal, materias, promedioNotas, horarios }) => {
+  const [activeTab, setActiveTab] = useState("Info");
 
   const renderTab = () => {
     switch (activeTab) {
-      case 'info':
-        return (
-          <Informacionpersonal
-            fechaNacimiento={infoPersonal.fechaNacimiento}
-            dni={infoPersonal.dni}
-            ingreso={infoPersonal.ingreso}
-          />
-        );
-      case 'materias':
-        return materias.map((m, i) => (
-          <Materia key={i} materia={m} />
-        ));
-      case 'notas':
-        return <Notas promedio={notasPromedio} />;
-      case 'horarios':
+      case "Materias":
+        return materias.map((m, i) => <Materia key={i} materia={m} />);
+      case "Notas":
+        return <Notas promedio={promedioNotas} />;
+      case "Horarios":
         return horarios.map((h, i) => (
           <Horarios
             key={i}
@@ -34,26 +24,32 @@ const Navbar = ({ infoPersonal, materias, notasPromedio, horarios }) => {
           />
         ));
       default:
-        return null;
+        return (
+          <InformacionPersonal
+            fechaNacimiento={informacionPersonal.fechaNacimiento}
+            dni={informacionPersonal.dni}
+            ingreso={informacionPersonal.ingreso}
+          />
+        )
     }
   };
 
   return (
     <>
       <div className={styles.tabHeader}>
-        {['info', 'materias', 'notas', 'horarios'].map(tab => (
+        {["Info", "Materias", "Notas", "Horarios"].map((tab) => (
           <button
             key={tab}
-            className={`${styles.button} ${activeTab === tab ? styles.active : ''}`}
+            className={`${styles.button} ${
+              activeTab === tab ? styles.active : ""
+            }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
       </div>
-      <div className={styles.tabContent}>
-        {renderTab()}
-      </div>
+      <div className={styles.tabContent}>{renderTab()}</div>
     </>
   );
 };
