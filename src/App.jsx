@@ -1,25 +1,26 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { RutaPublica } from "./components/RutaPublica/RutaPublica";
+import { ToastContainer } from "react-toastify";
+import { RutaPublicaSinRedireccion } from "./components/RutaPublica/RutaPublicaSinRedireccion";
 import Login from "./screens/Login/Login";
-import Layout from "./components/Layout/Layout";
+import Layout from "./screens/Layout/Layout";
 import Preinscripcion from "./screens/Preinscripcion/Preinscripcion";
 import RutaPrivada from "./components/RutaPrivada/RutaPrivada";
 import PanelAdministrador from "./screens/Administrador/PanelAdministrador/PanelAdministrador";
 import Dashboard from "./screens/Dashboard/Dashboard";
 import Perfil from "./screens/Perfil/Perfil";
-import GestionPreinscriptos from "./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos";
-import GestionCarreras from "./screens/Administrador/GestionCarreras/GestionCarreras";
-import GestionMaterias from "./screens/Administrador/GestionMaterias/GestionMaterias";
-import GestionPlanes from "./screens/Administrador/GestionPlanes/GestionPlanes";
-import { RutaPublica } from "./components/RutaPublica/RutaPublica";
+import PreguntasFrecuentes from "./screens/PreguntasFrecuentes/PreguntasFrecuentes";
+import AyudaAlumno from "./screens/AyudaAlumno/AyudaAlumno";
+import GestionProfesores from "./screens/Administrador/GestionProfesores/GestionProfesores";
 import GestionMateriasMenu from "./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu";
 import GestionMateriasGenericas from "./screens/Administrador/GestionMaterias/MateriasGenericas/GestionMateriasGenericas";
 import GestionMateriasPlan from "./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan";
 import GestionMateriasPlanCiclo from "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo";
-import { ToastContainer } from "react-toastify";
-import PreguntasFrecuentes from "./screens/PreguntasFrecuentes/PreguntasFrecuentes";
-import { RutaPublicaSinRedireccion } from "./components/RutaPublica/RutaPublicaSinRedireccion";
-import AyudaAlumno from "./screens/AyudaAlumno/AyudaAlumno";
+import GestionPreinscriptos from "./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos";
+import GestionCarreras from "./screens/Administrador/GestionCarreras/GestionCarreras";
+import GestionMaterias from "./screens/Administrador/GestionMaterias/GestionMaterias";
+import GestionPlanes from "./screens/Administrador/GestionPlanes/GestionPlanes";
 
 function App() {
   return (
@@ -101,6 +102,7 @@ function App() {
                     element={<GestionMateriasPlanCiclo />}
                   />
                 </Route>
+                <Route path="gestion-profesores" element={<GestionProfesores />} />
               </Route>
             </Route>
           </Route>

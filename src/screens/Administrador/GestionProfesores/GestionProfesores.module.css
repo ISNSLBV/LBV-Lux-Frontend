@@ -1,0 +1,164 @@
+.titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.barraAcciones {
+  display: flex;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.barraBusqueda {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.listaCarreras {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.botonAgregar {
+  flex: 0 0 auto;
+}
+
+.tabla {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tabla th {
+  color: rgba(255, 255, 255, 0.77);
+  height: 48px;
+  padding: 0 16px;
+}
+
+.tabla tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tablaFila {
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.tablaFila td {
+  padding: 16px;
+}
+
+.tabla tr:last-child td {
+  border-bottom: none;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: var(--color-form);
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.modalContent form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  color: white;
+}
+
+.modalContent .flex {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modalActions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modoSwitch {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.tab, .tabActivo {
+  padding: 8px 16px;
+  border: none;
+  background: #f2f2f2;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 6px 6px 0 0;
+}
+.tabActivo {
+  background: #38b6ff;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .datos {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .barraAcciones {
+    flex-direction: column;
+  }
+
+  .botonAgregar button {
+    width: 100%;
+  }
+
+  .tabla {
+    display: none;
+  }
+
+  .cards {
+    display: block;
+  }
+}

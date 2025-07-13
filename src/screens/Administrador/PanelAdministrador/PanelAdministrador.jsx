@@ -20,6 +20,10 @@ const PanelAdministrador = () => {
       titulo: 'Gestionar materias',
       redir: 'gestion-materias'
     },
+    {
+      titulo: 'Gestionar profesores',
+      redir: 'gestion-profesores'
+    },
   ]
   
   return (
