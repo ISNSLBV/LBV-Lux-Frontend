@@ -5,56 +5,52 @@ import { toast } from "react-toastify";
 import Boton from "../../components/Boton/Boton";
 import logo from "../../assets/logo.png";
 import api from "../../api/axios";
-import { useFormik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { validacionSchema } from "../../components/LoginForm/utils/validacionSchema";
 import { useAuth } from "../../contexts/AuthContext";
-import SelectorRol from "../../components/LoginForm/SelectorRol/SelectorRol";
-import InputField from '../../components/FormCampos/InputField'
+
+const loginSchema = Yup.object().shape({
+  username: Yup.string()
+    .matches(/^[A-Za-z0-9_]{1,30}$/, "Nombre de usuario incorrecto")
+    .required("Ingresá tu nombre de usuario"),
+  password: Yup.string()
+    .matches(/^.{4,}$/, "Contraseña incorrecta")
+    .required("Ingresá tu contraseña"),
+});
+
+const SelectorRol = ({ roles, onSelect, onClose }) => {
+  return (
+    <div className={styles.modalBackdrop} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <h3>¿Con qué rol querés ingresar?</h3>
+        <div className={styles.opciones}>
+          {roles.map((r) => (
+            <Boton
+              variant="primary"
+              fullWidth
+              key={r}
+              onClick={() => onSelect(r)}
+            >
+              {r}
+            </Boton>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Login = () => {
   const [seleccionandoRol, setSeleccionandoRol] = useState(null);
-  const { login } = useAuth();
+  const { login, refetchUser } = useAuth();
   const navigate = useNavigate();
-  const formik = useFormik({
-    initialValues: { username: "", password: "" },
-    validationSchema: validacionSchema,
-    onSubmit: async (values, helpers) => {
-      const { success, error, roles } = await login(
-        values.username,
-        values.password
-      );
-
-      if (!success) {
-        toast.error(error || "Error al iniciar sesión");
-        helpers.setSubmitting(false);
-        return;
-      }
-
-      if (!roles || roles.length === 0) {
-        toast.error("Este usuario no tiene un rol asignado");
-        helpers.setSubmitting(false);
-        return;
-      }
-      if (roles.length === 1) {
-        try {
-          await api.post("/auth/seleccionar-rol", { rol: roles[0] });
-          navigate("/");
-        } catch (e) {
-          toast.error("Error seleccionando rol");
-        }
-      } else {
-        setSeleccionandoRol({ roles });
-      }
-      helpers.setSubmitting(false);
-    },
-  });
 
   const handleSeleccionarRol = async (rol) => {
     try {
       await api.post("/auth/seleccionar-rol", { rol });
-      navigate('/');
+      await refetchUser();
+      navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.message || "Error al seleccionar rol");
     }
@@ -63,42 +59,106 @@ const Login = () => {
   return (
     <div className={styles.container}>
       {seleccionandoRol && (
-        <SelectorRol roles={seleccionandoRol.roles} onSelect={handleSeleccionarRol} />
+        <SelectorRol
+          roles={seleccionandoRol.roles}
+          onSelect={handleSeleccionarRol}
+        />
       )}
 
-      <form onSubmit={formik.handleSubmit} className={styles.loginForm}>
-        <img className={styles.formLogo} src={logo} alt="Logo" />
+      <Formik
+        initialValues={{ username: "", password: "" }}
+        validationSchema={loginSchema}
+        onSubmit={async (values, helpers) => {
+          const { success, error, roles } = await login(
+            values.username,
+            values.password
+          );
 
-        <fieldset disabled={formik.isSubmitting} className={styles.inputContainer}>
-          <InputField
-            name="username"
-            type="text"
-            placeholder="Ingresá tu nombre de usuario"
-            formik={formik}
-          />
-          <InputField
-            name="password"
-            type="password"
-            placeholder="Ingresá tu contraseña"
-            formik={formik}
-          />
-        </fieldset>
+          if (!success) {
+            toast.error(error || "Error al iniciar sesión");
+            helpers.setSubmitting(false);
+            return;
+          }
 
-        <Boton type='submit' fullWidth disabled={formik.isSubmitting}>
-          Iniciar Sesión
-        </Boton>
+          if (!roles || roles.length === 0) {
+            toast.error("Este usuario no tiene un rol asignado");
+            helpers.setSubmitting(false);
+            return;
+          }
 
-        <div className={styles.actionContainer}>
-          <Link to="/">Olvidé mi contraseña</Link>
-          <hr />
-          <div>
-            <p>¿Querés inscribirte al instituto?</p>
-            <p>
-              Completá el <Link to="/preinscripcion">Formulario de Preinscripción</Link>
-            </p>
-          </div>
-        </div>
-      </form>
+          if (roles.length === 1) {
+            try {
+              await api.post("/auth/seleccionar-rol", { rol: roles[0] });
+              await refetchUser();
+              navigate("/");
+            } catch {
+              toast.error("Error seleccionando rol");
+            }
+          } else {
+            setSeleccionandoRol({ roles });
+          }
+          helpers.setSubmitting(false);
+        }}
+      >
+        {(formik) => (
+          <Form className={styles.loginForm}>
+            <img className={styles.formLogo} src={logo} alt="Logo" />
+            <fieldset
+              disabled={formik.isSubmitting}
+              className={styles.inputContainer}
+            >
+              <div>
+                <Field
+                  name="username"
+                  type="text"
+                  placeholder="Nombre de usuario"
+                  className={
+                    formik.errors.username && formik.touched.username
+                      ? "formikFieldError"
+                      : "formikField"
+                  }
+                />
+                <ErrorMessage
+                  name="username"
+                  component="div"
+                  className="formikFieldErrorText"
+                />
+              </div>
+              <div>
+                <Field
+                  name="password"
+                  type="password"
+                  placeholder="Contraseña"
+                  className={
+                    formik.errors.password && formik.touched.password
+                      ? "formikFieldError"
+                      : "formikField"
+                  }
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="formikFieldErrorText"
+                />
+              </div>
+            </fieldset>
+            <Boton type="submit" fullWidth disabled={formik.isSubmitting}>
+              Iniciar sesión
+            </Boton>
+            <div className={styles.actionContainer}>
+              <Link to="/">Olvidé mi contraseña</Link>
+              <hr />
+              <div>
+                <p>¿Querés inscribirte al instituto?</p>
+                <p>
+                  Completá el{" "}
+                  <Link to="/preinscripcion">Formulario de Preinscripción</Link>
+                </p>
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

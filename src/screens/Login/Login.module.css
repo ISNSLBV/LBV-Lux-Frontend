@@ -25,24 +25,6 @@
     width: 100%;
 }
 
-.loginForm input {
-    background-color: var(--color-background);
-    color: var(--color-text);
-    padding: 0 5px;
-    height: 36px;
-    border-radius: 6px;
-}
-
-.loginFormButton {
-    background-color: var(--color-accent-dark);
-    color: var(--color-primary);
-    transition: background-color 0.3s ease;
-}
-
-.loginFormButton:hover {
-    background-color: var(--color-accent);
-}
-
 .actionContainer {
     display: flex;
     flex-direction: column;
@@ -64,4 +46,41 @@
 .formLogo {
   width: 100%;
   height: auto;
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+    width: 340px;
+    height: 280px;
+    border-radius: 6px;
+    background-color: var(--color-form);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    gap: 8px;
+}
+
+.modal h3 {
+    font-size: 20px;
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
 }

@@ -4,30 +4,58 @@ import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import logo from "../../../assets/logo.png";
-import BotonLogout from "../../BotonLogout/BotonLogout";
 import { useAuth } from "../../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { user, checking } = useAuth();
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const { user, checking, logout } = useAuth();
 
-  const esAdmin = user?.rol === "Administrador";
-  const esProfesor = user?.rol === "Profesor";
-  const esAlumno = user?.rol === "Alumno";
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      toast.error("Error al cerrar sesión");
+    }
+  };
 
-  const pathAyuda = esAdmin ? '/admin/ayuda' : esAlumno ? '/alumno/ayuda' : '/profesor/ayuda'
+  const opciones = [
+    {
+      titulo: "Panel de Administrador",
+      redir: "admin",
+      rol: "Administrador",
+    },
+    {
+      titulo: "Preguntas frecuentes",
+      redir: "/preguntas-frecuentes",
+    },
+    {
+      titulo: "Ayuda",
+      redir: "/ayuda",
+    },
+    {
+      titulo: "Cerrar sesión",
+      redir: null,
+    },
+  ];
+
+  const opcionesFiltradas = opciones.filter(
+    (o) => !o.rol || (user && user?.rol === o.rol)
+  );
+
+  if (checking) return null;
 
   return (
     <nav className={styles.navbar}>
       <button
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => setMenuAbierto((prev) => !prev)}
         className={`${styles.hamburger}`}
       >
         <Menu size={32} strokeWidth={3} />
       </button>
       <ul
         className={`${styles.navbarList} ${
-          isOpen ? styles.navbarListOpen : ""
+          menuAbierto ? styles.navbarListOpen : ""
         }`}
       >
         <li className={styles.mobileMenuControl} style={{ listStyle: "none" }}>
@@ -35,44 +63,30 @@ const Navbar = () => {
             <img className={styles.logo} src={logo} alt="" />
           </Link>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => setMenuAbierto(false)}
             className={`${styles.mobileMenuClose}`}
           >
             <X size={32} strokeWidth={3} />
           </button>
         </li>
-        {!checking && esAdmin && (
-          <li className={styles.navbarItem}>
-            <Link
-              onClick={() => setIsOpen(false)}
-              className={styles.navbarLink}
-              to="/admin/"
-            >
-              Panel de Administrador
-            </Link>
-          </li>
-        )}
-        <li className={styles.navbarItem}>
-          <Link
-            onClick={() => setIsOpen(false)}
-            className={styles.navbarLink}
-            to="/preguntas-frecuentes"
-          >
-            Preguntas frecuentes
-          </Link>
-        </li>
-        <li className={styles.navbarItem}>
-          <Link
-            onClick={() => setIsOpen(false)} 
-            className={styles.navbarLink} 
-            to={pathAyuda}
-          >
-            Ayuda
-          </Link>
-        </li>
-        {!checking && user && (
+        {opcionesFiltradas
+          .filter((o) => o.titulo !== "Cerrar sesión")
+          .map((o, i) => (
+            <li className={styles.navbarItem} key={i}>
+              <Link
+                onClick={() => setMenuAbierto(false)}
+                className={styles.navbarLink}
+                to={o.redir}
+              >
+                {o.titulo}
+              </Link>
+            </li>
+          ))}
+        {user && (
           <li className={`${styles.navbarItem} ${styles.navbarBotonLogout}`}>
-            <BotonLogout />
+            <button className={styles.navbarLink} onClick={handleLogout}>
+              Cerrar sesión
+            </button>
           </li>
         )}
       </ul>

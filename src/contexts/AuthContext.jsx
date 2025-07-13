@@ -6,8 +6,11 @@ import { useLocation } from "react-router-dom";
 const AuthCtx = createContext(null);
 
 const fetchUser = async () => {
-  const { data } = await api.get('/auth/me')
-  return data
+  const { data } = await api.get('/auth/me', {
+    headers: { 'Cache-Control': 'no-cache' },
+    params: { _: Date.now() }
+  });
+  return data;
 }
 
 export const AuthProvider = ({ children }) => {
@@ -21,6 +24,11 @@ export const AuthProvider = ({ children }) => {
     staleTime: 0,
     retry: false
   })
+
+  const refetchUser = async () => {
+    await queryClient.invalidateQueries(['user']);
+    return refetch();
+  }
 
   useEffect (() => {
     refetch();
@@ -49,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthCtx.Provider value={{ user, checking: isLoading, logout, login }}>
+    <AuthCtx.Provider value={{ user, checking: isLoading, logout, login, refetchUser }}>
       {children}
     </AuthCtx.Provider>
   );
