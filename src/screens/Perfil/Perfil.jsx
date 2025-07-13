@@ -6,8 +6,7 @@ import Notas from '../../components/Perfil/Notas/Notas'
 import Contacto from '../../components/Perfil/Contacto/Contacto'
 import Materia from '../../components/Perfil/Materia/Materia'
 import InformacionPersonal from '../../components/Perfil/Informacionpersonal/Informacionpersonal'
-import styles from './Perfil.module.css'
-
+import Navbar from '../../components/Perfil/Navbar/Navbar'
 const Perfil = () => {
   // Datos de prueba
 
@@ -50,11 +49,18 @@ const materiasData = [
 // 6. Promedio general
 const promedioGeneral = 8.3;
 
+  const estadisticas = estadisticasData
+  const horarios     = horariosData
+  const contacto     = contactoData
+  const infoPersonal = infoPersonalData
+  const materias     = materiasData
+  const promedio     = promedioGeneral
+
   return (
     <div className='container'>
       {/* Estadísticas */}
-      <div className={styles.containerEstadisticas}>
-        {estadisticasData.map(op => (
+      <div className='container-estadisticas'>
+        {estadisticas.map(op => (
           <Estadistica
             key={op.label}
             icono={op.icono}
@@ -66,7 +72,7 @@ const promedioGeneral = 8.3;
 
       {/* Horarios */}
       <div className='container-horarios'>
-        {horariosData.map((h, i) => (
+        {horarios.map((h, i) => (
           <Horarios
             key={i}
             nombre={h.nombre}
@@ -86,19 +92,19 @@ const promedioGeneral = 8.3;
         <Contacto
           correoElectronico={contactoData.correoElectronico}
           telefono={contactoData.telefono}
-          direccion={contactoData.direccion}
+          direccion={contactoData .direccion}
         />
       </div>
 
       {/* Materias */}
       <div className='container-materias'>
-        {materiasData.map((m, idx) => (
+        {materias.map((m, idx) => (
           <Materia key={idx} materia={m} />
         ))}
       </div>
 
       {/* Notas */}
-      <Notas promedio={promedioGeneral  } />
+      <Notas promedio={promedio} />
     </div>
   )
 }
