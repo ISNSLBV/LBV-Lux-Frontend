@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const { data } = await api.post("/auth/login", { username, password });
-      await refetch();
       return { success: true, roles: data.roles };
     } catch (error) {
       return {
