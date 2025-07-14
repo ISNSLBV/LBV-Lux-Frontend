@@ -1,12 +1,11 @@
-// components/preinscripcion/PreinscripcionForm.jsx
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
+import { useMutation } from '@tanstack/react-query';
+import api from '../../api/axios';
 import SeccionDatosPersonales from './SeccionDatosPersonales';
 import SeccionDatosDomicilio from './SeccionDatosDomicilio';
 import SeccionDatosAcademicos from './SeccionDatosAcademicos';
-
 import { schemaPreinscripcion } from './utils/schemaPreinscripcion';
 import './estilos/PreinscripcionForm.css'
 import Boton from '../Boton/Boton';
@@ -14,6 +13,29 @@ import PreinscripcionEnviada from './PreinscripcionEnviada/PreinscripcionEnviada
 
 const PreinscripcionForm = () => {
   const [resultado, setResultado] = useState(null);
+    const registrarPreinscripcion = useMutation({
+    mutationFn: async () => {
+      const res = await api.get('/preinscripcion');
+      if (!res.ok) {
+        throw new Error((await res.text()) || 'No se pudo enviar la preinscripción.');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      setResultado({
+        exito: true,
+        mensaje:
+          'Preinscripción enviada con éxito. Te enviaremos un email con los pasos a seguir para completar tu inscripción.',
+      });
+    },
+    onError: (err) => {
+      setResultado({
+        exito: false,
+        mensaje:
+          err.message || 'Ocurrió un error inesperado. Intentá nuevamente en unos minutos.',
+      });
+    },
+  });
   const formik = useFormik({
     initialValues: {
       numeroDocumento: '',
@@ -35,30 +57,10 @@ const PreinscripcionForm = () => {
     },
     validationSchema: schemaPreinscripcion, // definido en utils/schemaPreinscripcion.js
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/preinscripcion`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(values)
-        });
-        if (!res.ok) {
-          const msg = await res.text();
-          setResultado({ exito: false, mensaje: msg || 'No se pudo enviar la preinscripción.' });
-          return;
-        }
-        setResultado({
-          exito: true,
-          mensaje: "Preinscripción enviada con éxito. Te enviaremos un email con los pasos a seguir para completar tu inscripción."
-        });
-        resetForm();
-      } catch (err) {
-        setResultado({
-          exito: false,
-          mensaje: 'Ocurrió un error inesperado. Intentá nuevamente en unos minutos.'
-        });
-      } finally {
-        setSubmitting(false);
-      }
+      await registrarPreinscripcion.mutateAsync(values, {
+        onSuccess: () => resetForm(),
+      });
+      setSubmitting(false);
     },
   });
 

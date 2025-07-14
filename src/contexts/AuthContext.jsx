@@ -30,9 +30,9 @@ export const AuthProvider = ({ children }) => {
     return refetch();
   }
 
-  useEffect (() => {
+  useEffect(() => {
     refetch();
-  }, [location.pathname]);
+  }, [location.pathname, refetch]);
 
   const login = async (username, password) => {
     try {
