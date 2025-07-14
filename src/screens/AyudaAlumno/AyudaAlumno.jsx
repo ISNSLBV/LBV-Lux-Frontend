@@ -1,7 +1,6 @@
 import React from 'react'
 import PreguntasFrecuentesDesplegable from "../../components/FAQ/PreguntasFrecuentesDesplegable";
 import estilos from "./AyudaAlumno.module.css";
-import { datosPreguntas } from "../PreguntasFrecuentes/PreguntasFrecuentes";
 
 const AyudaAlumno = () => {
   return (

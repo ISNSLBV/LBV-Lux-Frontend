@@ -4,6 +4,7 @@ import { Calendar } from 'lucide-react';
 
 const DatePickerField = ({ label, name, formik }) => {
   const { values, setFieldValue, handleBlur, errors, touched } = formik;
+  const selectedDate = values[name] ? new Date(values[name]) : null;
   const errorText = touched[name] && errors[name] ? errors[name] : '';
 
   return (

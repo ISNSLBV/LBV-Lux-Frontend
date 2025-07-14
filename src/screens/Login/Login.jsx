@@ -9,7 +9,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { useMutation } from "@tanstack/react-query";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string()
@@ -45,17 +44,11 @@ const SelectorRol = ({ roles, onSelect, onClose }) => {
 const Login = () => {
   const [seleccionandoRol, setSeleccionandoRol] = useState(null);
   const { login, refetchUser } = useAuth();
-  const loginMutation = useMutation(({ username, password }) =>
-    login(username, password)
-  );
-  const seleccionarRol = useMutation((rol) =>
-    api.post("/auth/seleccionar-rol", { rol })
-  );
   const navigate = useNavigate();
 
   const handleSeleccionarRol = async (rol) => {
     try {
-      await seleccionarRol.mutateAsync(rol);
+      await api.post("/auth/seleccionar-rol", { rol });
       await refetchUser();
       navigate("/");
     } catch (err) {
@@ -76,10 +69,10 @@ const Login = () => {
         initialValues={{ username: "", password: "" }}
         validationSchema={loginSchema}
         onSubmit={async (values, helpers) => {
-          const { success, error, roles } = await loginMutation.mutateAsync({
-            username: values.username,
-            password: values.password,
-          });
+          const { success, error, roles } = await login(
+            values.username,
+            values.password
+          );
 
           if (!success) {
             toast.error(error || "Error al iniciar sesión");
@@ -95,11 +88,11 @@ const Login = () => {
 
           if (roles.length === 1) {
             try {
-              await seleccionarRol.mutateAsync(roles[0]);
+              await api.post("/auth/seleccionar-rol", { rol: roles[0] });
               await refetchUser();
-              navigate('/');
+              navigate("/");
             } catch {
-              toast.error('Error seleccionando rol');
+              toast.error("Error seleccionando rol");
             }
           } else {
             setSeleccionandoRol({ roles });

@@ -12,7 +12,7 @@ const PreinscripcionEnviada = ({ exito, mensaje }) => {
         </p>
         {/* Solo mostrar el botón si exito es falso */}
         {!exito && (
-            <button className={styles.volverBtn} onClick={() => window.location.reload()}>
+            <button className={styles.volverBtn} onClick={onVolver}>
             Volver a intentar
             </button>
         )}

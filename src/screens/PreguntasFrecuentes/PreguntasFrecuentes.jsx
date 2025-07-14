@@ -3,7 +3,7 @@ import Header from "../../components/Header/Header";
 import PreguntasFrecuentesDesplegable from "../../components/FAQ/PreguntasFrecuentesDesplegable";
 import estilos from "./PreguntasFrecuentes.module.css";
 
-export const datosPreguntas = [
+const datosPreguntas = [
   {
     titulo: "¿Cómo puedo preinscribirme a una carrera?",
     descripcion:

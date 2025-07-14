@@ -1,9 +1,21 @@
+// components/preinscripcion/SeccionDatosAcademicos.jsx
 import React from "react";
 import SelectField from "../FormCampos/SelectField";
 import InputField from "../FormCampos/InputField";
 
 const SeccionDatosAcademicos = ({ formik }) => {
   const MAX_LENGTH_OBS = 70;
+
+  const carreras = [
+    {
+      id: 1,
+      nombre: "Técnico Analista de Sistemas",
+    },
+    {
+      id: 2,
+      nombre: "Técnico en Redes Informáticas",
+    },
+  ];
 
   return (
     <fieldset className="seccionDatosAcademicos">
