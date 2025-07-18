@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { RutaPublica } from "./components/RutaPublica/RutaPublica";
@@ -7,7 +8,8 @@ import Login from "./screens/Login/Login";
 import Layout from "./screens/Layout/Layout";
 import Preinscripcion from "./screens/Preinscripcion/Preinscripcion";
 import RutaPrivada from "./components/RutaPrivada/RutaPrivada";
-import PanelAdministrador from "./screens/Administrador/PanelAdministrador/PanelAdministrador";
+// import PanelAdministrador from "./screens/Administrador/PanelAdministrador/PanelAdministrador";
+// const Dashboard = lazy(() => import('./screens/Dashboard/Dashboard'))
 import Dashboard from "./screens/Dashboard/Dashboard";
 import Perfil from "./screens/Perfil/Perfil";
 import PreguntasFrecuentes from "./screens/PreguntasFrecuentes/PreguntasFrecuentes";
@@ -21,6 +23,22 @@ import GestionPreinscriptos from "./screens/Administrador/GestionPreinscriptos/G
 import GestionCarreras from "./screens/Administrador/GestionCarreras/GestionCarreras";
 import GestionMaterias from "./screens/Administrador/GestionMaterias/GestionMaterias";
 import GestionPlanes from "./screens/Administrador/GestionPlanes/GestionPlanes";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+
+function delayForDemo(promise, ms = 1500) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      promise().then(resolve);
+    }, ms);
+  });
+}
+
+const PanelAdministrador = lazy(() =>
+  delayForDemo(() =>
+    import("./screens/Administrador/PanelAdministrador/PanelAdministrador")
+  )
+);
 
 function App() {
   return (
@@ -80,7 +98,33 @@ function App() {
                 path="admin"
                 element={<RutaPrivada rol={["Administrador"]} />}
               >
-                <Route index element={<PanelAdministrador />} />
+                <Route
+                  index
+                  element={
+                    <Suspense
+                      fallback={
+                        <Box
+                          sx={{
+                            width: "100vw",
+                            height: "100vh",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            position: "fixed",
+                            top: 0,
+                            left: 0,
+                            zIndex: 2000,
+                            background: "rgba(255,255,255,0.7)", // opcional, para deshabilitar fondo
+                          }}
+                        >
+                          <CircularProgress />
+                        </Box>
+                      }
+                    >
+                      <PanelAdministrador />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="gestion-preinscriptos"
                   element={<GestionPreinscriptos />}
@@ -102,7 +146,10 @@ function App() {
                     element={<GestionMateriasPlanCiclo />}
                   />
                 </Route>
-                <Route path="gestion-profesores" element={<GestionProfesores />} />
+                <Route
+                  path="gestion-profesores"
+                  element={<GestionProfesores />}
+                />
               </Route>
             </Route>
           </Route>
