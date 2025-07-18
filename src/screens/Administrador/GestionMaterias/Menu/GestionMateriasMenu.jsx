@@ -4,8 +4,8 @@ import PanelAdministradorOpcion from '../../../../components/PanelAdministradorO
 const GestionMateriasMenu = () => {
     const opciones = [
         {
-        titulo: 'Gestionar materias base',
-        redir: '/admin/gestion-materias/materias-base'
+        titulo: 'Gestionar materias',
+        redir: '/admin/gestion-materias/materias'
         },
         {
         titulo: 'Gestionar materias por plan de estudio',

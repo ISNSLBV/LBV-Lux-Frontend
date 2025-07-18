@@ -45,22 +45,19 @@ const GestionMateriasGenericas = () => {
   const inactivas = total - activas;
   const datos = [
     {
-      titulo: "Materias Genericas",
+      titulo: "Cantidad de materias",
       icono: <BookOpen />,
       dato: total.toString(),
-      descripcion: "Total de materias genericas registradas",
     },
     {
-      titulo: "Materias Activas",
+      titulo: "Materias activas",
       icono: <Check />,
       dato: activas.toString(),
-      descripcion: "Materias genericas activas actualmente",
     },
     {
-      titulo: "Materias Inactivas",
+      titulo: "Materias inactivas",
       icono: <TriangleAlert />,
       dato: inactivas.toString(),
-      descripcion: "Materias genericas inactivas actualmente",
     },
   ];
 
@@ -111,8 +108,8 @@ const GestionMateriasGenericas = () => {
   return (
     <div className={styles.container}>
       <div className={styles.titulo}>
-        <h1>Materias base</h1>
-        <p>Gestioná las materias base dictadas en el instituto</p>
+        <h1>Materias</h1>
+        <p>Registrá y editá los nombres de las materias dictadas en el instituto</p>
       </div>
       <div className={styles.datos}>
         {datos.map((dato, index) => (
@@ -129,7 +126,7 @@ const GestionMateriasGenericas = () => {
       <div className={styles.barraAcciones}>
         <div className={styles.barraBusqueda}>
           <SearchBar
-            placeholder="Buscar materia generica"
+            placeholder="Buscar materia"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
@@ -145,7 +142,7 @@ const GestionMateriasGenericas = () => {
         </div>
       </div>
       <div className={styles.listaMaterias}>
-        <h2>Catálogo de materias base</h2>
+        <h2>Catálogo de materias</h2>
         <table className={styles.tabla}>
           <thead>
             <tr>
