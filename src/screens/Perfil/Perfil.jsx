@@ -3,6 +3,7 @@ import Estadistica from "../../components/Perfil/Estadistica/Estadistica";
 import { TrendingUp, BookOpen, Award, Clock } from "lucide-react";
 import Navbar from "../../components/Perfil/Navbar/Navbar";
 import styles from "./Perfil.module.css";
+import Informacion from "../../components/Perfil/Informacion/Informacion";
 
 const Perfil = () => {
   // Datos de prueba
@@ -75,15 +76,35 @@ const Perfil = () => {
   // 6. Promedio general
   const promedioGeneral = 8.3;
 
+  const  infodata=[
+    {
+      nombre:"María Elena Rodríguez",
+      matricula:"TEC-2024-0156",
+      condicion:"Regular",
+      carrera:"Técnico Superior en Desarrollo de Software",
+      cuatrimestre:"2do Cuatrimestre 2024"
+    }
+  ]
+
+
   const estadisticas = estadisticasData;
   const horarios = horariosData;
   const contacto = contactoData;
   const informacionPersonal = infoPersonalData;
   const materias = materiasData;
   const promedio = promedioGeneral;
+  const Informacion=infodata;
 
   return (
     <div className={styles.container}>
+      <Informacion
+      nombre={Informacion.nombre}
+      matricula={Informacion.matricula}
+      condicion={Informacion.condicion}
+      carrera={Informacion.carrera}
+      cuatrimestre={Informacion.cuatrimestre}      
+      />
+
       <div className={styles.estadisticas}>
         {estadisticas.map((op) => (
           <Estadistica
