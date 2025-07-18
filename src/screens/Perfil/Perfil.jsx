@@ -76,15 +76,16 @@ const Perfil = () => {
   // 6. Promedio general
   const promedioGeneral = 8.3;
 
-  const  infodata=[
+  const  infodata=
     {
       nombre:"María Elena Rodríguez",
       matricula:"TEC-2024-0156",
       condicion:"Regular",
       carrera:"Técnico Superior en Desarrollo de Software",
-      cuatrimestre:"2do Cuatrimestre 2024"
+      cuatrimestre:"2do Cuatrimestre 2024",
+      progresoAcademico:"50%"
     }
-  ]
+  
 
 
   const estadisticas = estadisticasData;
@@ -93,16 +94,17 @@ const Perfil = () => {
   const informacionPersonal = infoPersonalData;
   const materias = materiasData;
   const promedio = promedioGeneral;
-  const Informacion=infodata;
+  const i=infodata;
 
   return (
     <div className={styles.container}>
       <Informacion
-      nombre={Informacion.nombre}
-      matricula={Informacion.matricula}
-      condicion={Informacion.condicion}
-      carrera={Informacion.carrera}
-      cuatrimestre={Informacion.cuatrimestre}      
+        nombre={i.nombre}
+        matricula={i.matricula}
+        condicion={i.condicion}
+        carrera={i.carrera}
+        cuatrimestre={i.cuatrimestre} 
+        progresoAcademico={i.progresoAcademico}     
       />
 
       <div className={styles.estadisticas}>
