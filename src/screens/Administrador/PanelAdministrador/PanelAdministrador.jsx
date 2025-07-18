@@ -24,6 +24,18 @@ const PanelAdministrador = () => {
       titulo: 'Gestionar profesores',
       redir: 'gestion-profesores'
     },
+     {
+      titulo: "Gestionar alumnos",
+      redir: "gestion-alumnos",
+    },
+    {
+      titulo: "Ver estadísticas",
+      redir: "ver-estadisticas",
+    },
+    {
+      titulo: "Configuración del sistema",
+      redir: "configuracion-sistema",
+    },
   ]
   
   return (
@@ -31,7 +43,11 @@ const PanelAdministrador = () => {
       <h1>Panel de Administrador</h1>
       <div className={styles.panel}>
         {opciones.map((opcion, index) => (
-          <PanelAdministradorOpcion key={index} {...opcion} />
+          <PanelAdministradorOpcion key={index}             
+            titulo={opcion.titulo}
+            descripcion={opcion.descripcion}
+            conteo={opcion.conteo} 
+            {...opcion} />
         ))}
       </div>
     </div>
