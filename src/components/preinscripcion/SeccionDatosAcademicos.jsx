@@ -1,4 +1,3 @@
-// components/preinscripcion/SeccionDatosAcademicos.jsx
 import React from "react";
 import SelectField from "../FormCampos/SelectField";
 import InputField from "../FormCampos/InputField";

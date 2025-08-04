@@ -1,7 +1,7 @@
 .titulo {
-  text-align: center;
   font-size: 32px;
-  color: var(--color-accent);
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {

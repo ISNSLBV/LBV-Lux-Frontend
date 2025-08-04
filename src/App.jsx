@@ -5,23 +5,63 @@ import { RutaPublica } from "./components/RutaPublica/RutaPublica";
 import { ToastContainer } from "react-toastify";
 import { RutaPublicaSinRedireccion } from "./components/RutaPublica/RutaPublicaSinRedireccion";
 import Login from "./screens/Login/Login";
-const Layout = lazy(() => import('./screens/Layout/Layout'))
-const RutaPrivada = lazy(() => import('./components/RutaPrivada/RutaPrivada'))
-const Dashboard = lazy(() => import('./screens/Dashboard/Dashboard'))
-const Preinscripcion = lazy(() => import('./screens/Preinscripcion/Preinscripcion'))
-const Perfil = lazy(() => import('./screens/Perfil/Perfil'))
-const PreguntasFrecuentes = lazy(() => import('./screens/PreguntasFrecuentes/PreguntasFrecuentes'))
-const GestionProfesores = lazy(() => import('./screens/Administrador/GestionProfesores/GestionProfesores'))
-const AyudaAlumno = lazy(() => import('./screens/AyudaAlumno/AyudaAlumno'))
-const GestionMateriasMenu = lazy(() => import('./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu'))
-const GestionMateriasGenericas = lazy(() => import('./screens/Administrador/GestionMaterias/MateriasGenericas/GestionMateriasGenericas'))
-const GestionMateriasPlan = lazy(() => import('./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan'))
-const GestionMateriasPlanCiclo = lazy(() => import('./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo'))
-const GestionPreinscriptos = lazy(() => import('./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos'))
-const GestionCarreras = lazy(() => import('./screens/Administrador/GestionCarreras/GestionCarreras'))
-const GestionMaterias = lazy(() => import('./screens/Administrador/GestionMaterias/GestionMaterias'))
-const GestionPlanes = lazy(() => import('./screens/Administrador/GestionPlanes/GestionPlanes'))
-const PanelAdministrador = lazy(() => import('./screens/Administrador/PanelAdministrador/PanelAdministrador'))
+const Layout = lazy(() => import("./screens/Layout/Layout"));
+const RutaPrivada = lazy(() => import("./components/RutaPrivada/RutaPrivada"));
+const Dashboard = lazy(() => import("./screens/Dashboard/Dashboard"));
+const Preinscripcion = lazy(() =>
+  import("./screens/Preinscripcion/Preinscripcion")
+);
+const Perfil = lazy(() => import("./screens/Perfil/Perfil"));
+const PreguntasFrecuentes = lazy(() =>
+  import("./screens/PreguntasFrecuentes/PreguntasFrecuentes")
+);
+const GestionProfesores = lazy(() =>
+  import("./screens/Administrador/GestionProfesores/GestionProfesores")
+);
+const AyudaAlumno = lazy(() => import("./screens/AyudaAlumno/AyudaAlumno"));
+const GestionMateriasMenu = lazy(() =>
+  import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu")
+);
+const GestionMateriasBase = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasBase/GestionMateriasBase"
+  )
+);
+const GestionMateriasPlan = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan"
+  )
+);
+const GestionMateriasPlanCiclo = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo"
+  )
+);
+const GestionPreinscriptos = lazy(() =>
+  import("./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos")
+);
+const GestionCarreras = lazy(() =>
+  import("./screens/Administrador/GestionCarreras/GestionCarreras")
+);
+const GestionMaterias = lazy(() =>
+  import("./screens/Administrador/GestionMaterias/GestionMaterias")
+);
+const GestionPlanes = lazy(() =>
+  import("./screens/Administrador/GestionPlanes/GestionPlanes")
+);
+const PanelAdministrador = lazy(() =>
+  import("./screens/Administrador/PanelAdministrador/PanelAdministrador")
+);
+const GestionCorrelativas = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/Correlativas/GestionCorrelativas"
+  )
+);
+const AdministrarMateria = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/AdministrarMateria/AdministrarMateria"
+  )
+);
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -88,10 +128,10 @@ function App() {
               <Route element={<Layout />}>
                 {/* ---- Ruta usuario ---- */}
                 <Route index element={<Dashboard />} />
-                <Route path="mi-perfil" element={<Perfil />} />
                 {/* ---- Ruta Alumno ---- */}
                 <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
                   <Route path="ayuda" element={<AyudaAlumno />} />
+                  <Route path="mi-perfil" element={<Perfil />} />
                 </Route>
                 {/* ---- Ruta Profesor ---- */}
                 <Route
@@ -103,10 +143,7 @@ function App() {
                   path="admin"
                   element={<RutaPrivada rol={["Administrador"]} />}
                 >
-                  <Route
-                    index
-                    element={<PanelAdministrador />}
-                  />
+                  <Route index element={<PanelAdministrador />} />
                   <Route
                     path="gestion-preinscriptos"
                     element={<GestionPreinscriptos />}
@@ -118,10 +155,7 @@ function App() {
                   <Route path="gestion-planes" element={<GestionPlanes />} />
                   <Route path="gestion-materias" element={<GestionMaterias />}>
                     <Route index element={<GestionMateriasMenu />} />
-                    <Route
-                      path="materias"
-                      element={<GestionMateriasGenericas />}
-                    />
+                    <Route path="materias" element={<GestionMateriasBase />} />
                     <Route
                       path="materias-por-plan"
                       element={<GestionMateriasPlan />}
@@ -129,12 +163,22 @@ function App() {
                     <Route
                       path="materias-por-ciclo"
                       element={<GestionMateriasPlanCiclo />}
+                    >
+                      <Route
+                        path=":idMateria"
+                        element={<AdministrarMateria />}
+                      />
+                    </Route>
+                    <Route
+                      path="correlativas"
+                      element={<GestionCorrelativas />}
                     />
                   </Route>
                   <Route
                     path="gestion-profesores"
                     element={<GestionProfesores />}
                   />
+                  <Route path="perfil/:id" element={<Perfil />} />
                 </Route>
               </Route>
             </Route>

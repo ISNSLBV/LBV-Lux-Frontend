@@ -37,13 +37,6 @@
     gap: 10px;
 }
 
-.datos {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
 .barraAcciones {
     display: flex;
     gap: 16px;
@@ -70,11 +63,6 @@
 }
 
 @media (max-width: 768px) {
-    .datos {
-        flex-direction: column;
-        align-items: center;
-    }
-
     .barraAcciones {
         flex-direction: column;
     }

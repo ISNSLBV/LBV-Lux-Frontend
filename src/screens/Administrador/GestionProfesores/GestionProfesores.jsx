@@ -118,6 +118,7 @@ export default function GestionProfesores() {
           </tbody>
         </table>
       </div>
+      
       {registro && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>

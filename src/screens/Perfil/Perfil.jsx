@@ -1,127 +1,81 @@
 import React from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import api from "../../api/axios";
 import Estadistica from "../../components/Perfil/Estadistica/Estadistica";
 import { TrendingUp, BookOpen, Award, Clock } from "lucide-react";
 import Navbar from "../../components/Perfil/Navbar/Navbar";
-import styles from "./Perfil.module.css";
 import Informacion from "../../components/Perfil/Informacion/Informacion";
+import styles from "./Perfil.module.css";
+
+const fetchPerfil = async ({ queryKey }) => {
+  const [, id] = queryKey;
+  const url = id ? `/usuario/perfil/${id}` : "/usuario/perfil";
+  const { data } = await api.get(url);
+  return data;
+};
+
+const iconMap = {
+  promedio: TrendingUp,
+  materias: BookOpen,
+  aprobadas: Award,
+  asistencia: Clock,
+};
 
 const Perfil = () => {
-  // Datos de prueba
+  const { id } = useParams();
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["perfil", id],
+    queryFn: fetchPerfil,
+    refetchOnWindowFocus: false,
+  });
+  if (isLoading) {
+    return <div className={styles.loader}>Cargando perfil…</div>;
+  }
 
-  // 1. Estadísticas
-  const estadisticasData = [
-    { icono: <TrendingUp size={24} />, label: "Promedio", valor: "8.5" },
-    { icono: <BookOpen size={24} />, label: "Materias", valor: "5" },
-    { icono: <Award size={24} />, label: "Aprobadas", valor: "15/30" },
-    { icono: <Clock size={24} />, label: "Asistencia", valor: "94%" },
-  ];
+  if (isError) {
+    return (
+      <div className={styles.error}>
+        Error al cargar perfil: {error.message}
+      </div>
+    );
+  }
 
-  // 2. Horarios (por cada materia)
-  const horariosData = [
-    {
-      nombre: "Desarrollo Web Frontend",
-      profesor: "Ing. Rodríguez, Carlos",
-      horario: "Lun-Mié 18:00–20:00",
-    },
-    {
-      nombre: "Metodologías Ágiles",
-      profesor: "Lic. Pérez, María",
-      horario: "Mar-Jue 14:00–16:00",
-    },
-    {
-      nombre: "Bases de Datos",
-      profesor: "Ing. López, Ana",
-      horario: "Vie 10:00–12:00",
-    },
-  ];
-
-  // 3. Contacto
-  const contactoData = {
-    correoElectronico: "hector.guzman@lujanbuenviaje.edu.ar",
-    telefono: "+54 11 1234-5678",
-    direccion: "Ruta 8 Nº 6725, Loma Hermosa, San Martín",
-  };
-
-  // 4. Información personal
-  const infoPersonalData = {
-    fechaNacimiento: "1998-04-12",
-    dni: "30.123.456",
-    ingreso: "2021",
-  };
-
-  // 5. Materias (estado, nota opcional)
-  const materiasData = [
-    {
-      nombre: "Lógica Computacional",
-      profesor: "Dr. Gómez, Luis",
-      horario: "Mar 08:00–10:00",
-      estado: "Aprobada",
-      nota: 9,
-    },
-    {
-      nombre: "Técnicas de Programación",
-      profesor: "Ing. Díaz, Marta",
-      horario: "Jue 16:00–18:00",
-      estado: "Inactiva",
-    },
-    {
-      nombre: "Sistemas Operativos",
-      profesor: "Ing. Silva, Juan",
-      horario: "Mié 12:00–14:00",
-      estado: "Activa",
-      nota: 7.5,
-    },
-  ];
-
-  // 6. Promedio general
-  const promedioGeneral = 8.3;
-
-  const  infodata=
-    {
-      nombre:"María Elena Rodríguez",
-      matricula:"TEC-2024-0156",
-      condicion:"Regular",
-      carrera:"Técnico Superior en Desarrollo de Software",
-      cuatrimestre:"2do Cuatrimestre 2024",
-      progresoAcademico:"50%"
-    }
-  
-
-
-  const estadisticas = estadisticasData;
-  const horarios = horariosData;
-  const contacto = contactoData;
-  const informacionPersonal = infoPersonalData;
-  const materias = materiasData;
-  const promedio = promedioGeneral;
-  const i=infodata;
+  const {
+    informacionPersonal,
+    estadisticas,
+    horarios,
+    materias,
+    promedioGeneral,
+  } = data;
 
   return (
     <div className={styles.container}>
       <Informacion
-        nombre={i.nombre}
-        matricula={i.matricula}
-        condicion={i.condicion}
-        carrera={i.carrera}
-        cuatrimestre={i.cuatrimestre} 
-        progresoAcademico={i.progresoAcademico}     
+        nombre={informacionPersonal.nombre}
+        condicion={informacionPersonal.condicion}
+        carrera={informacionPersonal.carrera}
       />
 
       <div className={styles.estadisticas}>
-        {estadisticas.map((op) => (
-          <Estadistica
-            key={op.label}
-            icono={op.icono}
-            label={op.label}
-            valor={op.valor}
-          />
-        ))}
+        {estadisticas.map(({ iconoKey, valor }) => {
+          const Icon = iconMap[iconoKey] || TrendingUp;
+          const label = iconoKey.charAt(0).toUpperCase() + iconoKey.slice(1);
+          return (
+            <Estadistica
+              key={iconoKey}
+              icono={<Icon size={24} />}
+              label={label}
+              valor={valor}
+            />
+          );
+        })}
       </div>
 
       <Navbar
         informacionPersonal={informacionPersonal}
         materias={materias}
-        promedioNotas={promedio}
+        promedioNotas={promedioGeneral}
         horarios={horarios}
       />
     </div>

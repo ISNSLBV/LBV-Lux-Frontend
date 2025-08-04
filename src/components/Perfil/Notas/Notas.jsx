@@ -7,7 +7,7 @@ const Notas = ({ promedio }) => {
       <h2 className={styles.titulo}>Resumen de Calificaciones</h2>
 
       <div className={styles.promedioContainer}>
-        <p className={styles.promedio}>{promedio.toFixed(1)}</p>
+        <p className={styles.promedio}>{promedio}</p>
         <span className={styles.promedioLabel}>Promedio General</span>
       </div>
     </div>

@@ -1,10 +1,9 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
-import styles from './PanelAdministradorOpcion.module.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import styles from "./PanelAdministradorOpcion.module.css";
 import {
   ArrowRight,
   UserPlus,
-  Award,
   ClipboardList,
   BookOpen,
   Users,
@@ -13,7 +12,6 @@ import {
   Settings,
   GraduationCap,
 } from "lucide-react";
-
 
 const iconMap = {
   "Gestionar preinscriptos": UserPlus,
@@ -27,18 +25,22 @@ const iconMap = {
 };
 
 const PanelAdministradorOpcion = ({ titulo, descripcion, conteo, redir }) => {
-  const IconComponent=iconMap[titulo]
+  const IconComponent = iconMap[titulo];
   return (
-    <Link to={redir} style={{ textDecoration: 'none', color: 'white' }} className={styles.opcion}>
+    <Link
+      to={redir}
+      style={{ textDecoration: "none", color: "white" }}
+      className={styles.opcion}
+    >
       <div className={styles.panel}>
-         {IconComponent && <IconComponent size={32} className={styles.icon} />}
-          <h2>{titulo}</h2>
-          <div className={styles.accion}>
-            <ArrowRight size={32} strokeWidth={3} />
-          </div>
+        <div className={styles.accion}>
+          {IconComponent && <IconComponent size={32} className={styles.icon} />}
+          <ArrowRight size={32} strokeWidth={3} />
+        </div>
+        <h2>{titulo}</h2>
       </div>
     </Link>
-  )
-}
+  );
+};
 
-export default PanelAdministradorOpcion
+export default PanelAdministradorOpcion;

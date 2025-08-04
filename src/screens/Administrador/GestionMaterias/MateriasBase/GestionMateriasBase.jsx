@@ -1,6 +1,6 @@
 import React from "react";
 import DatoCard from "../../../../components/Dato/DatoCard";
-import styles from "./GestionMateriasGenericas.module.css";
+import styles from "./GestionMateriasBase.module.css";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import {
   Plus,
@@ -15,7 +15,8 @@ import { useState } from "react";
 import api from "../../../../api/axios";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import CircularProgress from "@mui/material/CircularProgress";
+import TablaGestion from "../../../../components/Gestion/Tabla/TablaGestion";
+import CardGestion from "../../../../components/Gestion/Card/CardGestion";
 
 const fetchMaterias = async () => {
   const { data } = await api.get("/admin/materia/listar-materias");
@@ -40,30 +41,23 @@ const GestionMateriasGenericas = () => {
     queryFn: fetchMaterias,
   });
 
-  const total = materias.length;
-  const activas = materias.filter((m) => m.activa).length;
-  const inactivas = total - activas;
-  const datos = [
+  const campos = [
+    { label: "ID", accessor: (m) => m.id },
+    { label: "Nombre", accessor: (m) => m.nombre },
+    { label: "Estado", accessor: (m) => (m.activa ? "En uso" : "Sin asignar") },
     {
-      titulo: "Cantidad de materias",
-      icono: <BookOpen />,
-      dato: total.toString(),
+      label: "Plan(es) de estudio",
+      accessor: (m) => m.plan_estudio.map((p) => p.nombre).join(", "),
     },
     {
-      titulo: "Materias activas",
-      icono: <Check />,
-      dato: activas.toString(),
-    },
-    {
-      titulo: "Materias inactivas",
-      icono: <TriangleAlert />,
-      dato: inactivas.toString(),
+      label: "Carreras",
+      accessor: (m) => m.carrera.map((c) => c.nombre).join(", "),
     },
   ];
 
   const registrarMateria = useMutation({
     mutationFn: (nombre) =>
-      api.post("/api/admin/materia/registrar-materia", { nombre }),
+      api.post("/admin/materia/registrar-materia", { nombre }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["materiasGenericas"] });
       toast.success("Materia registrada");
@@ -80,8 +74,7 @@ const GestionMateriasGenericas = () => {
   };
 
   const editarMateria = useMutation({
-    mutationFn: ({ id, nombre }) =>
-      api.put(`/api/admin/materia/${id}`, { nombre }),
+    mutationFn: ({ id, nombre }) => api.put(`/admin/materia/${id}`, { nombre }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["materiasGenericas"] });
       toast.success("Materia editada correctamente");
@@ -109,19 +102,9 @@ const GestionMateriasGenericas = () => {
     <div className={styles.container}>
       <div className={styles.titulo}>
         <h1>Materias</h1>
-        <p>Registrá y editá los nombres de las materias dictadas en el instituto</p>
-      </div>
-      <div className={styles.datos}>
-        {datos.map((dato, index) => (
-          <DatoCard
-            key={index}
-            titulo={dato.titulo}
-            icono={dato.icono}
-            dato={dato.dato}
-            descripcion={dato.descripcion}
-            loading={isLoading}
-          />
-        ))}
+        <p>
+          Registrá y editá los nombres de las materias dictadas en el instituto
+        </p>
       </div>
       <div className={styles.barraAcciones}>
         <div className={styles.barraBusqueda}>
@@ -143,117 +126,41 @@ const GestionMateriasGenericas = () => {
       </div>
       <div className={styles.listaMaterias}>
         <h2>Catálogo de materias</h2>
-        <table className={styles.tabla}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Estado</th>
-              <th>Plan(es) de estudio</th>
-              <th>Carrera(s)</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={6} style={{ textAlign: "center", padding: 32 }}>
-                  <CircularProgress color="inherit" />
-                </td>
-              </tr>
-            ) : materiasFiltradas.length === 0 ? (
-              <tr>
-                <td colSpan={6} style={{ textAlign: "center", padding: 32 }}>
-                  No se encontraron materias.
-                </td>
-              </tr>
-            ) : (
-              materiasFiltradas.map((m) => (
-                <tr key={m.id} className={styles.tablaFila}>
-                  <td>{m.id}</td>
-                  <td>{m.nombre}</td>
-                  <td>{m.activa ? "Activa" : "Inactiva"}</td>
-                  <td>{m.plan_estudio.map((p) => p.nombre).join(", ")}</td>
-                  <td>{m.carrera.map((c) => c.nombre).join(", ")}</td>
-                  <td>
-                    <Boton
-                      variant="onlyIcon"
-                      icono={<SquarePen />}
-                      onClick={() => {
-                        setMateriaEditada({ id: m.id, nombre: m.nombre });
-                        setEdicion(true);
-                      }}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-        <div className={styles.cards}>
-          {isLoading ? (
-            <div style={{ textAlign: "center" }}>
-              <CircularProgress color="inherit" />
-            </div>
-          ) : materiasFiltradas.length === 0 ? (
-            <div>
-              <p>No se encontraron materias.</p>
-            </div>
-          ) : (
-            materiasFiltradas.map((m) => (
-              <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <div className={styles.cardHeaderContent}>
-                    <div className={styles.cardHeaderTitle}>
-                      <h3>{m.nombre}</h3>
-                      <p>ID: {m.id}</p>
-                    </div>
-                    <div className={styles.cardHeaderStatus}>
-                      {m.activa ? (
-                        <>
-                          <Check /> En uso
-                        </>
-                      ) : (
-                        <>
-                          <TriangleAlert /> Sin asignar
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.cardContent}>
-                  <div>
-                    <div>
-                      <h4>Plan(es) de estudio</h4>
-                      <p>{m.plan_estudio.map((p) => p.nombre).join(", ")}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <h4>Carreras</h4>
-                    <div>
-                      {m.carrera.map((c) => (
-                        <div>{c.nombre}</div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className={styles.cardActions}>
-                    <Boton
-                      fullWidth
-                      icono={<SquarePen />}
-                      variant="primary"
-                      onClick={() => {
-                        setMateriaEditada({ id: m.id, nombre: m.nombre });
-                        setEdicion(true);
-                      }}
-                    >
-                      Editar
-                    </Boton>
-                  </div>
-                </div>
-              </div>
-            ))
+        <TablaGestion
+          columnas={campos}
+          data={materiasFiltradas}
+          isLoading={isLoading}
+          vacioTexto="No se encontraron materias."
+          renderAcciones={(m) => (
+            <Boton
+              variant="onlyIcon"
+              icono={<SquarePen />}
+              onClick={() => {
+                setMateriaEditada({ id: m.id, nombre: m.nombre });
+                setEdicion(true);
+              }}
+            />
           )}
-        </div>
+        />
+        <CardGestion
+          data={materiasFiltradas}
+          campos={campos}
+          isLoading={isLoading}
+          vacioTexto="No se encontraron materias."
+          renderAcciones={(materia) => (
+            <Boton
+              fullWidth
+              icono={<SquarePen />}
+              variant="primary"
+              onClick={() => {
+                setMateriaEditada({ id: materia.id, nombre: materia.nombre });
+                setEdicion(true);
+              }}
+            >
+              Editar
+            </Boton>
+          )}
+        />
       </div>
 
       {/* Modal de registro */}
@@ -270,7 +177,7 @@ const GestionMateriasGenericas = () => {
               </button>
             </div>
             <form onSubmit={handleRegistrar}>
-              <div className="mb-4">
+              <div className={styles.formData}>
                 <label htmlFor="nombre" className="block mb-1">
                   Nombre
                 </label>

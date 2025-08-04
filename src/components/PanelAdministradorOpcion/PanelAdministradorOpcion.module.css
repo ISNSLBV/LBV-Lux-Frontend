@@ -1,58 +1,52 @@
 .opcion {
-    display: flex;
-    justify-content: center;
-    flex: 1 1 45%;
-    max-width: 45%;
-    min-width: 320px;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: inherit;
+  display: flex;
+  justify-content: center;
+  flex: 1 1 50%;
+  max-width: calc(50% - 10px);
+  min-width: 320px;
+  text-decoration: none;
 }
 
 .panel {
-    font: size 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(255,255,255,0.1);
-    background-color: rgba(255,255,255,0.05);
-    width: 550px;
-    padding: 16px;
-    flex-grow: 1;
-    padding: 16px;
-    transition: background-color 0.3s ease, border-color 0.3s ease,
-    transform 0.2s ease;
-    color: white;
-    min-height: 150px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  gap: 8px;
+  flex-grow: 1;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  color: white;
+  min-height: 120px;
 }
 
-.panel:hover{
-    background-color: rgba (255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    transform: translateY(-3px);
-
-}   
+.panel:hover {
+  background-color: rgba (255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
 
 h2 {
-    margin: 0;
+  margin: 0;
 }
 
 .accion {
-    height: 32px;
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (max-width: 768px) {
-    .panel {
-        width: 85vw;
-    }
+  .panel {
+    width: 85vw;
+  }
 }
 
 @media (max-width: 768px) {
-    .opcion {
-        flex-basis: 100%;
-        max-width: 100%;
-    }
+  .opcion {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
 }

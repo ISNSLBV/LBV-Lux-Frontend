@@ -4,14 +4,7 @@ import styles from "./GestionCarreras.module.css";
 import DatoCard from "../../../components/Dato/DatoCard";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import Boton from "../../../components/Boton/Boton";
-import {
-  Plus,
-  GraduationCap,
-  TrendingUp,
-  BookOpen,
-  SquarePen,
-  X,
-} from "lucide-react";
+import { Plus, SquarePen, X } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -60,26 +53,6 @@ const GestionCarreras = () => {
     queryFn: fetchCarreras,
   });
 
-  const total = carreras.length;
-
-  const datos = [
-    {
-      titulo: "Total de carreras",
-      icono: <GraduationCap />,
-      dato: total.toString(),
-    },
-    {
-      titulo: "Estudiantes activos",
-      icono: <TrendingUp />,
-      dato: "0",
-    },
-    {
-      titulo: "Total de egresados",
-      icono: <BookOpen />,
-      dato: "0",
-    },
-  ];
-
   const registrarCarrera = useMutation({
     mutationFn: ({ nombre, duracion }) =>
       api.post("/admin/carrera/registrar-carrera", { nombre, duracion }),
@@ -110,18 +83,6 @@ const GestionCarreras = () => {
       <div className={styles.titulo}>
         <h1>Carreras</h1>
         <p>Gestioná las carreras del instituto</p>
-      </div>
-      <div className={styles.datos}>
-        {datos.map((dato, index) => (
-          <DatoCard
-            key={index}
-            titulo={dato.titulo}
-            icono={dato.icono}
-            dato={dato.dato}
-            descripcion={dato.descripcion}
-            loading={isLoading}
-          />
-        ))}
       </div>
       <div className={styles.barraAcciones}>
         <div className={styles.barraBusqueda}>
@@ -276,18 +237,15 @@ const GestionCarreras = () => {
               {({ isSubmitting, errors, touched }) => (
                 <Form>
                   <div>
-                    <label htmlFor="nombre">
-                      Nombre
-                    </label>
+                    <label htmlFor="nombre">Nombre</label>
                     <Field
                       id="nombre"
                       name="nombre"
                       type="text"
                       className={
-                        (errors.nombre && touched.nombre
-                          ? 'formikFieldError'
-                          : 'formikField'
-                        )
+                        errors.nombre && touched.nombre
+                          ? "formikFieldError"
+                          : "formikField"
                       }
                     />
                     <ErrorMessage
@@ -297,18 +255,15 @@ const GestionCarreras = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="duracion">
-                      Duración (en años)
-                    </label>
+                    <label htmlFor="duracion">Duración (en años)</label>
                     <Field
                       id="duracion"
                       name="duracion"
                       type="text"
                       className={
-                        (errors.duracion && touched.duracion
-                          ? 'formikFieldError'
-                          : 'formikField'
-                        )
+                        errors.duracion && touched.duracion
+                          ? "formikFieldError"
+                          : "formikField"
                       }
                     />
                     <ErrorMessage
@@ -369,18 +324,15 @@ const GestionCarreras = () => {
               {({ isSubmitting, errors, touched }) => (
                 <Form className={styles.modalForm}>
                   <div>
-                    <label htmlFor="nombre">
-                      Nombre
-                    </label>
+                    <label htmlFor="nombre">Nombre</label>
                     <Field
                       id="nombre"
                       name="nombre"
                       type="text"
                       className={
-                        (errors.nombre && touched.nombre
+                        errors.nombre && touched.nombre
                           ? "formikFieldError"
                           : "formikField"
-                        )
                       }
                       required
                     />
@@ -391,18 +343,15 @@ const GestionCarreras = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="duracion">
-                      Duración (en años)
-                    </label>
+                    <label htmlFor="duracion">Duración (en años)</label>
                     <Field
                       id="duracion"
                       name="duracion"
                       type="number"
                       className={
-                        (errors.duracion && touched.duracion
+                        errors.duracion && touched.duracion
                           ? "formikFieldError"
                           : "formikField"
-                        )
                       }
                       required
                     />

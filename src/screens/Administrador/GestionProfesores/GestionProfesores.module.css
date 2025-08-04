@@ -20,7 +20,7 @@
   min-width: 0;
 }
 
-.listaCarreras {
+.listaProfesores {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -127,7 +127,8 @@
   gap: 8px;
   margin-bottom: 20px;
 }
-.tab, .tabActivo {
+.tab,
+.tabActivo {
   padding: 8px 16px;
   border: none;
   background: #f2f2f2;

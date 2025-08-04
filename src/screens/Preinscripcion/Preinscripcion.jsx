@@ -45,7 +45,6 @@ const Preinscripcion = () => {
     <>
         <Header />
         <main className={styles.container}>
-          <h1>Formulario de Preinscripción</h1>
           <PreinscripcionForm />
         </main>
     </>

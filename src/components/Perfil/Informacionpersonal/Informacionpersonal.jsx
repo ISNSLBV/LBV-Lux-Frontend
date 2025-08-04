@@ -12,15 +12,15 @@ const InformacionPersonal = ({ fechaNacimiento, dni, ingreso }) => {
         <div className={styles.infoContainer}>
             <div className={styles.info}>
                 <span>Fecha de nacimiento:</span>
-                <span style={{ fontWeight: '700' }}>{fechaNacimiento}</span>
+                <span><strong>{fechaNacimiento}</strong></span>
             </div>
             <div className={styles.info}>
                 <span>DNI:</span>
-                <span style={{ fontWeight: '700' }}>{dni}</span>
+                <span><strong>{dni}</strong></span>
             </div>
             <div className={styles.info}>
                 <span>Fecha de ingreso:</span>
-                <span style={{ fontWeight: '700' }}>{ingreso}</span>
+                <span><strong>{ingreso}</strong></span>
             </div>
         </div>
     </div>

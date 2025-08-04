@@ -8,43 +8,12 @@
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.05);
+  gap: 12px;
 }
 
-.card h2 {
-  text-align: center;
-  color: #ffffff;
-  margin-bottom: 20px;
-}
-
-.info p {
-  margin: 10px 0;
-  font-size: 16px;
-  color: #ffffff;
-}
-
-.info strong {
-  color: #ffffff;
-}
-
-/* ---- Barrita de progreso ---- */
-.progressContainer {
-  width: 100%;
-  background-color: rgba(255,255,255,0.2);
-  border-radius: 6px;
-  overflow: hidden;
-  height: 12px;
-  margin-top: 4px;
-}
-
-.progressFill {
-  height: 100%;
-  background-color: #225599; /* usa tu variable primaria */
-  transition: width 0.4s ease-in-out;
-}
-
-/* Adaptativo */
-@media (max-width: 768px) {
-  .card {
-    max-width: 100%;
-  }
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 }

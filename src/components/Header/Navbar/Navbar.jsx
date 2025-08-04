@@ -22,7 +22,7 @@ const Navbar = () => {
   const opciones = [
     {
       titulo: "Panel de Administrador",
-      redir: "admin",
+      redir: "/admin",
       rol: "Administrador",
     },
     {
@@ -32,10 +32,16 @@ const Navbar = () => {
     {
       titulo: "Ayuda",
       redir: "/ayuda",
+      rol: 'Administrador'
     },
     {
       titulo: "Cerrar sesión",
       redir: null,
+    },
+    {
+      titulo: 'Perfil',
+      redir: '/alumno/mi-perfil',
+      rol: 'Alumno'
     },
   ];
 

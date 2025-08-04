@@ -46,7 +46,7 @@ const SeccionDatosPersonales = ({ formik }) => {
             options={[
               { value: 'M', label: 'Masculino' },
               { value: 'F', label: 'Femenino' },
-              { value: 'X', label: 'No binario' },
+              { value: 'X', label: 'No binario (X)' },
             ]}
             formik={formik}
           />

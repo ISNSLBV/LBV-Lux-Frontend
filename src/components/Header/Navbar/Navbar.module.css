@@ -87,7 +87,8 @@
   }
 
   .navbarItem {
-    width: 93%;
+    width: 100%;
+    padding: 0 24px;
   }
 
   .logo, .logoLux {
@@ -102,11 +103,12 @@
   }
 
   .mobileMenuControl {
-    width: 93%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 90px;
+    padding: 0 24px;
   }
 
   .navbarItem a {

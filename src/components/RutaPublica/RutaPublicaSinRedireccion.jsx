@@ -2,7 +2,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import LinearProgress from "@mui/material/LinearProgress";
 
 export const RutaPublicaSinRedireccion = ({ children }) => {
-  const { checking } = useAuth(); // Solo necesitamos 'checking', no 'user' aquí
+  const { checking } = useAuth();
 
   if (checking)
     return (

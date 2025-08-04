@@ -5,12 +5,6 @@
   margin-bottom: 32px;
 }
 
-.datos {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
 .barraAcciones {
   display: flex;
   gap: 16px;
@@ -196,11 +190,6 @@
 }
 
 @media (max-width: 768px) {
-  .datos {
-    flex-direction: column;
-    align-items: center;
-  }
-
   .barraAcciones {
     flex-direction: column;
   }

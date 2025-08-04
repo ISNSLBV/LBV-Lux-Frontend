@@ -1,74 +1,74 @@
 .card {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 16px;
 }
 
 .info {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: space-between;
 }
 
 .estado {
-    border-radius: 9999px;
-    padding: 5px 10px;
-    font-weight: 600;
+  border-radius: 9999px;
+  padding: 5px 10px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .datosGenerales {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 24px;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 24px;
 }
 
 .titulo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.datosPersonales, .datosContacto, .datosAcademicos {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 8px;
+.datosPersonales,
+.datosContacto,
+.datosAcademicos {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
 }
 
-.datosPersonales .titulo, .datosContacto .titulo, .datosAcademicos .titulo {
-    margin-bottom: 5px;
+.datosPersonales .titulo,
+.datosContacto .titulo,
+.datosAcademicos .titulo {
+  margin-bottom: 5px;
 }
 
 .observaciones {
-    display: block;
-    overflow-wrap: break-word;
-    max-width: 350px;
-    margin: 0;
+  display: block;
+  overflow-wrap: break-word;
+  max-width: 350px;
+  margin: 0;
 }
 
 .acciones {
-    display: flex;
-    justify-content: end;
-    gap: 10px;
+  display: flex;
+  justify-content: end;
+  gap: 10px;
 }
 
 @media (max-width: 768px) {
-    .card {
-        flex-direction: column;
-        padding: 15px 10px;
-    }
+  .datosGenerales {
+    flex-direction: column;
+  }
 
-    .datosGenerales {
-        flex-direction: column;
-    }
-
-    .acciones {
-        flex-direction: column;
-    }
+  .acciones {
+    flex-direction: column;
+  }
 }

@@ -1,13 +1,11 @@
-// components/preinscripcion/SeccionDatosDomicilio.jsx
-import React from 'react';
-import InputField from '../FormCampos/InputField';
+import React from "react";
+import InputField from "../FormCampos/InputField";
 
 const SeccionDatosDomicilio = ({ formik }) => {
   return (
     <fieldset className="seccionDatosDomicilio">
       <legend>Datos de Domicilio</legend>
 
-      {/* Calle + Altura */}
       <div className="campoFila">
         <div className="campoColumna">
           <InputField
@@ -27,7 +25,6 @@ const SeccionDatosDomicilio = ({ formik }) => {
         </div>
       </div>
 
-      {/* Localidad */}
       <div className="campoFila">
         <div className="campoColumna">
           <InputField

@@ -20,7 +20,7 @@
   min-width: 0;
 }
 
-.listaPlanes {
+.listaMaterias {
   display: flex;
   flex-direction: column;
   gap: 16px;

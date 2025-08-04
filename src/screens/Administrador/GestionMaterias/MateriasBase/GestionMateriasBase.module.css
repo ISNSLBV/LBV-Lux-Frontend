@@ -5,6 +5,12 @@
   margin-bottom: 32px;
 }
 
+.datos {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
 .barraAcciones {
   display: flex;
   gap: 16px;
@@ -20,7 +26,7 @@
   min-width: 0;
 }
 
-.listaPlanes {
+.listaMaterias {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -74,8 +80,10 @@
   color: white;
 }
 
-.modalContent form .mb-4 {
-  margin-bottom: 1rem;
+.formData {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .modalContent input[type="text"] {
@@ -106,6 +114,11 @@
 }
 
 @media (max-width: 768px) {
+  .datos {
+    flex-direction: column;
+    align-items: center;
+  }
+
   .barraAcciones {
     flex-direction: column;
   }
