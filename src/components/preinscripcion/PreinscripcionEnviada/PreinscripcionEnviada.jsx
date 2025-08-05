@@ -48,7 +48,7 @@ const PreinscripcionEnviada = ({ exito, mensaje, successData }) => {
       items: [
         "Teléfono: (011) 5263-2395",
         "Email: terciario@lujanbuenviaje.edu.ar",
-        "Horario: Lun-Vie 19:00-22:00",
+        "Horario: Lunes a Viernes de 19 hs. a 22 hs.",
       ],
     },
   ];
@@ -91,8 +91,8 @@ const PreinscripcionEnviada = ({ exito, mensaje, successData }) => {
                         Fecha y Hora de Envío
                       </p>
                       <p className={styles.detailText}>
-                        {successData.submissionDate} a las{" "}
-                        {successData.submissionTime}
+                        El {successData.submissionDate} a las{" "}
+                        {successData.submissionTime} hs.
                       </p>
                     </div>
                   </div>

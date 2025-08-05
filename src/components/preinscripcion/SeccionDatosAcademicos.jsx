@@ -1,20 +1,9 @@
 import React from "react";
-import SelectField from "../FormCampos/SelectField";
-import InputField from "../FormCampos/InputField";
+import { Field, ErrorMessage, useFormikContext } from "formik";
 
-const SeccionDatosAcademicos = ({ formik }) => {
+const SeccionDatosAcademicos = () => {
+  const { values, errors, touched } = useFormikContext();
   const MAX_LENGTH_OBS = 70;
-
-  const carreras = [
-    {
-      id: 1,
-      nombre: "Técnico Analista de Sistemas",
-    },
-    {
-      id: 2,
-      nombre: "Técnico en Redes Informáticas",
-    },
-  ];
 
   return (
     <fieldset className="seccionDatosAcademicos">
@@ -22,31 +11,52 @@ const SeccionDatosAcademicos = ({ formik }) => {
 
       <div className="campoFila">
         <div className="campoColumna">
-          <SelectField
-            label="Carrera"
+          <label htmlFor="carrera">Carrera *</label>
+          <Field
+            as="select"
+            id="carrera"
             name="carrera"
-            options={[
-              { value: 1, label: "Técnico Analista de Sistemas" },
-              { value: 2, label: "Técnico en Redes Informáticas" },
-            ]}
-            formik={formik}
+            className={
+              errors.carrera && touched.carrera
+                ? "formikFieldError"
+                : "formikField"
+            }
+          >
+            <option value="">Seleccioná una carrera</option>
+            <option value="1">Técnico Analista de Sistemas</option>
+            <option value="2">Técnico en Redes Informáticas</option>
+          </Field>
+          <ErrorMessage
+            name="carrera"
+            component="div"
+            className="formikFieldErrorText"
           />
         </div>
       </div>
 
       <div className="campoFila">
         <div className="campoColumna campoObservaciones">
-          <InputField
-            label="Observaciones"
+          <label htmlFor="observaciones">Observaciones</label>
+          <Field
+            as="textarea"
+            id="observaciones"
             name="observaciones"
             maxLength={MAX_LENGTH_OBS}
             placeholder=""
-            formik={formik}
-            type="text"
+            className={
+              errors.observaciones && touched.observaciones
+                ? "formikFieldError"
+                : "formikField"
+            }
           />
           <div className="contador-caracteres">
-            {(formik.values.observaciones || "").length} / {MAX_LENGTH_OBS}
+            {(values.observaciones || "").length} / {MAX_LENGTH_OBS}
           </div>
+          <ErrorMessage
+            name="observaciones"
+            component="div"
+            className="formikFieldErrorText"
+          />
           <span className="obsAviso">
             Podes solicitar equivalencias por materias que hayas aprobado en
             otra institución y/o indicar si deseás inscribirte como alumno

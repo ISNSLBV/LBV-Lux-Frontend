@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Boton from "../../components/Boton/Boton";
 import logo from "../../assets/logo.png";
 import api from "../../api/axios";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -112,16 +112,7 @@ const Login = () => {
                   name="username"
                   type="text"
                   placeholder="Nombre de usuario"
-                  className={
-                    formik.errors.username && formik.touched.username
-                      ? "formikFieldError"
-                      : "formikField"
-                  }
-                />
-                <ErrorMessage
-                  name="username"
-                  component="div"
-                  className="formikFieldErrorText"
+                  className='formikField'
                 />
               </div>
               <div>
@@ -129,16 +120,7 @@ const Login = () => {
                   name="password"
                   type="password"
                   placeholder="Contraseña"
-                  className={
-                    formik.errors.password && formik.touched.password
-                      ? "formikFieldError"
-                      : "formikField"
-                  }
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="formikFieldErrorText"
+                  className='formikField'
                 />
               </div>
             </fieldset>
