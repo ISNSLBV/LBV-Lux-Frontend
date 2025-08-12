@@ -3,9 +3,9 @@ import InformacionPersonal from "../InformacionPersonal/InformacionPersonal";
 import Materia from "../Materia/Materia";
 import Notas from "../Notas/Notas";
 import Horarios from "../Horario/Horario";
-import styles from "./Navbar.module.css";
+import styles from "./BarraSecciones.module.css";
 
-const Navbar = ({ informacionPersonal, materias, promedioNotas, horarios }) => {
+const BarraSecciones = ({ informacionPersonal, materias, promedioNotas, horarios }) => {
   const [activeTab, setActiveTab] = useState("Info");
 
   const renderTab = () => {
@@ -54,4 +54,4 @@ const Navbar = ({ informacionPersonal, materias, promedioNotas, horarios }) => {
   );
 };
 
-export default Navbar;
+export default BarraSecciones;

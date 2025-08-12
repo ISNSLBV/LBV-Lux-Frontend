@@ -22,7 +22,6 @@ const PreinscripcionEnviada = ({ exito, mensaje, successData }) => {
       title: "Confirmación por Email",
       description: "En breve recibirás un email de confirmación",
       icon: Mail,
-      status: "pending",
     },
     {
       step: 2,
@@ -30,7 +29,6 @@ const PreinscripcionEnviada = ({ exito, mensaje, successData }) => {
       description:
         "Para continuar con la inscripción, deberás presentarte en el instituto y entregar la documentación detallada en esta página",
       icon: FileText,
-      status: "pending",
     },
   ];
 

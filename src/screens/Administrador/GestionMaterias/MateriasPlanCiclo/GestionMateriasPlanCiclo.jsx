@@ -108,12 +108,36 @@ const GestionMateriasPlanCiclo = () => {
     setRegistro(false);
   };
 
+  const editarMateriaCiclo = useMutation({
+    mutationFn: ({
+      id,
+      ciclo_lectivo,
+      fecha_inicio,
+      fecha_cierre,
+      tipo_aprobacion,
+    }) =>
+      api.put(`/admin/materia/materia-plan-ciclo/modificar-materia/${id}`, {
+        materiaPlanCicloLectivoId: id,
+        cicloLectivo: ciclo_lectivo,
+        fechaInicio: fecha_inicio,
+        fechaCierre: fecha_cierre,
+        tipoAprobacion: tipo_aprobacion,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["materiasPlanCiclo"] });
+      toast.success("Materia en ciclo lectivo actualizada");
+      setEdicion(false);
+    },
+    onError: () =>
+      toast.error("Error al actualizar la materia en ciclo lectivo"),
+  });
+
   const materiasFiltradas = materiasPlanCiclo.filter((m) =>
     m.materiaPlan?.materia?.nombre?.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
-    <div>
+    <>
       {!mostrandoDetalle && (
         <div>
           <div className={styles.titulo}>
@@ -321,7 +345,7 @@ const GestionMateriasPlanCiclo = () => {
         </div>
       )}
       <Outlet />
-    </div>
+    </>
   );
 };
 

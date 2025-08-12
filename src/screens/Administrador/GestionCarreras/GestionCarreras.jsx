@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import styles from "./GestionCarreras.module.css";
-import DatoCard from "../../../components/Dato/DatoCard";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import Boton from "../../../components/Boton/Boton";
 import { Plus, SquarePen, X } from "lucide-react";
@@ -110,22 +109,20 @@ const GestionCarreras = () => {
               <th>ID</th>
               <th>Nombre</th>
               <th>Duración</th>
-              <th>Total de inscriptos</th>
               <th>Plan de estudio vigente</th>
-              <th>Egresados</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={7} style={{ textAlign: "center", padding: 32 }}>
+                <td colSpan={5} style={{ textAlign: "center", padding: 32 }}>
                   <CircularProgress color="inherit" />
                 </td>
               </tr>
             ) : carrerasFiltradas.length === 0 ? (
               <tr>
-                <td colSpan={7} style={{ textAlign: "center", padding: 32 }}>
+                <td colSpan={5} style={{ textAlign: "center", padding: 32 }}>
                   No se encontraron carreras
                 </td>
               </tr>
@@ -135,9 +132,7 @@ const GestionCarreras = () => {
                   <td>{c.id}</td>
                   <td>{c.nombre}</td>
                   <td>{c.duracion} años</td>
-                  <td>{c.total_inscriptos}</td>
                   <td>{c.plan_estudio_vigente}</td>
-                  <td>{c.egresados}</td>
                   <td>
                     <Boton
                       variant="onlyIcon"
@@ -185,16 +180,8 @@ const GestionCarreras = () => {
                     </div>
                   </div>
                   <div>
-                    <h4>Total de inscriptos</h4>
-                    <div>{m.total_inscriptos}</div>
-                  </div>
-                  <div>
                     <h4>Plan de estudio vigente</h4>
                     <div>{m.plan_estudio_vigente}</div>
-                  </div>
-                  <div>
-                    <h4>Egresados</h4>
-                    <div>{m.egresados}</div>
                   </div>
                   <div className={styles.cardActions}>
                     <Boton fullWidth icono={<SquarePen />} variant="primary">

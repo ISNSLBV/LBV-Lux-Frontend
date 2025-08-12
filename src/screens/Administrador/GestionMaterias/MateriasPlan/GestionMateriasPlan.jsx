@@ -131,6 +131,21 @@ const GestionMateriasPlan = () => {
     setRegistro(false);
   };
 
+  const editarMateriaPlan = useMutation({
+    mutationFn: ({ id, horas_catedra, duracion, anio_carrera }) =>
+      api.put(`/admin/materia/materia-plan/${id}`, {
+        horasCatedra: horas_catedra,
+        duracion,
+        anioCarrera: anio_carrera,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["materiasPlan"] });
+      toast.success("Materia del plan actualizada");
+      setEdicion(false);
+    },
+    onError: () => toast.error("Error al actualizar la materia del plan"),
+  });
+
   const materiasFiltradas = materiasPlan.filter((m) =>
     m.materia?.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
@@ -334,6 +349,138 @@ const GestionMateriasPlan = () => {
                   Crear
                 </Boton>
                 <Boton type="button" onClick={() => setRegistro(false)}>
+                  Cancelar
+                </Boton>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Modal de edición */}
+      {edicion && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>Editar materia del plan</h3>
+              <button
+                className={styles.closeButton}
+                onClick={() => setEdicion(false)}
+              >
+                <X />
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                editarMateriaPlan.mutate({
+                  id: materiaEditada.id,
+                  horas_catedra: materiaEditada.horas_catedra,
+                  duracion: materiaEditada.duracion,
+                  anio_carrera: materiaEditada.anio_carrera,
+                });
+              }}
+            >
+              <div className="mb-4">
+                <label className="block mb-1">Materia</label>
+                <input
+                  type="text"
+                  disabled
+                  value={
+                    materias.find(
+                      (mat) => mat.id === +materiaEditada.id_materia
+                    )?.nombre || ""
+                  }
+                  className="w-full border rounded px-2 py-1 bg-gray-100 cursor-not-allowed"
+                  readOnly
+                />
+                <label className="block mb-1">Resolución Nº</label>
+                <input
+                  type="text"
+                  disabled
+                  value={
+                    planes.find(
+                      (plan) => plan.id === +materiaEditada.id_plan_estudio
+                    )
+                      ? `${
+                          planes.find(
+                            (plan) =>
+                              plan.id === +materiaEditada.id_plan_estudio
+                          ).resolucion
+                        } - ${
+                          planes.find(
+                            (plan) =>
+                              plan.id === +materiaEditada.id_plan_estudio
+                          ).carrera?.nombre
+                        }`
+                      : ""
+                  }
+                  className="w-full border rounded px-2 py-1 bg-gray-100 cursor-not-allowed"
+                  readOnly
+                />
+                <label htmlFor="horas-edit" className="block mb-1">
+                  Horas cátedra
+                </label>
+                <input
+                  type="text"
+                  id="horas-edit"
+                  value={materiaEditada.horas_catedra}
+                  onChange={(e) =>
+                    setMateriaEditada((prev) => ({
+                      ...prev,
+                      horas_catedra: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded px-2 py-1"
+                  required
+                />
+                <label htmlFor="duracion-edit" className="block mb-1">
+                  Duración
+                </label>
+                <select
+                  id="duracion-edit"
+                  value={materiaEditada.duracion}
+                  onChange={(e) =>
+                    setMateriaEditada((prev) => ({
+                      ...prev,
+                      duracion: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded px-2 py-1"
+                  required
+                >
+                  <option value="">Seleccioná una opción</option>
+                  <option value="Anual">Anual</option>
+                  <option value="Cuatrimestral">Cuatrimestral</option>
+                  <option value="Semestral">Semestral</option>
+                  <option value="Bimestral">Bimestral</option>
+                  <option value="Trimestral">Trimestral</option>
+                </select>
+                <label htmlFor="anio-edit" className="block mb-1">
+                  Año de carrera
+                </label>
+                <input
+                  type="text"
+                  id="anio-edit"
+                  value={materiaEditada.anio_carrera}
+                  onChange={(e) =>
+                    setMateriaEditada((prev) => ({
+                      ...prev,
+                      anio_carrera: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded px-2 py-1"
+                  required
+                />
+              </div>
+              <div className={styles.modalActions}>
+                <Boton
+                  type="submit"
+                  variant="success"
+                  loading={editarMateriaPlan.isLoading}
+                >
+                  Guardar
+                </Boton>
+                <Boton type="button" onClick={() => setEdicion(false)}>
                   Cancelar
                 </Boton>
               </div>

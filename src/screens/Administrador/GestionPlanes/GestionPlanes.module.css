@@ -105,6 +105,61 @@
   gap: 8px;
 }
 
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 16px 0;
+}
+
+.switchInput {
+  display: none;
+}
+
+.switchLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.switchSlider {
+  width: 44px;
+  height: 24px;
+  background: #ddd;
+  border-radius: 12px;
+  position: relative;
+  transition: background 0.3s;
+  display: inline-block;
+}
+
+.switchInput:checked + .switchLabel .switchSlider {
+  background: #4caf50;
+}
+
+.switchSlider::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.switchInput:checked + .switchLabel .switchSlider::after {
+  transform: translateX(20px);
+}
+
+.switchText {
+  font-size: 0.95em;
+  font-weight: 500;
+  color: #222;
+  min-width: 80px;
+}
+
 @media (max-width: 768px) {
   .barraAcciones {
     flex-direction: column;

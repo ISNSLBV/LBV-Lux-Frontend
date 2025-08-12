@@ -30,6 +30,7 @@ const GestionPlanes = () => {
     anio_implementacion: "",
     vigente: "",
   });
+  const [confirmarVigente, setConfirmarVigente] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -61,7 +62,7 @@ const GestionPlanes = () => {
     },
     {
       label: "Vigente",
-      accessor: (p) => p.vigente === 1 ? 'Sí' : 'No',
+      accessor: (p) => (p.vigente === 1 ? "Sí" : "No"),
     },
   ];
 
@@ -98,6 +99,31 @@ const GestionPlanes = () => {
     });
     setRegistro(false);
   };
+
+  const editarPlan = useMutation({
+    mutationFn: ({ id, id_carrera, resolucion, anio_implementacion }) =>
+      api.put(`/admin/plan-estudio/${id}/modificar`, {
+        carrera: id_carrera,
+        resolucion,
+        anio_implementacion,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["planes"] });
+      toast.success("Plan de estudio actualizado");
+      setEdicion(false);
+    },
+    onError: () => toast.error("Error al actualizar el plan de estudio"),
+  });
+
+  const cambiarVigencia = useMutation({
+    mutationFn: ({ id, vigente }) =>
+      api.patch(`/admin/plan-estudio/${id}/cambiar-estado`, { vigente }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["planes"] });
+      toast.success("Estado de vigencia actualizado");
+    },
+    onError: () => toast.error("Error al cambiar el estado"),
+  });
 
   const planesFiltrados = planes.filter((p) =>
     p.resolucion.toLowerCase().includes(filtro.toLowerCase())
@@ -257,6 +283,159 @@ const GestionPlanes = () => {
                 </Boton>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de edición */}
+      {edicion && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>Editar plan de estudio</h3>
+              <button
+                className={styles.closeButton}
+                onClick={() => setEdicion(false)}
+              >
+                <X />
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                editarPlan.mutate({
+                  id: planEditado.id,
+                  id_carrera: planEditado.id_carrera,
+                  resolucion: planEditado.resolucion,
+                  anio_implementacion: planEditado.anio_implementacion,
+                });
+              }}
+            >
+              <div className="mb-4">
+                <label htmlFor="resolucion-edit" className="block mb-1">
+                  Resolución Nº
+                </label>
+                <input
+                  type="text"
+                  id="resolucion-edit"
+                  value={planEditado.resolucion}
+                  onChange={(e) =>
+                    setPlanEditado((prev) => ({
+                      ...prev,
+                      resolucion: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded px-2 py-1"
+                  required
+                />
+                <label htmlFor="carrera-edit" className="block mb-1">
+                  Carrera
+                </label>
+                <select
+                  name="carrera-edit"
+                  id="carrera-edit"
+                  value={planEditado.id_carrera}
+                  onChange={(e) =>
+                    setPlanEditado((prev) => ({
+                      ...prev,
+                      id_carrera: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded px-2 py-1"
+                  required
+                >
+                  <option value="" disabled>
+                    Seleccioná una opción
+                  </option>
+                  <option value="1">Técnico Analista de Sistemas</option>
+                  <option value="2">Técnico en Redes Informáticas</option>
+                </select>
+                <label
+                  htmlFor="anio_implementacion-edit"
+                  className="block mb-1"
+                >
+                  Año de implementación
+                </label>
+                <input
+                  type="text"
+                  id="anio_implementacion-edit"
+                  value={planEditado.anio_implementacion}
+                  onChange={(e) =>
+                    setPlanEditado((prev) => ({
+                      ...prev,
+                      anio_implementacion: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded px-2 py-1"
+                  required
+                />
+                <label className="block mb-1">Estado</label>
+                <div className={styles.switchContainer}>
+                  <input
+                    type="checkbox"
+                    id="vigente-switch"
+                    checked={!!planEditado.vigente}
+                    onChange={() => setConfirmarVigente(!planEditado.vigente)}
+                    className={styles.switchInput}
+                  />
+                  <label
+                    htmlFor="vigente-switch"
+                    className={styles.switchLabel}
+                  >
+                    <span className={styles.switchSlider}></span>
+                    <span className={styles.switchText}>
+                      {planEditado.vigente ? "Vigente" : "No vigente"}
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div className={styles.modalActions}>
+                <Boton
+                  type="submit"
+                  variant="success"
+                  loading={editarPlan.isLoading}
+                >
+                  Guardar
+                </Boton>
+                <Boton type="button" onClick={() => setEdicion(false)}>
+                  Cancelar
+                </Boton>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {confirmarVigente !== null && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>¿Confirmar cambio de estado?</h3>
+            </div>
+            <p>
+              ¿Estás seguro de marcar el plan como{" "}
+              <b>{confirmarVigente ? "Vigente" : "No vigente"}</b>?
+            </p>
+            <div className={styles.modalActions}>
+              <Boton
+                variant="success"
+                onClick={() => {
+                  cambiarVigencia.mutate({
+                    id: planEditado.id,
+                    vigente: Number(confirmarVigente),
+                  });
+                  setPlanEditado((prev) => ({
+                    ...prev,
+                    vigente: Number(confirmarVigente),
+                  }));
+                  setConfirmarVigente(null);
+                }}
+              >
+                Sí, confirmar
+              </Boton>
+              <Boton variant="danger" onClick={() => setConfirmarVigente(null)}>
+                Cancelar
+              </Boton>
+            </div>
           </div>
         </div>
       )}

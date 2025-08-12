@@ -24,7 +24,7 @@
 }
 
 .panel:hover {
-  background-color: rgba (255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
@@ -36,6 +36,7 @@ h2 {
 .accion {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 @media (max-width: 768px) {

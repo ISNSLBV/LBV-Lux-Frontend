@@ -84,3 +84,21 @@
   width: 100%;
   gap: 8px;
 }
+
+.link:link {
+  color: #b57bff; /* Color para enlaces no visitados */
+}
+
+.link:visited {
+  color: #b57bff; /* Igual que el de link o uno que mantenga buen contraste */
+}
+
+.link:hover,
+.link:focus {
+  color: #e1bfff; /* Más claro para hover/focus */
+  text-decoration: underline;
+}
+
+.link:active {
+  color: #d19cff;
+}

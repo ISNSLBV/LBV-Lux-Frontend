@@ -1,9 +1,87 @@
 import React from "react";
 import styles from "./AdministrarMateria.module.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "../../../../../api/axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+
+const fetchMateria = async (id) => {
+  const { data } = await api.get(
+    `/admin/materia/materia-plan-ciclo/${id}/detalle`
+  );
+  return data;
+};
+
+const SECCIONES = [
+  { key: "alumnos", label: "Alumnos" },
+  { key: "clases", label: "Clases" },
+  { key: "profesores", label: "Profesores" },
+  { key: "evaluaciones", label: "Evaluaciones" },
+];
 
 const AdministrarMateria = () => {
-  return <div>Materia</div>;
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [seccion, setSeccion] = useState("alumnos");
+  const { idMateria } = useParams();
+
+  const {
+    data: materia,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["detalleMateria", idMateria],
+    queryFn: ({ queryKey }) => fetchMateria(queryKey[1]),
+    enabled: !!idMateria,
+  });
+
+  const renderSeccion = () => {
+    switch (seccion) {
+      case "alumnos":
+        return <div>Listado de alumnos de la materia</div>;
+      case "clases":
+        return <div>Listado de clases de la materia</div>;
+      case "profesores":
+        return <div>Listado de profesores de la materia</div>;
+      case "evaluaciones":
+        return <div>Listado de evaluaciones de la materia</div>;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.botonVolver} onClick={() => navigate(-1)}>
+        <ArrowLeft />
+        <span>Volver</span>
+      </div>
+      {materia && (
+        <div className={styles.titulo}>
+          <h1>
+            {materia.materia} (Año {materia.ciclo})
+          </h1>
+          <h2>
+            {materia.carrera} - Resolución Nº {materia.resolucion}
+          </h2>
+        </div>
+      )}
+      <nav className={styles.navbar}>
+        {SECCIONES.map((sec) => (
+          <button
+            key={sec.key}
+            className={seccion === sec.key ? styles.active : ""}
+            onClick={() => setSeccion(sec.key)}
+            type="button"
+          >
+            {sec.label}
+          </button>
+        ))}
+      </nav>
+      <div className={styles.seccionContenido}>{renderSeccion()}</div>
+    </div>
+  );
 };
 
 export default AdministrarMateria;

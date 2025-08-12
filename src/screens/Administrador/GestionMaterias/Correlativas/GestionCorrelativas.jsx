@@ -197,7 +197,7 @@ const GestionCorrelativas = () => {
                     setNuevaCorrelativa((prev) => ({
                       ...prev,
                       materiaPlanId: e.target.value,
-                      correlativaId: "", // Reset correlativa al cambiar materia principal
+                      correlativaId: "",
                     }))
                   }
                   className="w-full border rounded px-2 py-1"

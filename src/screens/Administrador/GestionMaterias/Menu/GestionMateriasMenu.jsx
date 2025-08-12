@@ -1,5 +1,5 @@
 import React from "react";
-import PanelAdministradorOpcion from "../../../../components/PanelAdministradorOpcion/PanelAdministradorOpcion";
+import PanelOpcion from "../../../../components/PanelOpcion/PanelOpcion";
 import styles from "./GestionMateriasMenu.module.css";
 
 const GestionMateriasMenu = () => {
@@ -25,11 +25,11 @@ const GestionMateriasMenu = () => {
   return (
     <div className={styles.container}>
       <div className={styles.panel}>
-        {opciones.map((opcion, index) => (
-          <PanelAdministradorOpcion
-            key={index}
-            titulo={opcion.titulo}
-            redir={opcion.redir}
+        {opciones.map((o, idx) => (
+          <PanelOpcion
+            key={idx}
+            titulo={o.titulo}
+            redir={o.redir}
           />
         ))}
       </div>

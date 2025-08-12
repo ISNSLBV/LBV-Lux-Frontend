@@ -44,10 +44,10 @@ const GestionMateriasGenericas = () => {
   const campos = [
     { label: "ID", accessor: (m) => m.id },
     { label: "Nombre", accessor: (m) => m.nombre },
-    { label: "Estado", accessor: (m) => (m.activa ? "En uso" : "Sin asignar") },
+    { label: "Estado", accessor: (m) => (m.plan_estudio && m.plan_estudio.length > 0 ? "En uso" : "Sin asignar") },
     {
       label: "Plan(es) de estudio",
-      accessor: (m) => m.plan_estudio.map((p) => p.nombre).join(", "),
+      accessor: (m) => m.plan_estudio.map((p) => p.resolucion).join(", "),
     },
     {
       label: "Carreras",

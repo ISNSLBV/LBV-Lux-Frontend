@@ -128,13 +128,13 @@ const Login = () => {
               Iniciar sesión
             </Boton>
             <div className={styles.actionContainer}>
-              <Link to="/">Olvidé mi contraseña</Link>
+              <Link className={styles.link} to="/">Olvidé mi contraseña</Link>
               <hr />
               <div>
                 <p>¿Querés inscribirte al instituto?</p>
                 <p>
                   Completá el{" "}
-                  <Link to="/preinscripcion">Formulario de Preinscripción</Link>
+                  <Link className={styles.link} to="/preinscripcion">Formulario de Preinscripción</Link>
                 </p>
               </div>
             </div>

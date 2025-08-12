@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../../api/axios";
 import Estadistica from "../../components/Perfil/Estadistica/Estadistica";
 import { TrendingUp, BookOpen, Award, Clock } from "lucide-react";
-import Navbar from "../../components/Perfil/Navbar/Navbar";
+import BarraSecciones from "../../components/Perfil/BarraSecciones/BarraSecciones";
 import Informacion from "../../components/Perfil/Informacion/Informacion";
 import styles from "./Perfil.module.css";
 
@@ -72,7 +72,7 @@ const Perfil = () => {
         })}
       </div>
 
-      <Navbar
+      <BarraSecciones
         informacionPersonal={informacionPersonal}
         materias={materias}
         promedioNotas={promedioGeneral}
