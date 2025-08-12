@@ -26,22 +26,32 @@ const Navbar = () => {
       rol: "Administrador",
     },
     {
+      titulo: "Panel de opciones",
+      redir: "/profesor",
+      rol: "Profesor",
+    },
+    {  
+      titulo:"Panel de Alumno",
+      redir:"/alumno",
+      rol:"Alumno",
+    },
+    {
       titulo: "Preguntas frecuentes",
       redir: "/preguntas-frecuentes",
     },
     {
       titulo: "Ayuda",
       redir: "/ayuda",
-      rol: 'Administrador'
+      rol: "Administrador",
     },
     {
       titulo: "Cerrar sesión",
       redir: null,
     },
     {
-      titulo: 'Perfil',
-      redir: '/alumno/mi-perfil',
-      rol: 'Alumno'
+      titulo: "Perfil",
+      redir: "/alumno/mi-perfil",
+      rol: "Alumno",
     },
   ];
 
