@@ -18,7 +18,9 @@ const PreguntasFrecuentes = lazy(() =>
 const GestionProfesores = lazy(() =>
   import("./screens/Administrador/GestionProfesores/GestionProfesores")
 );
-const AyudaAlumno = lazy(() => import("./screens/Alumno/AyudaAlumno/AyudaAlumno"));
+const AyudaAlumno = lazy(() =>
+  import("./screens/Alumno/AyudaAlumno/AyudaAlumno")
+);
 const GestionMateriasMenu = lazy(() =>
   import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu")
 );
@@ -137,6 +139,10 @@ function App() {
               <Route element={<Layout />}>
                 {/* ---- Ruta usuario ---- */}
                 <Route index element={<Dashboard />} />
+                <Route
+                  path="cuenta"
+                  element={<ConfiguracionCuenta />}
+                />
                 {/* ---- Ruta Alumno ---- */}
                 <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
                   <Route index element={<PanelAlumno />} />
@@ -149,7 +155,6 @@ function App() {
                   element={<RutaPrivada rol={["Profesor"]} />}
                 >
                   <Route index element={<PanelProfesor />} />
-                  <Route path="configuracion-cuenta" element={<ConfiguracionCuenta />} />
                 </Route>
                 {/* ---- Ruta Administrador ---- */}
                 <Route

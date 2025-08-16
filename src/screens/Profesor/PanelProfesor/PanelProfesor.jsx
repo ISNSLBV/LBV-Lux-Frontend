@@ -14,7 +14,7 @@ const PanelProfesor = () => {
     },
     {
       titulo: "Configuración de la cuenta",
-      redir: "configuracion-cuenta",
+      redir: "/cuenta",
     },
   ];
 
