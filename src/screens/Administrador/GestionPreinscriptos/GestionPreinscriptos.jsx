@@ -5,6 +5,7 @@ import styles from "./GestionPreinscriptos.module.css";
 import Boton from "../../../components/Boton/Boton";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import {toast} from 'react-toastify'
 
 export default function GestionPreinscriptos() {
   const [form, setForm] = useState({});
@@ -35,6 +36,7 @@ export default function GestionPreinscriptos() {
     onSuccess: () => {
       queryClient.invalidateQueries(["preinscriptos"]);
     },
+    onError: () => toast.error('Error al realizar la inscripción')
   });
 
   const ocultarMutation = useMutation({
@@ -43,6 +45,7 @@ export default function GestionPreinscriptos() {
     onSuccess: () => {
       queryClient.invalidateQueries(["preinscriptos"]);
     },
+    onError: () => toast.error('Error al ocultar')
   });
 
   const personasFiltradas = useMemo(() => {
@@ -97,7 +100,6 @@ export default function GestionPreinscriptos() {
             <option value="">Todos los estados</option>
             <option value="Pendiente">Pendientes</option>
             <option value="Aprobada">Aprobadas</option>
-            <option value="Rechazada">Rechazadas</option>
           </select>
 
           <select
@@ -126,7 +128,7 @@ export default function GestionPreinscriptos() {
       {showAceptarModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2>Confirmá el tipo de alumno</h2>
+            <p className={styles.modalHeader}>Inscribir a {personaSeleccionada.nombre} {personaSeleccionada.apellido} como alumno/a</p>
             <select
               value={form.tipoAlumnoId || ""}
               onChange={(e) =>
@@ -144,8 +146,14 @@ export default function GestionPreinscriptos() {
             <div className={styles.modalActions}>
               <Boton
                 variant="success"
-                onClick={() => aceptar(form.tipoAlumnoId)}
+                onClick={() => {
+                  aceptar(form.tipoAlumnoId);
+                  setShowAceptarModal(false);
+                  setPersonaSeleccionada(null);
+                  toast.success('Inscripción realizada')
+                }}
                 disabled={!form.tipoAlumnoId}
+                fullWidth
               >
                 Confirmar
               </Boton>
@@ -155,6 +163,7 @@ export default function GestionPreinscriptos() {
                   setShowAceptarModal(false);
                   setPersonaSeleccionada(null);
                 }}
+                fullWidth
               >
                 Cancelar
               </Boton>

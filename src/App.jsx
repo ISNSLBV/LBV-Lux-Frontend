@@ -18,7 +18,7 @@ const PreguntasFrecuentes = lazy(() =>
 const GestionProfesores = lazy(() =>
   import("./screens/Administrador/GestionProfesores/GestionProfesores")
 );
-const AyudaAlumno = lazy(() => import("./screens/AyudaAlumno/AyudaAlumno"));
+const AyudaAlumno = lazy(() => import("./screens/Alumno/AyudaAlumno/AyudaAlumno"));
 const GestionMateriasMenu = lazy(() =>
   import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu")
 );

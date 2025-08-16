@@ -52,6 +52,10 @@
 
 .seccionContenido {
   margin-top: 16px;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
 }
 
 .navbar .active {
@@ -72,5 +76,9 @@
 
   .navbar {
     flex-direction: column;
+  }
+
+  .botonVolver {
+    display: none;
   }
 }

@@ -1,5 +1,5 @@
-import React from 'react'
-import PreguntasFrecuentesDesplegable from "../../components/FAQ/PreguntasFrecuentesDesplegable";
+import React from "react";
+import PreguntasFrecuentesDesplegable from "../../../components/FAQ/PreguntasFrecuentesDesplegable";
 import estilos from "./AyudaAlumno.module.css";
 
 const AyudaAlumno = () => {
@@ -8,7 +8,7 @@ const AyudaAlumno = () => {
       <h1 className={estilos.titulo}>Ayuda para el Alumno</h1>
       <PreguntasFrecuentesDesplegable items={datosPreguntas} />
     </>
-  )
-}
+  );
+};
 
-export default AyudaAlumno
+export default AyudaAlumno;

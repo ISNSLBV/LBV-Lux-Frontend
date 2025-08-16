@@ -5,21 +5,6 @@
   margin-bottom: 32px;
 }
 
-.barraAcciones {
-  display: flex;
-  gap: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 24px;
-  margin-bottom: 32px;
-}
-
-.barraBusqueda {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
 .listaCarreras {
   display: flex;
   flex-direction: column;
@@ -30,8 +15,10 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.botonAgregar {
-  flex: 0 0 auto;
+.listaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal {

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./PanelProfesor.module.css";
-import PanelAdministradorOpcion from "../../../components/PanelAdministradorOpcion/PanelAdministradorOpcion";
+import PanelOpcion from "../../../components/PanelOpcion/PanelOpcion";
 
 const PanelProfesor = () => {
   const opciones = [
@@ -23,7 +23,7 @@ const PanelProfesor = () => {
       <h1>Panel de Profesor</h1>
       <div className={styles.panel}>
         {opciones.map((opcion, index) => (
-          <PanelAdministradorOpcion
+          <PanelOpcion
             key={index}
             titulo={opcion.titulo}
             descripcion={opcion.descripcion}

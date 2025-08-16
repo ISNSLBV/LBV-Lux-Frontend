@@ -3,7 +3,6 @@ import api from "../../../api/axios";
 import TablaGestion from "../../../components/Gestion/Tabla/TablaGestion";
 import CardGestion from "../../../components/Gestion/Card/CardGestion";
 import { Plus, SquarePen, X } from "lucide-react";
-import SearchBar from "../../../components/SearchBar/SearchBar";
 import styles from "./GestionPlanes.module.css";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -135,15 +134,9 @@ const GestionPlanes = () => {
         <h1>Planes de estudio</h1>
         <p>Registrá y editá los planes de estudio del instituto</p>
       </div>
-      <div className={styles.barraAcciones}>
-        <div className={styles.barraBusqueda}>
-          <SearchBar
-            placeholder="Buscar resolución"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          />
-        </div>
-        <div className={styles.botonAgregar}>
+      <div className={styles.listaPlanes}>
+        <div className={styles.listaHeader}>
+          <h2>Listado de planes de estudio</h2>
           <Boton
             variant="success"
             icono={<Plus />}
@@ -152,9 +145,6 @@ const GestionPlanes = () => {
             Registrar plan de estudio
           </Boton>
         </div>
-      </div>
-      <div className={styles.listaPlanes}>
-        <h2>Listado de planes de estudio</h2>
         <TablaGestion
           columnas={campos}
           data={planesFiltrados}

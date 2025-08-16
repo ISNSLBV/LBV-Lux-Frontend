@@ -5,6 +5,7 @@ import api from "../../../../../api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import Alumnos from "./SeccionAlumnos/Alumnos";
 
 const fetchMateria = async (id) => {
   const { data } = await api.get(
@@ -14,16 +15,16 @@ const fetchMateria = async (id) => {
 };
 
 const SECCIONES = [
-  { key: "alumnos", label: "Alumnos" },
+  { key: "alumnosInscriptos", label: "Alumnos inscriptos" },
   { key: "clases", label: "Clases" },
-  { key: "profesores", label: "Profesores" },
+  { key: "profesores", label: "Profesor/es asignado/s" },
   { key: "evaluaciones", label: "Evaluaciones" },
 ];
 
 const AdministrarMateria = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [seccion, setSeccion] = useState("alumnos");
+  const [seccion, setSeccion] = useState("alumnosInscriptos");
   const { idMateria } = useParams();
 
   const {
@@ -38,8 +39,8 @@ const AdministrarMateria = () => {
 
   const renderSeccion = () => {
     switch (seccion) {
-      case "alumnos":
-        return <div>Listado de alumnos de la materia</div>;
+      case "alumnosInscriptos":
+        return <Alumnos alumnos={materia?.alumnos ?? []} />;
       case "clases":
         return <div>Listado de clases de la materia</div>;
       case "profesores":

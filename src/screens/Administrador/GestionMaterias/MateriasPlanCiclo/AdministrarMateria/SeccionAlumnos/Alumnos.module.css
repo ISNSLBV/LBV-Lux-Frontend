@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: calc(25% - 12px);
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.nombre {
+    font-weight: 600;
+}
+
+.acciones {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+    }
+}

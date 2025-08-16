@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import styles from "./GestionCarreras.module.css";
-import SearchBar from "../../../components/SearchBar/SearchBar";
 import Boton from "../../../components/Boton/Boton";
 import { Plus, SquarePen, X } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -14,12 +13,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 const schemaCarrera = Yup.object().shape({
   nombre: Yup.string()
     .min(10, "Nombre no válido")
-    .required("El nombre es obligatorio"),
+    .required("Este campo es obligatorio"),
   duracion: Yup.number()
     .typeError("Debe ser un número")
     .min(1, "Duración mínima: 1 año")
     .max(10, "Duración máxima: 10 años")
-    .required("La duración es obligatoria"),
+    .required("Este campo es obligatorio"),
 });
 
 const fetchCarreras = async () => {
@@ -83,15 +82,9 @@ const GestionCarreras = () => {
         <h1>Carreras</h1>
         <p>Gestioná las carreras del instituto</p>
       </div>
-      <div className={styles.barraAcciones}>
-        <div className={styles.barraBusqueda}>
-          <SearchBar
-            placeholder="Buscar carrera"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          />
-        </div>
-        <div className={styles.botonAgregar}>
+      <div className={styles.listaCarreras}>
+        <div className={styles.listaHeader}>
+          <h2>Listado de carreras</h2>
           <Boton
             variant="success"
             icono={<Plus />}
@@ -100,9 +93,6 @@ const GestionCarreras = () => {
             Registrar nueva carrera
           </Boton>
         </div>
-      </div>
-      <div className={styles.listaCarreras}>
-        <h2>Listado de carreras</h2>
         <table className={styles.tabla}>
           <thead>
             <tr>
