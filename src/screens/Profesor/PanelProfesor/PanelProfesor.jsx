@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./PanelProfesor.module.css";
-import PanelAdministradorOpcion from "../../../components/PanelAdministradorOpcion/PanelAdministradorOpcion";
+import PanelAdministradorOpcion from "../../../components/PanelOpcion/PanelOpcion";
 
 const PanelProfesor = () => {
   const opciones = [
@@ -14,7 +14,7 @@ const PanelProfesor = () => {
     },
     {
       titulo: "Configuración de la cuenta",
-      redir: "cuenta",
+      redir: "configuracion-cuenta",
     },
   ];
 
