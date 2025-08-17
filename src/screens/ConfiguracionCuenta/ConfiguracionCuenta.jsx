@@ -3,11 +3,18 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from "./ConfiguracionCuenta.module.css";
 import Boton from "../../components/Boton/Boton";
 import * as Yup from "yup";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "../../api/axios";
+import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const ConfiguracionCuenta = () => {
+  const { user } = useAuth();
+  const idUsuario = user.id;
+  const queryClient = useQueryClient();
+
+
   const personalSchema = Yup.object({
-    nombre: Yup.string().required("Campo obligatorio"),
-    apellido: Yup.string().required("Campo obligatorio"),
     email: Yup.string().email("Formato inválido").required("Campo obligatorio"),
     telefono: Yup.string()
       .matches(/^[0-9]+$/, "Solo se permiten números")
@@ -29,82 +36,128 @@ const ConfiguracionCuenta = () => {
       .required("Campo obligatorio"),
   });
 
-  const [editEmail, setEditEmail] = useState(false);
-  const [editTelefono, setEditTelefono] = useState(false);
 
-  const guardarDatosPersonales = (values) => {
-    setEditEmail(false);
-    setEditTelefono(false);
-    alert("Datos personales actualizados correctamente");
+  const fetchDatos = async () => {
+    const { data } = await api.get(`/usuario/${idUsuario}/datos-personales`);
+    return data;
   };
 
-  const cambiarPassword = (values) => {
-    alert("Contraseña cambiada correctamente");
-  };
+  const {
+    data: datosPersonales,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["datosPersonales", idUsuario],
+    queryFn: fetchDatos,
+  });
+
+
+  const actualizarDatosPersonales = useMutation({
+    mutationFn: ({ email, telefono }) =>
+      api.put(`/usuario/${idUsuario}/actualizar-datos-personales`, {
+        email,
+        telefono,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["datosPersonales", idUsuario] });
+      toast.success("Datos personales actualizados correctamente");
+    },
+    onError: () => {
+      toast.error("Error al actualizar los datos personales");
+    },
+  });
+
+
+  const actualizarPassword = useMutation({
+    mutationFn: ({ actual, nueva }) =>
+      api.put(`/usuario/${idUsuario}/actualizar-password`, {
+        actual,
+        nueva,
+      }),
+    onSuccess: () => {
+      toast.success("Contraseña cambiada correctamente");
+    },
+    onError: () => {
+      toast.error("Error al cambiar la contraseña");
+    },
+  });
 
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.title}>Configuración de Cuenta</h1>
       <div className={styles.container}>
+        {/* === Información Personal === */}
         <div className={styles.card}>
           <h2>Información personal</h2>
-          <Formik
-            initialValues={{
-              email: "",
-              telefono: "",
-            }}
-            validationSchema={personalSchema}
-            onSubmit={guardarDatosPersonales}
-          >
-            {({ isSubmitting, errors, touched }) => (
-              <Form className={styles.form}>
-                <div className={styles.campo}>
-                  <label>Correo electrónico</label>
-                  <Field
-                    name="email"
-                    type="email"
-                    className={
-                      errors.email && touched.email
-                        ? "formikFieldError"
-                        : "formikField"
-                    }
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="formikFieldErrorText"
-                  />
-                </div>
-                <div className={styles.campo}>
-                  <label>Teléfono</label>
-                  <Field
-                    name="telefono"
-                    type="tel"
-                    inputMode="numeric"
-                    className={
-                      errors.telefono && touched.telefono
-                        ? "formikFieldError"
-                        : "formikField"
-                    }
-                  />
-                  <ErrorMessage
-                    name="telefono"
-                    component="div"
-                    className="formikFieldErrorText"
-                  />
-                </div>
-                <Boton
-                  type="submit"
-                  size="md"
-                  fullWidth
-                  disabled={isSubmitting}
-                >
-                  Guardar cambios
-                </Boton>
-              </Form>
-            )}
-          </Formik>
+          {isLoading ? (
+            <p>Cargando datos...</p>
+          ) : isError ? (
+            <p>Error al cargar los datos</p>
+          ) : (
+            <Formik
+              enableReinitialize
+              initialValues={{
+                email: datosPersonales?.email || "",
+                telefono: datosPersonales?.telefono || "",
+              }}
+              validationSchema={personalSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                actualizarDatosPersonales.mutate(values);
+                setSubmitting(false);
+              }}
+            >
+              {({ isSubmitting, errors, touched }) => (
+                <Form className={styles.form}>
+                  <div className={styles.campo}>
+                    <label>Correo electrónico</label>
+                    <Field
+                      name="email"
+                      type="email"
+                      className={
+                        errors.email && touched.email
+                          ? "formikFieldError"
+                          : "formikField"
+                      }
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="formikFieldErrorText"
+                    />
+                  </div>
+                  <div className={styles.campo}>
+                    <label>Teléfono</label>
+                    <Field
+                      name="telefono"
+                      type="tel"
+                      inputMode="numeric"
+                      className={
+                        errors.telefono && touched.telefono
+                          ? "formikFieldError"
+                          : "formikField"
+                      }
+                    />
+                    <ErrorMessage
+                      name="telefono"
+                      component="div"
+                      className="formikFieldErrorText"
+                    />
+                  </div>
+                  <Boton
+                    type="submit"
+                    size="md"
+                    fullWidth
+                    disabled={isSubmitting}
+                  >
+                    Guardar cambios
+                  </Boton>
+                </Form>
+              )}
+            </Formik>
+          )}
         </div>
+
+        {/* === Seguridad === */}
         <div className={styles.card}>
           <h2>Seguridad</h2>
           <Formik
@@ -114,7 +167,14 @@ const ConfiguracionCuenta = () => {
               confirmar: "",
             }}
             validationSchema={passwordSchema}
-            onSubmit={cambiarPassword}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              actualizarPassword.mutate({
+                actual: values.actual,
+                nueva: values.nueva,
+              });
+              setSubmitting(false);
+              resetForm();
+            }}
           >
             {({ isSubmitting, errors, touched }) => (
               <Form className={styles.form}>
