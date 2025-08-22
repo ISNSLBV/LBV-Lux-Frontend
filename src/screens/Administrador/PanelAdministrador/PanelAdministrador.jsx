@@ -15,38 +15,38 @@ import {
 const PanelAdministrador = () => {
   const opciones = [
     {
-      titulo: "Gestionar preinscriptos",
-      redir: "gestion-preinscriptos",
+      titulo: "Gestionar preinscripciones",
+      redir: "preinscripciones",
       icono: UserPlus,
     },
     {
       titulo: "Gestionar carreras",
-      redir: "gestion-carreras",
+      redir: "carreras",
       icono: GraduationCap,
     },
     {
       titulo: "Gestionar planes de estudio",
-      redir: "gestion-planes",
+      redir: "planes-de-estudio",
       icono: ClipboardList,
     },
     {
       titulo: "Gestionar materias",
-      redir: "gestion-materias",
+      redir: "materias",
       icono: BookOpen,
     },
     {
       titulo: "Gestionar profesores",
-      redir: "gestion-profesores",
+      redir: "profesores",
       icono: Users,
     },
     {
       titulo: "Gestionar alumnos",
-      redir: "gestion-alumnos",
+      redir: "alumnos",
       icono: User,
     },
     {
       titulo: "Ver estadísticas",
-      redir: "ver-estadisticas",
+      redir: "estadisticas",
       icono: BarChart,
     },
     {

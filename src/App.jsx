@@ -163,17 +163,17 @@ function App() {
                 >
                   <Route index element={<PanelAdministrador />} />
                   <Route
-                    path="gestion-preinscriptos"
+                    path="preinscripciones"
                     element={<GestionPreinscriptos />}
                   />
                   <Route
-                    path="gestion-carreras"
+                    path="carreras"
                     element={<GestionCarreras />}
                   />
-                  <Route path="gestion-planes" element={<GestionPlanes />} />
-                  <Route path="gestion-materias" element={<GestionMaterias />}>
+                  <Route path="planes-de-estudio" element={<GestionPlanes />} />
+                  <Route path="materias" element={<GestionMaterias />}>
                     <Route index element={<GestionMateriasMenu />} />
-                    <Route path="materias" element={<GestionMateriasBase />} />
+                    <Route path="materias-base" element={<GestionMateriasBase />} />
                     <Route
                       path="materias-por-plan"
                       element={<GestionMateriasPlan />}
@@ -193,7 +193,7 @@ function App() {
                     />
                   </Route>
                   <Route
-                    path="gestion-profesores"
+                    path="profesores"
                     element={<GestionProfesores />}
                   />
                   <Route path="perfil/:id" element={<Perfil />} />

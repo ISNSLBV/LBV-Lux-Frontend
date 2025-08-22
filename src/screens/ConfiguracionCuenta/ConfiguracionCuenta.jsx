@@ -13,7 +13,6 @@ const ConfiguracionCuenta = () => {
   const idUsuario = user.id;
   const queryClient = useQueryClient();
 
-
   const personalSchema = Yup.object({
     email: Yup.string().email("Formato inválido").required("Campo obligatorio"),
     telefono: Yup.string()
@@ -36,7 +35,6 @@ const ConfiguracionCuenta = () => {
       .required("Campo obligatorio"),
   });
 
-
   const fetchDatos = async () => {
     const { data } = await api.get(`/usuario/${idUsuario}/datos-personales`);
     return data;
@@ -51,7 +49,6 @@ const ConfiguracionCuenta = () => {
     queryFn: fetchDatos,
   });
 
-
   const actualizarDatosPersonales = useMutation({
     mutationFn: ({ email, telefono }) =>
       api.put(`/usuario/${idUsuario}/actualizar-datos-personales`, {
@@ -59,14 +56,15 @@ const ConfiguracionCuenta = () => {
         telefono,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["datosPersonales", idUsuario] });
+      queryClient.invalidateQueries({
+        queryKey: ["datosPersonales", idUsuario],
+      });
       toast.success("Datos personales actualizados correctamente");
     },
     onError: () => {
       toast.error("Error al actualizar los datos personales");
     },
   });
-
 
   const actualizarPassword = useMutation({
     mutationFn: ({ actual, nueva }) =>
@@ -86,7 +84,6 @@ const ConfiguracionCuenta = () => {
     <div className={styles.formContainer}>
       <h1 className={styles.title}>Configuración de Cuenta</h1>
       <div className={styles.container}>
-        {/* === Información Personal === */}
         <div className={styles.card}>
           <h2>Información personal</h2>
           {isLoading ? (
@@ -157,7 +154,6 @@ const ConfiguracionCuenta = () => {
           )}
         </div>
 
-        {/* === Seguridad === */}
         <div className={styles.card}>
           <h2>Seguridad</h2>
           <Formik

@@ -2,10 +2,12 @@ import React from "react";
 import styles from "./Alumnos.module.css";
 import { useAuth } from "../../../../../../contexts/AuthContext";
 import Boton from "../../../../../../components/Boton/Boton";
+import { useNavigate } from "react-router-dom";
 
 const Alumnos = ({ alumnos = [] }) => {
   const { user } = useAuth();
   const admin = user?.rol === "Administrador";
+  const navigate = useNavigate();
 
   return (
     <div className={styles.container}>
@@ -19,6 +21,7 @@ const Alumnos = ({ alumnos = [] }) => {
             <div className={styles.acciones}>
               <Boton
                 fullWidth
+                onClick={() => navigate(`/admin/perfil/${a.id_usuario}`)}
               >
                 Ver perfil
               </Boton>

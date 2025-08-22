@@ -122,7 +122,7 @@ const GestionCarreras = () => {
                   <td>{c.id}</td>
                   <td>{c.nombre}</td>
                   <td>{c.duracion} años</td>
-                  <td>{c.plan_estudio_vigente}</td>
+                  <td>{c.planesEstudio[0].resolucion}</td>
                   <td>
                     <Boton
                       variant="onlyIcon"
@@ -153,7 +153,7 @@ const GestionCarreras = () => {
             </div>
           ) : (
             carrerasFiltradas.map((m) => (
-              <div className={styles.card}>
+              <div className={styles.card} key={m.id}>
                 <div className={styles.cardHeader}>
                   <div className={styles.cardHeaderContent}>
                     <div className={styles.cardHeaderTitle}>

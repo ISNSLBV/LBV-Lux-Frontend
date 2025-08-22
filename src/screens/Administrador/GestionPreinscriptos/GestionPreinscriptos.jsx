@@ -5,7 +5,8 @@ import styles from "./GestionPreinscriptos.module.css";
 import Boton from "../../../components/Boton/Boton";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import {toast} from 'react-toastify'
+import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function GestionPreinscriptos() {
   const [form, setForm] = useState({});
@@ -36,7 +37,7 @@ export default function GestionPreinscriptos() {
     onSuccess: () => {
       queryClient.invalidateQueries(["preinscriptos"]);
     },
-    onError: () => toast.error('Error al realizar la inscripción')
+    onError: () => toast.error("Error al realizar la inscripción"),
   });
 
   const ocultarMutation = useMutation({
@@ -45,7 +46,7 @@ export default function GestionPreinscriptos() {
     onSuccess: () => {
       queryClient.invalidateQueries(["preinscriptos"]);
     },
-    onError: () => toast.error('Error al ocultar')
+    onError: () => toast.error("Error al ocultar"),
   });
 
   const personasFiltradas = useMemo(() => {
@@ -82,7 +83,7 @@ export default function GestionPreinscriptos() {
   return (
     <div className={styles.container}>
       <div className={styles.titulo}>
-        <h1>Panel de preinscriptos</h1>
+        <h1>Preinscripciones</h1>
       </div>
       <div className={styles.barraAcciones}>
         <div className={styles.barraBusqueda}>
@@ -112,23 +113,34 @@ export default function GestionPreinscriptos() {
           </select>
         </div>
       </div>
-
-      {personasFiltradas.map((p) => (
-        <PreinscriptoCard
-          key={p.id}
-          persona={p}
-          onAceptar={() => {
-            setPersonaSeleccionada(p);
-            setShowAceptarModal(true);
-          }}
-          onOcultar={() => ocultar(p)}
-        />
-      ))}
-
+      <div className={styles.containerLista}>
+        {isLoading ? (
+          <CircularProgress />
+        ) : personasFiltradas.length === 0 ? (
+          <p className={styles.listaSinResultados}>
+            No se encontraron resultados para los filtros utilizados
+          </p>
+        ) : (
+          personasFiltradas.map((p) => (
+            <PreinscriptoCard
+              key={p.id}
+              persona={p}
+              onAceptar={() => {
+                setPersonaSeleccionada(p);
+                setShowAceptarModal(true);
+              }}
+              onOcultar={() => ocultar(p)}
+            />
+          ))
+        )}
+      </div>
       {showAceptarModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <p className={styles.modalHeader}>Inscribir a {personaSeleccionada.nombre} {personaSeleccionada.apellido} como alumno/a</p>
+            <p className={styles.modalHeader}>
+              Inscribir a {personaSeleccionada.nombre}{" "}
+              {personaSeleccionada.apellido} como alumno/a
+            </p>
             <select
               value={form.tipoAlumnoId || ""}
               onChange={(e) =>
@@ -150,7 +162,7 @@ export default function GestionPreinscriptos() {
                   aceptar(form.tipoAlumnoId);
                   setShowAceptarModal(false);
                   setPersonaSeleccionada(null);
-                  toast.success('Inscripción realizada')
+                  toast.success("Inscripción realizada");
                 }}
                 disabled={!form.tipoAlumnoId}
                 fullWidth

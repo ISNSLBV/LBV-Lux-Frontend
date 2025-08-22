@@ -5,20 +5,20 @@ import styles from "./GestionMateriasMenu.module.css";
 const GestionMateriasMenu = () => {
   const opciones = [
     {
-      titulo: "Gestionar materias",
-      redir: "/admin/gestion-materias/materias",
+      titulo: "Gestionar materias base",
+      redir: "/admin/materias/materias-base",
     },
     {
       titulo: "Gestionar materias por plan de estudio",
-      redir: "/admin/gestion-materias/materias-por-plan",
+      redir: "/admin/materias/materias-por-plan",
     },
     {
       titulo: "Gestionar materias por ciclo lectivo",
-      redir: "/admin/gestion-materias/materias-por-ciclo",
+      redir: "/admin/materias/materias-por-ciclo",
     },
     {
       titulo: "Gestionar correlativas",
-      redir: "/admin/gestion-materias/correlativas",
+      redir: "/admin/materias/correlativas",
     },
   ];
 
