@@ -8,7 +8,6 @@ import api from "../../../api/axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { schemaPreinscripcion } from "../../../components/preinscripcion/utils/schemaPreinscripcion";
 import { Plus, X, SquarePen } from "lucide-react";
 
 const fetchProfesores = async () => {
@@ -19,7 +18,6 @@ const fetchProfesores = async () => {
 export default function GestionProfesores() {
   const [filtro, setFiltro] = useState("");
   const [registro, setRegistro] = useState(false);
-  const [vinculando, setVinculando] = useState(false);
   const [edicion, setEdicion] = useState(false);
   const [modoRegistro, setModoRegistro] = useState("dni");
 
@@ -35,7 +33,8 @@ export default function GestionProfesores() {
   });
 
   const registrarProfesor = useMutation({
-    mutationFn: (datos) => api.post("/admin/profesor/registrar-profesor", datos),
+    mutationFn: (datos) =>
+      api.post("/admin/profesor/registrar-profesor", datos),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profesores"] });
       toast.success("Profesor registrado");
@@ -101,8 +100,8 @@ export default function GestionProfesores() {
                 <tr key={p.id} className={styles.tablaFila}>
                   <td>{p.persona?.dni}</td>
                   <td>{`${p.persona?.nombre} ${p.persona?.apellido}`}</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td></td>
+                  <td></td>
                   <td>
                     <Boton
                       variant="onlyIcon"
@@ -118,7 +117,7 @@ export default function GestionProfesores() {
           </tbody>
         </table>
       </div>
-      
+
       {registro && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
@@ -135,7 +134,6 @@ export default function GestionProfesores() {
               </button>
             </div>
 
-            {/* OPCIONES: Tabs o Botones */}
             <div className={styles.modoSwitch}>
               <button
                 className={
@@ -143,7 +141,7 @@ export default function GestionProfesores() {
                 }
                 onClick={() => setModoRegistro("dni")}
               >
-                Registrar por DNI
+                Registro por DNI
               </button>
               <button
                 className={
@@ -205,7 +203,7 @@ export default function GestionProfesores() {
                         variant="success"
                         disabled={isSubmitting}
                       >
-                        Registrar por DNI
+                        Registrar
                       </Boton>
                       <Boton type="button" onClick={() => setRegistro(false)}>
                         Cancelar
@@ -216,7 +214,6 @@ export default function GestionProfesores() {
               </Formik>
             )}
 
-            {/* FORMULARIO "REGISTRO COMPLETO" */}
             {modoRegistro === "completo" && (
               <Formik
                 initialValues={{

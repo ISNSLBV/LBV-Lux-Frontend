@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import Alumnos from "./SeccionAlumnos/Alumnos";
+import Clases from "./SeccionClases/Clases";
 
 const fetchMateria = async (id) => {
   const { data } = await api.get(
@@ -42,7 +43,7 @@ const AdministrarMateria = () => {
       case "alumnosInscriptos":
         return <Alumnos alumnos={materia?.alumnos ?? []} />;
       case "clases":
-        return <div>Listado de clases de la materia</div>;
+        return <Clases materiaId={idMateria} />;
       case "profesores":
         return <div>Listado de profesores de la materia</div>;
       case "evaluaciones":
