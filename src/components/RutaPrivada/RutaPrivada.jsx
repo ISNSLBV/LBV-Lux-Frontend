@@ -11,10 +11,10 @@ export default function RutaPrivada({ rol = [] }) {
     );
 
   if (needsRoleSelection()) {
-    return <Navigate to="/alumnos2025/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
-  if (!user) return <Navigate to="/alumnos2025/login" replace />;
+  if (!user) return <Navigate to="/login" replace />;
 
   if (rol.length && !rol.some((r) => user.rol.includes(r))) {
     return <Navigate to="/403" replace />;

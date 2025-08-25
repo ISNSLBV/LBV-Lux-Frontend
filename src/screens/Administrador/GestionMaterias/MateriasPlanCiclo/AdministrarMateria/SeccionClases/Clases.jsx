@@ -7,24 +7,17 @@ import { CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Te
 import api from "../../../../../../api/axios";
 import { toast } from "react-toastify";
 
-// Recibe materiaId como prop
 const Clases = ({ materiaId }) => {
   const queryClient = useQueryClient();
 
-  // Estado para clase seleccionada
   const [claseSeleccionada, setClaseSeleccionada] = useState(null);
   const [modalAgregar, setModalAgregar] = useState(false);
   const [modalInfo, setModalInfo] = useState(false);
-
-  // Para agregar clase
   const [fechaNuevaClase, setFechaNuevaClase] = useState("");
-
-  // Para agregar info a clase
   const [tema, setTema] = useState("");
   const [idProfesor, setIdProfesor] = useState("");
   const [profesores, setProfesores] = useState([]);
 
-  // Listar clases
   const {
     data: clases = [],
     isLoading: cargandoClases,
@@ -38,7 +31,6 @@ const Clases = ({ materiaId }) => {
     enabled: !!materiaId,
   });
 
-  // Detalle de clase
   const {
     data: detalle,
     isLoading: cargandoDetalle,
@@ -53,7 +45,6 @@ const Clases = ({ materiaId }) => {
     enabled: !!claseSeleccionada,
   });
 
-  // Mutación para agregar clase
   const agregarClase = useMutation({
     mutationFn: async (fecha) => {
       await api.post("/admin/materia/materia-plan-ciclo/crear-clase", {
@@ -70,7 +61,6 @@ const Clases = ({ materiaId }) => {
     onError: () => toast.error("Error al agregar la clase"),
   });
 
-  // Mutación para agregar info a clase
   const agregarInfoClase = useMutation({
     mutationFn: async ({ idClase, tema, idProfesor }) => {
       await api.post("/admin/materia/materia-plan-ciclo/registrar-informacion-clase", {
@@ -89,7 +79,6 @@ const Clases = ({ materiaId }) => {
     onError: () => toast.error("Error al registrar información"),
   });
 
-  // Cargar profesores solo cuando se abre el modal de info
   React.useEffect(() => {
     if (modalInfo && claseSeleccionada) {
       api
@@ -121,21 +110,19 @@ const Clases = ({ materiaId }) => {
               <Info size={20} style={{ verticalAlign: "middle" }} /> No hay clases registradas.
             </div>
           ) : (
-            <ul>
+            <ul className={styles.lista}>
               {clases.map((detalle) => (
                 <li
                   key={detalle.id}
-                  className={claseSeleccionada?.id === detalle.id ? styles.seleccionada : ""}
-                  style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                  className={styles.claseCard}
                   onClick={() => setClaseSeleccionada(detalle)}
                 >
-                  <span>
+                  <span className={styles.fecha}>
                     {detalle.fecha.split("T")[0].split("-").reverse().join("/")}
                   </span>
                   <Boton
                     icono={<SquarePen />}
                     variant="onlyIcon"
-                    size="small"
                     title="Agregar información"
                     onClick={(e) => {
                       e.stopPropagation();
