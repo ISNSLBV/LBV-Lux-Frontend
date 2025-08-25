@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect } from "react";
 import api from "../api/axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const AuthCtx = createContext(null);
 
@@ -59,9 +60,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const needsRoleSelection = () => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="))
+      ?.split("=")[1];
+    if (!token) return false;
+    try {
+      const payload = jwtDecode(token);
+      return payload.roles && Array.isArray(payload.roles) && !payload.rol;
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <AuthCtx.Provider
-      value={{ user, checking: isLoading, logout, login, refetchUser }}
+      value={{ user, checking: isLoading, logout, login, refetchUser, needsRoleSelection }}
     >
       {children}
     </AuthCtx.Provider>

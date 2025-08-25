@@ -70,19 +70,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-  gap: 8px;
+  padding: 0 16px;
+  gap: 16px;
 }
 
 .modal h3 {
   font-size: 20px;
 }
 
+.botones {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 18px;
+}
+
 .opciones {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 8px;
+  gap: 6px;
 }
 
 .link:link {

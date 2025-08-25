@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Login.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Boton from "../../components/Boton/Boton";
 import logo from "../../assets/logo.png";
@@ -24,17 +24,24 @@ const SelectorRol = ({ roles, onSelect, onClose }) => {
     <div className={styles.modalBackdrop} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>¿Con qué rol querés ingresar?</h3>
-        <div className={styles.opciones}>
-          {roles.map((r) => (
-            <Boton
-              variant="primary"
-              fullWidth
-              key={r}
-              onClick={() => onSelect(r)}
-            >
-              {r}
+        <div className={styles.botones}>
+          <div className={styles.opciones}>
+            {roles.map((r) => (
+              <Boton
+                variant="primary"
+                fullWidth
+                key={r}
+                onClick={() => onSelect(r)}
+              >
+                {r}
+              </Boton>
+            ))}
+          </div>
+          <div className={styles.cancelar}>
+            <Boton variant="cancel" fullWidth onClick={onClose}>
+              Cancelar Inicio de Sesión
             </Boton>
-          ))}
+          </div>
         </div>
       </div>
     </div>
@@ -43,8 +50,27 @@ const SelectorRol = ({ roles, onSelect, onClose }) => {
 
 const Login = () => {
   const [seleccionandoRol, setSeleccionandoRol] = useState(null);
-  const { login, refetchUser } = useAuth();
+  const { login, refetchUser, needsRoleSelection, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (needsRoleSelection()) {
+      try {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="))
+          ?.split("=")[1];
+        if (token) {
+          const payload = require("jwt-decode")(token);
+          if (payload.roles && Array.isArray(payload.roles)) {
+            setSeleccionandoRol({ roles: payload.roles });
+          }
+        }
+      } catch {
+        logout();
+      }
+    }
+  }, [needsRoleSelection, logout]);
 
   const handleSeleccionarRol = async (rol) => {
     try {
@@ -56,12 +82,17 @@ const Login = () => {
     }
   };
 
+  const handleCancelarSeleccion = () => {
+    logout();
+  };
+
   return (
     <div className={styles.container}>
       {seleccionandoRol && (
         <SelectorRol
           roles={seleccionandoRol.roles}
           onSelect={handleSeleccionarRol}
+          onClose={handleCancelarSeleccion}
         />
       )}
 
@@ -112,7 +143,7 @@ const Login = () => {
                   name="username"
                   type="text"
                   placeholder="Nombre de usuario"
-                  className='formikField'
+                  className="formikField"
                 />
               </div>
               <div>
@@ -120,7 +151,7 @@ const Login = () => {
                   name="password"
                   type="password"
                   placeholder="Contraseña"
-                  className='formikField'
+                  className="formikField"
                 />
               </div>
             </fieldset>
@@ -128,13 +159,17 @@ const Login = () => {
               Iniciar sesión
             </Boton>
             <div className={styles.actionContainer}>
-              <Link className={styles.link} to="/">Olvidé mi contraseña</Link>
+              <Link className={styles.link} to="/">
+                Olvidé mi contraseña
+              </Link>
               <hr />
               <div>
                 <p>¿Querés inscribirte al instituto?</p>
                 <p>
                   Completá el{" "}
-                  <Link className={styles.link} to="/preinscripcion">Formulario de Preinscripción</Link>
+                  <Link className={styles.link} to="/preinscripcion">
+                    Formulario de Preinscripción
+                  </Link>
                 </p>
               </div>
             </div>

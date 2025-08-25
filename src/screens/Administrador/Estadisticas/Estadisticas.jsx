@@ -32,7 +32,6 @@ const Estadisticas = () => {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <CircularProgress />
-        <p className="ml-4">Cargando estadísticas...</p>
       </div>
     );
   }
@@ -57,8 +56,9 @@ const Estadisticas = () => {
 
   const generoData = datosOriginales.map((item) => ({
     nombre: item["carrera.nombre"],
-    varones: parseInt(item.varones, 10),
+    hombres: parseInt(item.hombres, 10),
     mujeres: parseInt(item.mujeres, 10),
+    noBin: parseInt(item.noBin, 10),
   }));
 
   return (
@@ -81,8 +81,9 @@ const Estadisticas = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="varones" fill="#26e859ff" name="Varones" />
+          <Bar dataKey="hombres" fill="#26e859ff" name="Hombres" />
           <Bar dataKey="mujeres" fill="#f47710ff" name="Mujeres" />
+          <Bar dataKey="noBin" fill="#f4a300ff" name="No Binario" />
         </BarChart>
       </ResponsiveContainer>
     </div>
