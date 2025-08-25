@@ -11,6 +11,9 @@ const Dashboard = lazy(() => import("./screens/Dashboard/Dashboard"));
 const Preinscripcion = lazy(() =>
   import("./screens/Preinscripcion/Preinscripcion")
 );
+const Estadisticas = lazy(() =>
+  import("./screens/Administrador/Estadisticas/Estadisticas")
+);
 const Perfil = lazy(() => import("./screens/Perfil/Perfil"));
 const PreguntasFrecuentes = lazy(() =>
   import("./screens/PreguntasFrecuentes/PreguntasFrecuentes")
@@ -139,10 +142,7 @@ function App() {
               <Route element={<Layout />}>
                 {/* ---- Ruta usuario ---- */}
                 <Route index element={<Dashboard />} />
-                <Route
-                  path="cuenta"
-                  element={<ConfiguracionCuenta />}
-                />
+                <Route path="cuenta" element={<ConfiguracionCuenta />} />
                 {/* ---- Ruta Alumno ---- */}
                 <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
                   <Route index element={<PanelAlumno />} />
@@ -166,14 +166,14 @@ function App() {
                     path="preinscripciones"
                     element={<GestionPreinscriptos />}
                   />
-                  <Route
-                    path="carreras"
-                    element={<GestionCarreras />}
-                  />
+                  <Route path="carreras" element={<GestionCarreras />} />
                   <Route path="planes-de-estudio" element={<GestionPlanes />} />
                   <Route path="materias" element={<GestionMaterias />}>
                     <Route index element={<GestionMateriasMenu />} />
-                    <Route path="materias-base" element={<GestionMateriasBase />} />
+                    <Route
+                      path="materias-base"
+                      element={<GestionMateriasBase />}
+                    />
                     <Route
                       path="materias-por-plan"
                       element={<GestionMateriasPlan />}
@@ -192,10 +192,8 @@ function App() {
                       element={<GestionCorrelativas />}
                     />
                   </Route>
-                  <Route
-                    path="profesores"
-                    element={<GestionProfesores />}
-                  />
+                  <Route path="profesores" element={<GestionProfesores />} />
+                  <Route path="estadisticas" element={<Estadisticas />} />
                   <Route path="perfil/:id" element={<Perfil />} />
                 </Route>
               </Route>
