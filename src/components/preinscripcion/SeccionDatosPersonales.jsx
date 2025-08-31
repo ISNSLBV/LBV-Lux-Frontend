@@ -69,16 +69,10 @@ const SeccionDatosPersonales = () => {
       <div className="campoFila">
         <div className="campoColumna">
           <label>Sexo *</label>
-          <div role="group">
-            <label>
-              <Field type="radio" name="sexo" value="M" /> Masculino
-            </label>
-            <label>
-              <Field type="radio" name="sexo" value="F" /> Femenino
-            </label>
-            <label>
-              <Field type="radio" name="sexo" value="X" /> No binario (X)
-            </label>
+          <div role="group" className="selectorSexo">
+            <label htmlFor="sexoM"><p>Masculino</p> <Field type="radio" id="sexoM" name="sexo" value="M" /></label>
+            <label htmlFor="sexoF"><p>Femenino</p> <Field type="radio" id="sexoF" name="sexo" value="F" /></label>
+            <label htmlFor="sexoX"><p>No binario (X)</p> <Field type="radio" id="sexoX" name="sexo" value="X" /></label>
           </div>
           <ErrorMessage
             name="sexo"
@@ -103,6 +97,40 @@ const SeccionDatosPersonales = () => {
           />
           <ErrorMessage
             name="fechaNacimiento"
+            component="div"
+            className="formikFieldErrorText"
+          />
+        </div>
+      </div>
+
+      <div className="campoFila">
+        <div className="campoColumna">
+          <label htmlFor="nacionalidad">Nacionalidad *</label>
+          <Field
+            as="select"
+            id="nacionalidad"
+            name="nacionalidad"
+            className={
+              formik.errors.nacionalidad && formik.touched.nacionalidad
+                ? "formikFieldError"
+                : "formikField"
+            }
+          >
+            <option value="">Seleccioná tu nacionalidad</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Chile">Chile</option>
+            <option value="Brasil">Brasil</option>
+            <option value="Bolivia">Bolivia</option>
+            <option value="Peru">Perú</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Venezuela">Venezuela</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Otro">Otro</option>
+          </Field>
+          <ErrorMessage
+            name="nacionalidad"
             component="div"
             className="formikFieldErrorText"
           />

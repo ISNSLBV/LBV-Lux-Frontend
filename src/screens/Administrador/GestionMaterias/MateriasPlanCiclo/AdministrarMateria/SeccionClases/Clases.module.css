@@ -28,7 +28,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .detalleClase {
@@ -53,10 +53,125 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.05);
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .fecha {
   padding: 8px 16px;
+}
+
+.detalleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoProfesor,
+.infoTemas,
+.infoAlumnos {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.infoContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.infoTemas {
+  flex: 1;
+}
+
+.infoTemasHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listaAlumnos {
+  list-style: none;
+}
+
+.infoAlumnosHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ...existing code... */
+
+.modalAsistenciaOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(30, 30, 30, 0.65);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalAsistencia {
+  background: #181c24;
+  color: #fff;
+  border-radius: 12px;
+  padding: 32px 24px 24px 24px;
+  min-width: 340px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 90vh;
+}
+
+.selectAllRow {
+  display: flex;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.selectAllRow label, .asistenciaItem label {
+  flex: 2;
+}
+
+.selectAllRow input, .asistenciaItem input {
+  flex: 1;
+}
+
+.listaAlumnosAsistencia {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.asistenciaItem {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.asistenciaItem:last-child {
+  border-bottom: none;
+}
+
+.botonesAsistencia {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 @media (max-width: 768px) {
@@ -75,5 +190,13 @@
 
   .detalleClase {
     flex: 1;
+  }
+
+  .modalAsistencia {
+    min-width: 90vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+  .listaAlumnosAsistencia {
+    max-height: 250px;
   }
 }

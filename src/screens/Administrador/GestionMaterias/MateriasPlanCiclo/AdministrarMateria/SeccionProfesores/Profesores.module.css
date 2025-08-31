@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal .selectores {
+  display: flex;
+  flex: 2;
+  gap: 8px;
+}
+
+.modal .botones {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.profesorItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+}
+
+.profesorNombre {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.opcionesProfesor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editarRol {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.editarRol select {
+  flex: 2;
+}
+
+.botonesRol {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+}
