@@ -150,8 +150,9 @@ export default function GestionPreinscriptos() {
               <option value="" disabled>
                 Seleccioná una opción
               </option>
-              <option value={1}>Regular</option>
-              <option value={2}>Libre</option>
+              <option defaultChecked value={1}>
+                Regular
+              </option>
               <option value={3}>Oyente</option>
               <option value={4}>Itinerante</option>
             </select>
