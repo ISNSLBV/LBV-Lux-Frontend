@@ -32,7 +32,7 @@ const PanelAlumno = () => {
     {
       titulo: "Inscripcion a finales",
       redir: "finales",
-      icono: NotebookPen, 
+      icono: NotebookPen,
     },
 
     {
