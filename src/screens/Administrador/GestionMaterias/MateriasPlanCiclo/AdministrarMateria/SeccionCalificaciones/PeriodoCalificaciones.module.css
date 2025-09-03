@@ -1,0 +1,74 @@
+.container {
+  padding: 20px;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla th,
+.tabla td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla th {
+  font-weight: 600;
+}
+
+.btnEditar,
+.btnGuardar,
+.btnCancelar {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.btnEditar {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.btnGuardar {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.btnCancelar {
+  background-color: #d9534f;
+  color: white;
+}
+
+.btnEditar:hover,
+.btnGuardar:hover,
+.btnCancelar:hover {
+  opacity: 0.9;
+}
+
+input[type="number"] {
+  width: 80px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.calificacionContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lockIcon {
+  font-size: 14px;
+  color: #666;
+  cursor: help;
+}
+
+.bloqueada {
+  background-color: rgba(0, 0, 0, 0.02);
+}

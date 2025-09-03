@@ -62,6 +62,26 @@ legend {
   gap: 10px;
 }
 
+.selectorSexo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selectorSexo label {
+  display: flex;
+  height: 15px;
+}
+
+.selectorSexo label p {
+  min-width: 120px;
+}
+
+.selectorSexo label input {
+  width: 25px;
+}
+
+
 @media (max-width: 768px) {
   .campoFila {
     flex-direction: column;
@@ -78,10 +98,6 @@ legend {
   .seccionDatosAcademicos {
     padding: 0.75rem;
     margin-bottom: 1rem;
-  }
-
-  .preinscripcionForm {
-    padding: 0 1rem;
   }
 
   .botonera {

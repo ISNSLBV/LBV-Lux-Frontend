@@ -1,20 +1,13 @@
 import React from "react";
 import styles from "./PanelAlumno.module.css";
 import PanelOpcion from "../../../components/PanelOpcion/PanelOpcion";
-import {
-  ScrollText,
-  BookOpen,
-  User,
-  ShieldUser,
-  NotebookPen,
-  FilePenLine,
-} from "lucide-react";
+import {ScrollText, BookOpen, User, ShieldUser, NotebookPen, FilePenLine} from "lucide-react";
 const PanelAlumno = () => {
   const opciones = [
     {
-      titulo: "Mi perfil",
-      redir: "perfil",
-      icono: User,
+      titulo:"Mi perfil",
+      redir:"perfil",
+      icono: User, 
     },
     {
       titulo: "Mis materias",
@@ -57,6 +50,7 @@ const PanelAlumno = () => {
             key={index}
             titulo={opcion.titulo}
             descripcion={opcion.descripcion}
+            icono={opcion.icono}
             {...opcion}
           />
         ))}

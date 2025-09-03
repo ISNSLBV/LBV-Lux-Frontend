@@ -36,9 +36,11 @@ const PreinscripcionEnviada = ({ exito, mensaje, successData }) => {
     {
       title: "Documentación Requerida",
       items: [
-        "DNI (fotocopia)",
-        "Analítico o Constancia de análitico en trámite",
+        "Fotocopia de DNI",
+        "Analítico o Constancia de analítico en trámite",
         "2 fotos 4x4",
+        "Apto psicofísico emitido por cualquier médico matriculado",
+        "Fotocopia de Partida de Nacimiento"
       ],
     },
     {

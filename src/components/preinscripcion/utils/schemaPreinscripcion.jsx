@@ -16,6 +16,7 @@ export const schemaPreinscripcion = Yup.object().shape({
   fechaNacimiento: Yup.date()
     .max(new Date(), "La fecha debe ser anterior a hoy")
     .required("Este campo es obligatorio"),
+  nacionalidad: Yup.string().required("Este campo es obligatorio"),
   email: Yup.string()
     .email("Formato de email inválido")
     .required("Este campo es obligatorio"),

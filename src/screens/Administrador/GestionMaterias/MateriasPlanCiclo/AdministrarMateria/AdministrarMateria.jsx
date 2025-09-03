@@ -7,6 +7,8 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import Alumnos from "./SeccionAlumnos/Alumnos";
 import Clases from "./SeccionClases/Clases";
+import Profesores from "./SeccionProfesores/Profesores";
+import Calificaciones from "./SeccionCalificaciones/Calificaciones";
 
 const fetchMateria = async (id) => {
   const { data } = await api.get(
@@ -19,7 +21,7 @@ const SECCIONES = [
   { key: "alumnosInscriptos", label: "Alumnos inscriptos" },
   { key: "clases", label: "Clases" },
   { key: "profesores", label: "Profesor/es asignado/s" },
-  { key: "evaluaciones", label: "Evaluaciones" },
+  { key: "calificaciones", label: "Calificaciones" },
 ];
 
 const AdministrarMateria = () => {
@@ -45,9 +47,9 @@ const AdministrarMateria = () => {
       case "clases":
         return <Clases materiaId={idMateria} />;
       case "profesores":
-        return <div>Listado de profesores de la materia</div>;
-      case "evaluaciones":
-        return <div>Listado de evaluaciones de la materia</div>;
+        return <Profesores profesores={materia?.profesores ?? []} idMateria={idMateria} />;
+      case "calificaciones":
+        return <Calificaciones idMateriaPlanCiclo={idMateria} />;
       default:
         return null;
     }
