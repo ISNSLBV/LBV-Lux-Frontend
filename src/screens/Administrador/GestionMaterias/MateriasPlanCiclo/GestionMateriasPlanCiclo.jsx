@@ -39,6 +39,29 @@ const GestionMateriasPlanCiclo = () => {
   const params = useParams();
   const mostrandoDetalle = !!params.idMateria;
 
+  // Función para formatear fecha a dd/mm/aaaa
+  const formatearFecha = (fecha) => {
+    if (!fecha || fecha === "0000-00-00") return "—";
+    try {
+      // Si la fecha viene en formato YYYY-MM-DD, parsearla manualmente
+      // para evitar problemas de zona horaria
+      if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [año, mes, dia] = fecha.split('-');
+        return `${dia}/${mes}/${año}`;
+      }
+      
+      const fechaObj = new Date(fecha);
+      if (isNaN(fechaObj.getTime())) return "—";
+      return fechaObj.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch (error) {
+      return "—";
+    }
+  };
+
   const queryClient = useQueryClient();
 
   const {
@@ -153,7 +176,7 @@ const GestionMateriasPlanCiclo = () => {
                     <p>Fecha de inicio</p>
                     <span>
                       <strong>
-                        {m.fecha_inicio !== "0000-00-00" ? m.fecha_inicio : "—"}
+                        {formatearFecha(m.fecha_inicio)}
                       </strong>
                     </span>
                   </div>
@@ -161,7 +184,7 @@ const GestionMateriasPlanCiclo = () => {
                     <p>Fecha de cierre</p>
                     <span>
                       <strong>
-                        {m.fecha_cierre !== "0000-00-00" ? m.fecha_cierre : "—"}
+                        {formatearFecha(m.fecha_cierre)}
                       </strong>
                     </span>
                   </div>

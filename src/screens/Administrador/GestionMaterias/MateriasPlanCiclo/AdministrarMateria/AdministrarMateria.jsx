@@ -9,6 +9,7 @@ import Alumnos from "./SeccionAlumnos/Alumnos";
 import Clases from "./SeccionClases/Clases";
 import Profesores from "./SeccionProfesores/Profesores";
 import Calificaciones from "./SeccionCalificaciones/Calificaciones";
+import Configuracion from "./SeccionConfiguracion/Configuracion";
 
 const fetchMateria = async (id) => {
   const { data } = await api.get(
@@ -22,6 +23,7 @@ const SECCIONES = [
   { key: "clases", label: "Clases" },
   { key: "profesores", label: "Profesor/es asignado/s" },
   { key: "calificaciones", label: "Calificaciones" },
+  { key: 'configuracion', label: "Configuración" }
 ];
 
 const AdministrarMateria = () => {
@@ -50,6 +52,8 @@ const AdministrarMateria = () => {
         return <Profesores profesores={materia?.profesores ?? []} idMateria={idMateria} />;
       case "calificaciones":
         return <Calificaciones idMateriaPlanCiclo={idMateria} />;
+      case "configuracion":
+        return <Configuracion idMateriaPlanCiclo={idMateria} />;
       default:
         return null;
     }

@@ -116,6 +116,50 @@ export default function GestionProfesores() {
             )}
           </tbody>
         </table>
+        
+        {/* Mobile Cards */}
+        <div className={styles.cards}>
+          {isLoading ? (
+            <div style={{ textAlign: "center", padding: 32 }}>
+              <CircularProgress color="inherit" />
+            </div>
+          ) : profesoresFiltrados.length === 0 ? (
+            <div style={{ textAlign: "center", padding: 32 }}>
+              No se encontraron profesores
+            </div>
+          ) : (
+            profesoresFiltrados.map((p) => (
+              <div key={p.id} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.cardTitle}>
+                    {`${p.persona?.nombre} ${p.persona?.apellido}`}
+                  </div>
+                  <Boton
+                    variant="onlyIcon"
+                    icono={<SquarePen />}
+                    onClick={() => {
+                      setEdicion(true);
+                    }}
+                  />
+                </div>
+                <div className={styles.cardBody}>
+                  <div className={styles.cardRow}>
+                    <span className={styles.cardLabel}>DNI:</span>
+                    <span className={styles.cardValue}>{p.persona?.dni}</span>
+                  </div>
+                  <div className={styles.cardRow}>
+                    <span className={styles.cardLabel}>Rol(es):</span>
+                    <span className={styles.cardValue}>-</span>
+                  </div>
+                  <div className={styles.cardRow}>
+                    <span className={styles.cardLabel}>Materias actuales:</span>
+                    <span className={styles.cardValue}>-</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {registro && (

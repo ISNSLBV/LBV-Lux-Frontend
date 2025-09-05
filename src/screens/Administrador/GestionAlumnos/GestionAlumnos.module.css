@@ -13,14 +13,19 @@
   background-color: rgba(255, 255, 255, 0.05);
   padding: 24px;
   margin-bottom: 32px;
+  align-items: center;
 }
 
 .barraBusqueda {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 1;
 }
 
-.listaProfesores {
+.filtros {
+    display: flex;
+    gap: 8px;
+}
+
+.listaAlumnos {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -165,9 +170,22 @@
   padding-bottom: 8px;
 }
 
+.cardNombre {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .cardTitle {
   font-weight: 600;
   font-size: 16px;
+}
+
+.cardEstado {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .cardBody {
@@ -182,6 +200,27 @@
   align-items: center;
 }
 
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cardContent button {
+    width: 100%;
+}
+
+.cardField {
+    display: flex;
+    flex-direction: column;
+}
+
 .cardLabel {
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
@@ -189,6 +228,10 @@
 
 .cardValue {
   font-weight: 500;
+}
+
+.card .estado {
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
@@ -211,5 +254,13 @@
 
   .cards {
     display: block;
+  }
+
+  .filtros {
+    flex-direction: column;
+  }
+
+  .barraBusqueda {
+    width: 100%;
   }
 }
