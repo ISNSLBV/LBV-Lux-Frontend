@@ -82,6 +82,9 @@ const GestionAlumnos = lazy(() =>
 const ConfiguracionSistema = lazy(() => 
   import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema")
 );
+const MisMaterias = lazy(() =>
+  import("./screens/Alumno/MisMaterias/MisMaterias")
+);
 
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -155,6 +158,8 @@ function App() {
                   <Route index element={<PanelAlumno />} />
                   <Route path="ayuda" element={<AyudaAlumno />} />
                   <Route path="mi-perfil" element={<Perfil />} />
+                  <Route path="mis-materias" element={<MisMaterias />} />
+                  <Route path="config" element={<ConfiguracionCuenta />} />
                 </Route>
                 {/* ---- Ruta Profesor ---- */}
                 <Route
@@ -162,6 +167,7 @@ function App() {
                   element={<RutaPrivada rol={["Profesor"]} />}
                 >
                   <Route index element={<PanelProfesor />} />
+
                 </Route>
                 {/* ---- Ruta Administrador ---- */}
                 <Route

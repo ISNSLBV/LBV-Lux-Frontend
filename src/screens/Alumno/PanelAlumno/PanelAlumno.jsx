@@ -6,7 +6,7 @@ const PanelAlumno = () => {
   const opciones = [
     {
       titulo:"Mi perfil",
-      redir:"perfil",
+      redir:"mi-perfil",
       icono: User, 
     },
     {
@@ -37,7 +37,7 @@ const PanelAlumno = () => {
 
     {
       titulo: "Configuracion de la cuenta",
-      redir: "cuenta",
+      redir: "config",
       icono: ShieldUser,
     },
   ];
