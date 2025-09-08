@@ -59,6 +59,7 @@ const Perfil = () => {
       <div className={styles.estadisticas}>
         {estadisticas.map(({ iconoKey, valor }) => {
           const Icon = iconMap[iconoKey];
+          if (!Icon) return null;
           const label = iconoKey.charAt(0).toUpperCase() + iconoKey.slice(1);
           return (
             <Estadistica

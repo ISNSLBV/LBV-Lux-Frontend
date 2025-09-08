@@ -5,87 +5,40 @@ import { RutaPublica } from "./components/RutaPublica/RutaPublica";
 import { ToastContainer } from "react-toastify";
 import { RutaPublicaSinRedireccion } from "./components/RutaPublica/RutaPublicaSinRedireccion";
 import Login from "./screens/Login/Login";
-const Layout = lazy(() => import("./screens/Layout/Layout"));
-const RutaPrivada = lazy(() => import("./components/RutaPrivada/RutaPrivada"));
-const Dashboard = lazy(() => import("./screens/Dashboard/Dashboard"));
-const Preinscripcion = lazy(() =>
-  import("./screens/Preinscripcion/Preinscripcion")
-);
-const Estadisticas = lazy(() =>
-  import("./screens/Administrador/Estadisticas/Estadisticas")
-);
-const Perfil = lazy(() => import("./screens/Perfil/Perfil"));
-const PreguntasFrecuentes = lazy(() =>
-  import("./screens/PreguntasFrecuentes/PreguntasFrecuentes")
-);
-const GestionProfesores = lazy(() =>
-  import("./screens/Administrador/GestionProfesores/GestionProfesores")
-);
-const AyudaAlumno = lazy(() =>
-  import("./screens/Alumno/AyudaAlumno/AyudaAlumno")
-);
-const GestionMateriasMenu = lazy(() =>
-  import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu")
-);
-const GestionMateriasBase = lazy(() =>
-  import(
-    "./screens/Administrador/GestionMaterias/MateriasBase/GestionMateriasBase"
-  )
-);
-const GestionMateriasPlan = lazy(() =>
-  import(
-    "./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan"
-  )
-);
-const GestionMateriasPlanCiclo = lazy(() =>
-  import(
-    "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo"
-  )
-);
-const GestionPreinscriptos = lazy(() =>
-  import("./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos")
-);
-const GestionCarreras = lazy(() =>
-  import("./screens/Administrador/GestionCarreras/GestionCarreras")
-);
-const GestionMaterias = lazy(() =>
-  import("./screens/Administrador/GestionMaterias/GestionMaterias")
-);
-const GestionPlanes = lazy(() =>
-  import("./screens/Administrador/GestionPlanes/GestionPlanes")
-);
-const PanelAdministrador = lazy(() =>
-  import("./screens/Administrador/PanelAdministrador/PanelAdministrador")
-);
-const GestionCorrelativas = lazy(() =>
-  import(
-    "./screens/Administrador/GestionMaterias/Correlativas/GestionCorrelativas"
-  )
-);
-const AdministrarMateria = lazy(() =>
-  import(
-    "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/AdministrarMateria/AdministrarMateria"
-  )
-);
-const PanelProfesor = lazy(() =>
-  import("./screens/Profesor/PanelProfesor/PanelProfesor")
-);
-const PanelAlumno = lazy(() =>
-  import("./screens/Alumno/PanelAlumno/PanelAlumno")
-);
-const ConfiguracionCuenta = lazy(() =>
-  import("./screens/ConfiguracionCuenta/ConfiguracionCuenta")
-);
-
-const MisMaterias = lazy(() =>
-  import("./screens/Alumno/MisMaterias/MisMaterias")
-);
-const MisFinales = lazy(() =>
-  import("./screens/Alumno/MisFinales/MisFinales")
-);
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 
+//=======================
+// Lazy loading de componentes
+//=======================
+const Layout = lazy(() => import("./screens/Layout/Layout"));
+const RutaPrivada = lazy(() => import("./components/RutaPrivada/RutaPrivada"));
+const Dashboard = lazy(() => import("./screens/Dashboard/Dashboard"));
+const Preinscripcion = lazy(() => import("./screens/Preinscripcion/Preinscripcion"));
+const Estadisticas = lazy(() => import("./screens/Administrador/Estadisticas/Estadisticas"));
+const Perfil = lazy(() => import("./screens/Perfil/Perfil"));
+const PreguntasFrecuentes = lazy(() => import("./screens/PreguntasFrecuentes/PreguntasFrecuentes"));
+const GestionProfesores = lazy(() => import("./screens/Administrador/GestionProfesores/GestionProfesores"));
+const AyudaAlumno = lazy(() => import("./screens/Alumno/AyudaAlumno/AyudaAlumno"));
+const GestionMateriasMenu = lazy(() => import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu"));
+const GestionMateriasBase = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasBase/GestionMateriasBase"));
+const GestionMateriasPlan = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan"));
+const GestionMateriasPlanCiclo = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo"));
+const GestionPreinscriptos = lazy(() => import("./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos"));
+const GestionCarreras = lazy(() => import("./screens/Administrador/GestionCarreras/GestionCarreras"));
+const GestionMaterias = lazy(() => import("./screens/Administrador/GestionMaterias/GestionMaterias"));
+const GestionPlanes = lazy(() => import("./screens/Administrador/GestionPlanes/GestionPlanes"));
+const PanelAdministrador = lazy(() => import("./screens/Administrador/PanelAdministrador/PanelAdministrador"));
+const GestionCorrelativas = lazy(() => import("./screens/Administrador/GestionMaterias/Correlativas/GestionCorrelativas"));
+const AdministrarMateria = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasPlanCiclo/AdministrarMateria/AdministrarMateria"));
+const PanelProfesor = lazy(() => import("./screens/Profesor/PanelProfesor/PanelProfesor"));
+const PanelAlumno = lazy(() => import("./screens/Alumno/PanelAlumno/PanelAlumno"));
+const ConfiguracionCuenta = lazy(() => import("./screens/ConfiguracionCuenta/ConfiguracionCuenta"));
+const GestionAlumnos = lazy(() => import("./screens/Administrador/GestionAlumnos/GestionAlumnos"));
+const ConfiguracionSistema = lazy(() => import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema"));
+const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
+const MisMaterias = lazy(() => import ("./screens/Alumno/MisMaterias/MisMaterias"))
+const MisFinales = lazy(() => import ("./screens/Alumno/MisFinales/MisFinales"))
 function App() {
   return (
     <Router basename="/alumnos2025">
@@ -203,9 +156,13 @@ function App() {
                     />
                   </Route>
                   <Route path="profesores" element={<GestionProfesores />} />
-                  {/*<Route path="alumnos" element={<GestionAlumnos />} />*/}
+                  <Route path="alumnos" element={<GestionAlumnos />} />
+                  <Route path="certificados" element={<Certificados />} />
                   <Route path="estadisticas" element={<Estadisticas />} />
-                  {/*<Route path="configuracion-sistema" element={<ConfiguracionSistema />} />*/}
+                  <Route
+                    path="configuracion-sistema"
+                    element={<ConfiguracionSistema />}
+                  />
                   <Route path="perfil/:id" element={<Perfil />} />
                 </Route>
               </Route>

@@ -43,7 +43,9 @@ export default function GestionProfesores() {
   });
 
   const profesoresFiltrados = profesores.filter((p) =>
-    p.persona?.nombre.toLowerCase().includes(filtro.toLowerCase())
+    `${p.persona?.nombre} ${p.persona?.apellido} ${p.persona?.dni}`
+      .toLowerCase()
+      .includes(filtro.toLowerCase())
   );
 
   return (
@@ -77,7 +79,7 @@ export default function GestionProfesores() {
             <tr>
               <th>DNI</th>
               <th>Nombre</th>
-              <th>Rol(es)</th>
+              <th>Contacto</th>
               <th>Materias actuales</th>
               <th>Acciones</th>
             </tr>
@@ -100,8 +102,34 @@ export default function GestionProfesores() {
                 <tr key={p.id} className={styles.tablaFila}>
                   <td>{p.persona?.dni}</td>
                   <td>{`${p.persona?.nombre} ${p.persona?.apellido}`}</td>
-                  <td></td>
-                  <td></td>
+                  <td>
+                    <div className={styles.contactoInfo}>
+                      <div>{p.persona?.email}</div>
+                      <div className={styles.telefono}>
+                        {p.persona?.telefono}
+                      </div>
+                    </div>
+                  </td>
+                  <td className={styles.materiasCell}>
+                    {p.materiasAsignadas && p.materiasAsignadas.length > 0 ? (
+                      <div className={styles.materiasLista}>
+                        {p.materiasAsignadas.map((materia, index) => (
+                          <div
+                            key={materia.id || index}
+                            className={styles.materiaItem}
+                          >
+                            <span className={styles.materiaNombre}>
+                              {materia.nombre} ({materia.rol})
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className={styles.sinMaterias}>
+                        Sin materias asignadas
+                      </span>
+                    )}
+                  </td>
                   <td>
                     <Boton
                       variant="onlyIcon"
@@ -116,7 +144,7 @@ export default function GestionProfesores() {
             )}
           </tbody>
         </table>
-        
+
         {/* Mobile Cards */}
         <div className={styles.cards}>
           {isLoading ? (
@@ -201,7 +229,7 @@ export default function GestionProfesores() {
               <Formik
                 initialValues={{ dni: "" }}
                 validationSchema={Yup.object({
-                  dni: Yup.string().required("Ingrese el DNI"),
+                  dni: Yup.string().required("Ingresá el DNI del profesor"),
                 })}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                   registrarProfesor.mutate(
@@ -267,21 +295,25 @@ export default function GestionProfesores() {
                   email: "",
                   dni: "",
                   telefono: "",
+                  nacionalidad: "",
                   fecha_nacimiento: "",
                 }}
                 validationSchema={Yup.object({
-                  nombre: Yup.string().required("Ingrese el nombre"),
-                  apellido: Yup.string().required("Ingrese el apellido"),
+                  nombre: Yup.string().required("Este campo es obligatorio"),
+                  apellido: Yup.string().required("Este campo es obligatorio"),
                   sexo: Yup.string()
                     .oneOf(["F", "M", "X"])
-                    .required("Seleccione el sexo"),
+                    .required("Este campo es obligatorio"),
                   email: Yup.string()
                     .email("Email inválido")
-                    .required("Ingrese el email"),
-                  dni: Yup.string().required("Ingrese el DNI"),
-                  telefono: Yup.string().required("Ingrese el teléfono"),
+                    .required("Este campo es obligatorio"),
+                  dni: Yup.string().required("Este campo es obligatorio"),
+                  telefono: Yup.string().required("Este campo es obligatorio"),
+                  nacionalidad: Yup.string().required(
+                    "Este campo es obligatorio"
+                  ),
                   fecha_nacimiento: Yup.string().required(
-                    "Ingrese la fecha de nacimiento"
+                    "Este campo es obligatorio"
                   ),
                 })}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -293,6 +325,7 @@ export default function GestionProfesores() {
                       email: values.email.trim(),
                       dni: values.dni.trim(),
                       telefono: values.telefono.trim(),
+                      nacionalidad: values.nacionalidad.trim(),
                       fecha_nacimiento: values.fecha_nacimiento,
                     },
                     {
@@ -416,6 +449,37 @@ export default function GestionProfesores() {
                       />
                       <ErrorMessage
                         name="telefono"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="nacionalidad">Nacionalidad</label>
+                      <Field
+                        id="nacionalidad"
+                        name="nacionalidad"
+                        as="select"
+                        className={
+                          errors.nacionalidad && touched.nacionalidad
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      >
+                        <option value="">Seleccioná la nacionalidad</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Uruguay">Uruguay</option>
+                        <option value="Paraguay">Paraguay</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Brasil">Brasil</option>
+                        <option value="Bolivia">Bolivia</option>
+                        <option value="Peru">Perú</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="Venezuela">Venezuela</option>
+                        <option value="Ecuador">Ecuador</option>
+                        <option value="Otro">Otro</option>
+                      </Field>
+                      <ErrorMessage
+                        name="nacionalidad"
                         component="div"
                         className="formikFieldErrorText"
                       />

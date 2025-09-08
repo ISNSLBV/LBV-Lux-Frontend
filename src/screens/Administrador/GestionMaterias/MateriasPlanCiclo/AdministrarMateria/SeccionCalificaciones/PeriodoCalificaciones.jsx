@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../../../../../../api/axios'
 import { toast } from 'react-toastify'
 import styles from './PeriodoCalificaciones.module.css'
+import { Lock } from 'lucide-react'
+import Boton from '../../../../../../components/Boton/Boton'
 
 const PeriodoCalificaciones = ({ periodo, idMateriaPlanCiclo, userRole }) => {
   const queryClient = useQueryClient();
@@ -93,42 +95,41 @@ const PeriodoCalificaciones = ({ periodo, idMateriaPlanCiclo, userRole }) => {
                     <div className={styles.calificacionContainer}>
                       {cal.calificacion || '-'}
                       {cal.bloqueada && (
-                        <span className={styles.lockIcon} title={canEditBlocked ? "Bloqueada (puedes editar como administrador)" : "Bloqueada"}>
-                          🔒
+                        <span className={styles.lockIcon} title={canEditBlocked ? "Bloqueada (podés editar como administrador)" : "Bloqueada"}>
+                          <Lock />
                         </span>
                       )}
                     </div>
                   )}
                 </td>
-                <td>
+                <td className={styles.acciones}>
                   {isEditing ? (
                     <>
-                      <button 
+                      <Boton 
                         onClick={() => handleSave(cal.inscripcionId)}
-                        className={styles.btnGuardar}
+                        variant='success'
                       >
                         Guardar
-                      </button>
-                      <button 
+                      </Boton>
+                      <Boton 
                         onClick={() => setEditingStates(prev => {
                           const newState = {...prev};
                           delete newState[cal.inscripcionId];
                           return newState;
                         })}
-                        className={styles.btnCancelar}
+                        variant='cancel'
                       >
                         Cancelar
-                      </button>
+                      </Boton>
                     </>
                   ) : (
                     canEdit && (
-                      <button 
+                      <Boton
                         onClick={() => handleEdit(cal.inscripcionId, cal.calificacion)}
-                        className={styles.btnEditar}
                         title={cal.bloqueada ? "Editar (como administrador)" : "Editar"}
                       >
                         Editar
-                      </button>
+                      </Boton>
                     )
                   )}
                 </td>

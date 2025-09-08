@@ -14,7 +14,7 @@ const MisMaterias = () => {
   const { data: personaData, isLoading: isLoadingPersona } = useQuery({
     queryKey: ["persona", idAlumno],
     queryFn: async () => {
-      const { data } = await api.get(`/usuario/perfil/${idAlumno}`);
+      const { data } = await api.get(`/usuario/perfil`);
       return data;
     },
   });

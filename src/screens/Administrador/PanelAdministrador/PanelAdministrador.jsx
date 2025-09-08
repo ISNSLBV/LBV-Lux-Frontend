@@ -10,9 +10,11 @@ import {
   BarChart,
   Settings,
   GraduationCap,
+  Feather
 } from "lucide-react";
 
 const PanelAdministrador = () => {
+  //Opciones del panel de administrador
   const opciones = [
     {
       titulo: "Gestionar preinscripciones",
@@ -43,6 +45,11 @@ const PanelAdministrador = () => {
       titulo: "Gestionar alumnos",
       redir: "alumnos",
       icono: User,
+    },
+    {
+      titulo: "Emitir certificados",
+      redir: "certificados",
+      icono: Feather,
     },
     {
       titulo: "Ver estadísticas",

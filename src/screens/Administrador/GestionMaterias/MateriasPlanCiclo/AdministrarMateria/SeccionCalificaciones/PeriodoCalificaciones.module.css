@@ -16,7 +16,16 @@
 }
 
 .tabla th {
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.tabla td {
+  font-weight: 500;
+}
+
+.tabla .acciones {
+  display: flex;
+  gap: 8px;
 }
 
 .btnEditar,
@@ -27,21 +36,6 @@
   border: none;
   cursor: pointer;
   margin-right: 8px;
-}
-
-.btnEditar {
-  background-color: #4a90e2;
-  color: white;
-}
-
-.btnGuardar {
-  background-color: #5cb85c;
-  color: white;
-}
-
-.btnCancelar {
-  background-color: #d9534f;
-  color: white;
 }
 
 .btnEditar:hover,
@@ -65,7 +59,6 @@ input[type="number"] {
 
 .lockIcon {
   font-size: 14px;
-  color: #666;
   cursor: help;
 }
 

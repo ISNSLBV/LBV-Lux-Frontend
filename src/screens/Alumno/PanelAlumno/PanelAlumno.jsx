@@ -37,7 +37,7 @@ const PanelAlumno = () => {
 
     {
       titulo: "Configuracion de la cuenta",
-      redir: "config",
+      redir: "/cuenta",
       icono: ShieldUser,
     },
   ];

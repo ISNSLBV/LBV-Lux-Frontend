@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import styles from "./Profesores.module.css";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import api from "../../../../../../api/axios";
-
 import { useAuth } from "../../../../../../contexts/AuthContext";
 import Boton from "../../../../../../components/Boton/Boton";
 import { Plus, Trash, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ROLES = [
   { value: "Titular", label: "Titular" },
@@ -49,7 +49,11 @@ const Profesores = ({ profesores = [], idMateria }) => {
       setShowModal(false);
       setNuevoProfesor("");
       setNuevoRol("Titular");
+      toast.success("Profesor asignado correctamente");
     },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || "Error al asignar profesor");
+    }
   });
 
   const modificarRol = useMutation({
@@ -64,6 +68,7 @@ const Profesores = ({ profesores = [], idMateria }) => {
     onSuccess: () => {
       queryClient.invalidateQueries(["detalleMateria", idMateria]);
       setEditIndex(null);
+      toast.success("Rol modificado correctamente");
     },
   });
 

@@ -8,6 +8,8 @@ import api from "../../../../api/axios";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const fetchMateriasPlanCiclo = async () => {
   const { data } = await api.get(
@@ -17,24 +19,8 @@ const fetchMateriasPlanCiclo = async () => {
 };
 
 const GestionMateriasPlanCiclo = () => {
-  const [nuevaMateria, setNuevaMateria] = useState({
-    id_materia_plan: "",
-    ciclo_lectivo: new Date().getFullYear().toString(),
-    fecha_inicio: "",
-    fecha_cierre: "",
-    tipo_aprobacion: "",
-  });
   const [filtro, setFiltro] = useState("");
-  const [edicion, setEdicion] = useState(false);
   const [registro, setRegistro] = useState(false);
-  const [materiaEditada, setMateriaEditada] = useState({
-    id: "",
-    id_materia_plan: "",
-    ciclo_lectivo: "",
-    fecha_inicio: "",
-    fecha_cierre: "",
-    tipo_aprobacion: "",
-  });
   const navigate = useNavigate();
   const params = useParams();
   const mostrandoDetalle = !!params.idMateria;
@@ -45,17 +31,17 @@ const GestionMateriasPlanCiclo = () => {
     try {
       // Si la fecha viene en formato YYYY-MM-DD, parsearla manualmente
       // para evitar problemas de zona horaria
-      if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        const [año, mes, dia] = fecha.split('-');
+      if (typeof fecha === "string" && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [año, mes, dia] = fecha.split("-");
         return `${dia}/${mes}/${año}`;
       }
-      
+
       const fechaObj = new Date(fecha);
       if (isNaN(fechaObj.getTime())) return "—";
-      return fechaObj.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+      return fechaObj.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       });
     } catch (error) {
       return "—";
@@ -106,31 +92,6 @@ const GestionMateriasPlanCiclo = () => {
     onError: () => toast.error("Error al registrar la materia"),
   });
 
-  const handleRegistrar = async (e) => {
-    e.preventDefault();
-    if (
-      !nuevaMateria.id_materia_plan ||
-      !nuevaMateria.ciclo_lectivo ||
-      !nuevaMateria.tipo_aprobacion
-    )
-      return;
-    registrarMateria.mutate({
-      idMateriaPlan: nuevaMateria.id_materia_plan,
-      cicloLectivo: new Date().getFullYear(),
-      fechaInicio: nuevaMateria.fecha_inicio,
-      fechaCierre: nuevaMateria.fecha_cierre,
-      tipoAprobacion: nuevaMateria.tipo_aprobacion,
-    });
-    setNuevaMateria({
-      id_materia_plan: "",
-      ciclo_lectivo: new Date().getFullYear(),
-      fecha_inicio: "",
-      fecha_cierre: "",
-      tipo_aprobacion: "",
-    });
-    setRegistro(false);
-  };
-
   const materiasFiltradas = materiasPlanCiclo.filter((m) =>
     m.materiaPlan?.materia?.nombre?.toLowerCase().includes(filtro.toLowerCase())
   );
@@ -175,17 +136,13 @@ const GestionMateriasPlanCiclo = () => {
                   <div>
                     <p>Fecha de inicio</p>
                     <span>
-                      <strong>
-                        {formatearFecha(m.fecha_inicio)}
-                      </strong>
+                      <strong>{formatearFecha(m.fecha_inicio)}</strong>
                     </span>
                   </div>
                   <div>
                     <p>Fecha de cierre</p>
                     <span>
-                      <strong>
-                        {formatearFecha(m.fecha_cierre)}
-                      </strong>
+                      <strong>{formatearFecha(m.fecha_cierre)}</strong>
                     </span>
                   </div>
                 </div>
@@ -251,93 +208,156 @@ const GestionMateriasPlanCiclo = () => {
                     <X />
                   </button>
                 </div>
-                <form onSubmit={handleRegistrar}>
-                  <div className="mb-4">
-                    {/* Materia-Plan */}
-                    <label htmlFor="id_materia_plan">
-                      Materia - Resolución plan
-                    </label>
-                    <select
-                      id="id_materia_plan"
-                      value={nuevaMateria.id_materia_plan}
-                      onChange={(e) =>
-                        setNuevaMateria((prev) => ({
-                          ...prev,
-                          id_materia_plan: e.target.value,
-                        }))
-                      }
-                      required
-                    >
-                      <option value="">Seleccionar materia/plan</option>
-                      {materiasPlan.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.materia?.nombre} - {m.planEstudio?.resolucion}
-                        </option>
-                      ))}
-                    </select>
-                    {/* Ciclo lectivo */}
-                    <label htmlFor="ciclo_lectivo">Ciclo lectivo</label>
-                    <input
-                      type="text"
-                      id="ciclo_lectivo"
-                      value={new Date().getFullYear()}
-                      disabled
-                    />
-                    {/* Fecha inicio */}
-                    <label htmlFor="fecha_inicio">Fecha de inicio</label>
-                    <input
-                      type="date"
-                      id="fecha_inicio"
-                      value={nuevaMateria.fecha_inicio}
-                      onChange={(e) =>
-                        setNuevaMateria((prev) => ({
-                          ...prev,
-                          fecha_inicio: e.target.value,
-                        }))
-                      }
-                      min={new Date().toISOString().split("T")[0]}
-                    />
-                    {/* Fecha cierre */}
-                    <label htmlFor="fecha_cierre">Fecha de cierre</label>
-                    <input
-                      type="date"
-                      id="fecha_cierre"
-                      value={nuevaMateria.fecha_cierre}
-                      onChange={(e) =>
-                        setNuevaMateria((prev) => ({
-                          ...prev,
-                          fecha_cierre: e.target.value,
-                        }))
-                      }
-                      min={new Date().toISOString().split("T")[0]}
-                    />
-                    <label htmlFor="tipo_aprobacion">Tipo de aprobación</label>
-                    <select
-                      id="tipo_aprobacion"
-                      value={nuevaMateria.tipo_aprobacion}
-                      onChange={(e) =>
-                        setNuevaMateria((prev) => ({
-                          ...prev,
-                          tipo_aprobacion: e.target.value,
-                        }))
-                      }
-                      required
-                    >
-                      <option value="">Seleccioná una opción</option>
-                      <option value="EP">Exclusivamente promocionable</option>
-                      <option value="P">Promocionable</option>
-                      <option value="NP">No promocionable</option>
-                    </select>
-                  </div>
-                  <div className={styles.modalActions}>
-                    <Boton type="submit" variant="success">
-                      Crear
-                    </Boton>
-                    <Boton type="button" onClick={() => setRegistro(false)}>
-                      Cancelar
-                    </Boton>
-                  </div>
-                </form>
+                <Formik
+                  initialValues={{
+                    id_materia_plan: "",
+                    ciclo_lectivo: new Date().getFullYear(),
+                    fecha_inicio: "",
+                    fecha_cierre: "",
+                    tipo_aprobacion: "",
+                  }}
+                  validationSchema={Yup.object({
+                    id_materia_plan: Yup.string().required(
+                      "La materia es obligatoria"
+                    ),
+                    // Fecha inicio opcional
+                    fecha_inicio: Yup.date()
+                      .nullable(true)
+                      .transform((curr, orig) => (orig === "" ? null : curr)),
+                    // Fecha cierre opcional, si se ingresa debe ser >= fecha_inicio
+                    fecha_cierre: Yup.date()
+                      .nullable(true)
+                      .transform((curr, orig) => (orig === "" ? null : curr))
+                      .when("fecha_inicio", (fecha_inicio, schema) =>
+                        fecha_inicio
+                          ? schema.min(
+                              fecha_inicio,
+                              "La fecha de cierre no puede ser anterior a la de inicio"
+                            )
+                          : schema
+                      ),
+                    tipo_aprobacion: Yup.string().required(
+                      "El tipo de aprobación es obligatorio"
+                    ),
+                  })}
+                  onSubmit={(values, { resetForm }) => {
+                    // Mapear cadenas vacías a null
+                    const fechaInicio = values.fecha_inicio || null;
+                    const fechaCierre = values.fecha_cierre || null;
+                    registrarMateria.mutate({
+                      idMateriaPlan: values.id_materia_plan,
+                      cicloLectivo: values.ciclo_lectivo,
+                      fechaInicio,
+                      fechaCierre,
+                      tipoAprobacion: values.tipo_aprobacion,
+                    });
+                    resetForm();
+                    setRegistro(false);
+                  }}
+                >
+                  {({ isSubmitting, touched, errors }) => (
+                    <Form>
+                      <div className="mb-4">
+                        <label htmlFor="id_materia_plan">
+                          Materia - Resolución plan
+                        </label>
+                        <Field
+                          as="select"
+                          id="id_materia_plan"
+                          name="id_materia_plan"
+                          className={
+                            errors.id_materia_plan && touched.id_materia_plan
+                              ? "formikFieldError"
+                              : "formikField"
+                          }
+                        >
+                          <option value="">Seleccionar materia/plan</option>
+                          {materiasPlan.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.materia?.nombre} - {m.planEstudio?.resolucion}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="id_materia_plan"
+                          component="div"
+                          className="formikFieldErrorText"
+                        />
+                        <label htmlFor="fecha_inicio">Fecha de inicio</label>
+                        <Field
+                          type="date"
+                          id="fecha_inicio"
+                          name="fecha_inicio"
+                          min={new Date().toISOString().split("T")[0]}
+                          className={
+                            errors.fecha_inicio && touched.fecha_inicio
+                              ? "formikFieldError"
+                              : "formikField"
+                          }
+                        />
+                        <ErrorMessage
+                          name="fecha_inicio"
+                          component="div"
+                          className="formikFieldErrorText"
+                        />
+                        <label htmlFor="fecha_cierre">Fecha de cierre</label>
+                        <Field
+                          type="date"
+                          id="fecha_cierre"
+                          name="fecha_cierre"
+                          min={new Date().toISOString().split("T")[0]}
+                          className={
+                            errors.fecha_cierre && touched.fecha_cierre
+                              ? "formikFieldError"
+                              : "formikField"
+                          }
+                        />
+                        <ErrorMessage
+                          name="fecha_cierre"
+                          component="div"
+                          className="formikFieldErrorText"
+                        />
+                        <label htmlFor="tipo_aprobacion">
+                          Tipo de aprobación
+                        </label>
+                        <Field
+                          as="select"
+                          id="tipo_aprobacion"
+                          name="tipo_aprobacion"
+                          className={
+                            errors.tipo_aprobacion && touched.tipo_aprobacion
+                              ? "formikFieldError"
+                              : "formikField"
+                          }
+                        >
+                          <option value="">Seleccioná una opción</option>
+                          <option value="EP">
+                            Exclusivamente promocionable
+                          </option>
+                          <option value="P">Promocionable</option>
+                          <option value="NP">No promocionable</option>
+                        </Field>
+                        <ErrorMessage
+                          name="tipo_aprobacion"
+                          component="div"
+                          className="formikFieldErrorText"
+                        />
+                      </div>
+                      <div className={styles.modalActions}>
+                        <Boton
+                          type="submit"
+                          variant="success"
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? "Creando..." : "Crear"}
+                        </Boton>
+                        <Boton type="button" onClick={() => setRegistro(false)}>
+                          Cancelar
+                        </Boton>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
               </div>
             </div>
           )}
