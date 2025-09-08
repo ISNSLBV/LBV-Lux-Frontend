@@ -10,6 +10,7 @@ import {
   BarChart,
   Settings,
   GraduationCap,
+  Feather
 } from "lucide-react";
 
 const PanelAdministrador = () => {
@@ -43,6 +44,11 @@ const PanelAdministrador = () => {
       titulo: "Gestionar alumnos",
       redir: "alumnos",
       icono: User,
+    },
+    {
+      titulo: "Emitir certificados",
+      redir: "certificados",
+      icono: Feather,
     },
     {
       titulo: "Ver estadísticas",

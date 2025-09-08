@@ -82,6 +82,9 @@ const GestionAlumnos = lazy(() =>
 const ConfiguracionSistema = lazy(() => 
   import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema")
 );
+const Certificados = lazy(() =>
+  import("./screens/Administrador/Certificados/Certificados")
+);
 
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -201,6 +204,7 @@ function App() {
                   </Route>
                   <Route path="profesores" element={<GestionProfesores />} />
                   <Route path="alumnos" element={<GestionAlumnos />} />
+                  <Route path="certificados" element={<Certificados />} />
                   <Route path="estadisticas" element={<Estadisticas />} />
                   <Route path="configuracion-sistema" element={<ConfiguracionSistema />} />
                   <Route path="perfil/:id" element={<Perfil />} />
