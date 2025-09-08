@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 const PanelAdministrador = () => {
+  //Opciones del panel de administrador
   const opciones = [
     {
       titulo: "Gestionar preinscripciones",

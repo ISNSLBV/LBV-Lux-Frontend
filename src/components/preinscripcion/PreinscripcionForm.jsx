@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import SeccionDatosPersonales from "./SeccionDatosPersonales";
 import SeccionDatosDomicilio from "./SeccionDatosDomicilio";
 import SeccionDatosAcademicos from "./SeccionDatosAcademicos";
@@ -9,9 +9,28 @@ import "./estilos/PreinscripcionForm.css";
 import Boton from "../Boton/Boton";
 import PreinscripcionEnviada from "./PreinscripcionEnviada/PreinscripcionEnviada";
 import api from "../../api/axios";
+import { CircularProgress } from "@mui/material";
+import PreinscripcionCerrada from "./PreinscripcionCerrada/PreinscripcionCerrada";
+
+const estadoPreinscripcion = async () => {
+  const { data } = await api.get("/preinscripcion/estado");
+  return data;
+};
 
 const PreinscripcionForm = () => {
   const [resultado, setResultado] = useState(null);
+
+  const {
+    data: estadoData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["estadoPreinscripcion"],
+    queryFn: estadoPreinscripcion,
+    staleTime: 60 * 60 * 1000, // 1 hora
+    retry: 3,
+    retryDelay: 1000,
+  });
 
   const registrarPreinscripcion = useMutation({
     mutationFn: async (values) => {
@@ -69,6 +88,33 @@ const PreinscripcionForm = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="mensaje">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  // Mostrar error si no se pudo cargar el estado
+  if (error) {
+    return (
+      <div className="mensaje">
+        <p>
+          Error al cargar el estado de las preinscripciones. Por favor, intentá
+          más tarde.
+        </p>
+      </div>
+    );
+  }
+
+  // Verificar si las preinscripciones están cerradas
+  if (estadoData && estadoData.abierta === 0) {
+    return (
+      <PreinscripcionCerrada />
+    );
+  }
 
   if (resultado) {
     return (

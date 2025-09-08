@@ -81,6 +81,14 @@ legend {
   width: 25px;
 }
 
+.mensaje {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 
 @media (max-width: 768px) {
   .campoFila {

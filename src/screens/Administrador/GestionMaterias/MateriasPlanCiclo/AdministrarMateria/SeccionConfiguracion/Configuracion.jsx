@@ -30,8 +30,6 @@ const Configuracion = ({ idMateriaPlanCiclo }) => {
     // Cargar fechas cuando se obtienen los datos de la materia
     useEffect(() => {
         if (materia) {
-            console.log('Datos de materia recibidos:', materia);
-            
             const formatearFecha = (fecha) => {
                 if (!fecha || fecha === '0000-00-00' || fecha === '0000-00-00 00:00:00') return '';
                 try {
@@ -50,9 +48,7 @@ const Configuracion = ({ idMateriaPlanCiclo }) => {
 
             const fechaInicioFormateada = formatearFecha(materia.fechaInicio);
             const fechaCierreFormateada = formatearFecha(materia.fechaCierre);
-            
-            console.log('Fechas formateadas:', { fechaInicioFormateada, fechaCierreFormateada });
-            
+                        
             setFechaInicio(fechaInicioFormateada);
             setFechaCierre(fechaCierreFormateada);
             setFechasOriginales({

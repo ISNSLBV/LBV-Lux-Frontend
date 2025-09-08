@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.panel {
+    display: flex;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    height: calc(100vh - 250px);
+}
+
+.selectorAlumno {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 300px;
+    padding: 16px;
+    margin: 16px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.selectorCertificado {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin: 16px;
+    flex: 1;
+    padding: 16px;
+}
+
+@media (max-width:768px) {
+    .panel {
+        flex-direction: column;
+        height: calc(100vh - 100px);
+    }
+
+    .selectorCertificado {
+        width: 300px;
+    }
+}

@@ -55,7 +55,7 @@ const ConfiguracionSistema = () => {
                 <div className={styles.opcionConfiguracion}>
                     <div className={styles.descripcionOpcion}>
                         <h3>Estado de preinscripciones</h3>
-                        <p>Controla si los estudiantes pueden realizar preinscripciones</p>
+                        <p>Abrí o cerrá las preinscripciones a las carreras del instituto</p>
                     </div>
                     <div className={styles.controlOpcion}>
                         {cargando ? (
