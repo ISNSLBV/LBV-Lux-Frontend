@@ -76,16 +76,13 @@ const PanelAlumno = lazy(() =>
 const ConfiguracionCuenta = lazy(() =>
   import("./screens/ConfiguracionCuenta/ConfiguracionCuenta")
 );
-const GestionAlumnos = lazy(() =>
-  import("./screens/Administrador/GestionAlumnos/GestionAlumnos")
-);
-const ConfiguracionSistema = lazy(() => 
-  import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema")
-);
+
 const MisMaterias = lazy(() =>
   import("./screens/Alumno/MisMaterias/MisMaterias")
 );
-
+const MisFinales = lazy(() =>
+  import("./screens/Alumno/MisFinales/MisFinales")
+);
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -154,12 +151,12 @@ function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="cuenta" element={<ConfiguracionCuenta />} />
                 {/* ---- Ruta Alumno ---- */}
-                <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
+                <Route path="alumno" elemenxt={<RutaPrivada rol={["Alumno"]} />}>
                   <Route index element={<PanelAlumno />} />
                   <Route path="ayuda" element={<AyudaAlumno />} />
                   <Route path="mi-perfil" element={<Perfil />} />
                   <Route path="mis-materias" element={<MisMaterias />} />
-                  <Route path="config" element={<ConfiguracionCuenta />} />
+                  <Route path="mis-finales" element={<MisFinales />} />
                 </Route>
                 {/* ---- Ruta Profesor ---- */}
                 <Route
@@ -206,9 +203,9 @@ function App() {
                     />
                   </Route>
                   <Route path="profesores" element={<GestionProfesores />} />
-                  <Route path="alumnos" element={<GestionAlumnos />} />
+                  {/*<Route path="alumnos" element={<GestionAlumnos />} />*/}
                   <Route path="estadisticas" element={<Estadisticas />} />
-                  <Route path="configuracion-sistema" element={<ConfiguracionSistema />} />
+                  {/*<Route path="configuracion-sistema" element={<ConfiguracionSistema />} />*/}
                   <Route path="perfil/:id" element={<Perfil />} />
                 </Route>
               </Route>

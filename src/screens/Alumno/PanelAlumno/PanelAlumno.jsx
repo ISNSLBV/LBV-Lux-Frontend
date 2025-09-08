@@ -16,7 +16,7 @@ const PanelAlumno = () => {
     },
     {
       titulo: "Mis examenes finales",
-      redir: "examenes-finales",
+      redir: "mis-finales",
       icono: FilePenLine,
     },
     {
