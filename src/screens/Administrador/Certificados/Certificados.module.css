@@ -26,6 +26,31 @@
     align-items: center;
 }
 
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.alumno {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    border-radius: 8px;
+    list-style: none;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: background-color 0.2s, border 0.2s;
+}
+
+.alumno:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .selectorCertificado {
     display: flex;
     flex-direction: column;

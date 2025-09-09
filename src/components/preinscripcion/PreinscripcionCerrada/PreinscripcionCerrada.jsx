@@ -10,7 +10,7 @@ const PreinscripcionCerrada = () => {
       </div>
       <h1>Las preinscripciones se encuentran cerradas</h1>
       <h2>
-        Para más información comunicate con secretaría por lo siguientes medios:
+        Para más información comunicate con secretaría por los siguientes medios:
       </h2>
       <div className={styles.contacto}>
         <p>

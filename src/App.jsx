@@ -114,6 +114,9 @@ function App() {
                   element={<RutaPrivada rol={["Profesor"]} />}
                 >
                   <Route index element={<PanelProfesor />} />
+                  <Route path="materias-asignadas" element={<GestionMateriasPlanCiclo />}>
+                    <Route path=":idMateria" element={<AdministrarMateria />} />
+                  </Route>
                 </Route>
                 {/* ---- Ruta Administrador ---- */}
                 <Route
