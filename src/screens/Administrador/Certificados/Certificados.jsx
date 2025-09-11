@@ -5,17 +5,21 @@ import api from "../../../api/axios";
 import { toast } from "react-toastify";
 import Boton from "../../../components/Boton/Boton";
 
-const fetchAlumnos = async () => {
-  const { data } = await api.get("/usuario/listar-alumnos");
-  return data;
-};
-
 const Certificados = () => {
   // Estados para búsqueda de alumnos
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAlumno, setSelectedAlumno] = useState(null);
   const [certificadoSeleccionado, setCertificadoSeleccionado] = useState("");
-  // Query para buscar alumnos por término
+
+  const [isManualMode, setIsManualMode] = useState(false);
+  const [manualData, setManualData] = useState({
+    nombre: "",
+    apellido: "",
+    dni: "",
+    carrera: "",
+    resolucion: ""
+  });
+
   const {
     data: alumnosOptions = [],
     isLoading: isLoadingSearch,
@@ -36,17 +40,32 @@ const Certificados = () => {
   ];
 
   const emitirCertificado = useMutation({
-    mutationFn: async ({ alumnoId, certificadoId }) => {
-      // Obtener el PDF como blob y mostrar en nueva pestaña para vista previa y opciones del navegador
-      const response = await api.get(
-        `/pdf/certificado/${certificadoId}/${alumnoId}`,
-        {
-          responseType: "blob",
-        }
-      );
+    mutationFn: async ({ alumnoId, certificadoId, datosManual }) => {
+      let url;
+      let params = {};
+
+      if (isManualMode && datosManual) {
+        // Para alumno no registrado - usar query params
+        url = `/pdf/certificado/${certificadoId}`;
+        params = {
+          nombre: datosManual.nombre,
+          apellido: datosManual.apellido,
+          dni: datosManual.dni,
+          carrera: datosManual.carrera,
+          resolucion: datosManual.resolucion
+        };
+      } else {
+        // Para alumno registrado - usar path param
+        url = `/pdf/certificado/${certificadoId}/${alumnoId}`;
+      }
+
+      const response = await api.get(url, {
+        responseType: "blob",
+        params,
+      });
       const blob = new Blob([response.data], { type: "application/pdf" });
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
+      const url_blob = window.URL.createObjectURL(blob);
+      window.open(url_blob);
       return response.data;
     },
     onSuccess: () => {
@@ -58,13 +77,47 @@ const Certificados = () => {
     },
   });
 
-  const handleEmitirCertificado = (alumnoId, certificadoId) => {
-    if (!alumnoId || !certificadoId) {
-      toast.error("Seleccioná un alumno y un tipo de certificado");
-      return;
-    }
+  const handleEmitirCertificado = () => {
+    if (isManualMode) {
+      // Validar datos manuales
+      if (!manualData.nombre || !manualData.apellido || !manualData.dni) {
+        toast.error("Completá nombre, apellido y DNI del alumno");
+        return;
+      }
+      if (!certificadoSeleccionado) {
+        toast.error("Seleccioná un tipo de certificado");
+        return;
+      }
 
-    emitirCertificado.mutate({ alumnoId, certificadoId });
+      emitirCertificado.mutate({
+        certificadoId: certificadoSeleccionado,
+        datosManual: manualData,
+      });
+    } else {
+      // Validar alumno registrado
+      if (!selectedAlumno?.id || !certificadoSeleccionado) {
+        toast.error("Seleccioná un alumno y un tipo de certificado");
+        return;
+      }
+
+      emitirCertificado.mutate({
+        alumnoId: selectedAlumno.id,
+        certificadoId: certificadoSeleccionado,
+      });
+    }
+  };
+
+  const handleModeChange = (manual) => {
+    setIsManualMode(manual);
+    setSelectedAlumno(null);
+    setSearchTerm("");
+    setManualData({ 
+      nombre: "", 
+      apellido: "", 
+      dni: "", 
+      carrera: "", 
+      resolucion: "" 
+    });
   };
 
   if (errorSearch) return <div>Error al buscar los alumnos</div>;
@@ -74,39 +127,104 @@ const Certificados = () => {
       <h1>Certificados</h1>
       <div className={styles.panel}>
         <div className={styles.selectorAlumno}>
-          <h2>Buscar Alumno</h2>
-          <p>(mínimo 3 caracteres)</p>
-          <input
-            type="text"
-            placeholder="DNI, nombre o apellido"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
-          {isLoadingSearch && <div>Cargando...</div>}
-          {alumnosOptions.length > 0 && (
-            <ul className={styles.dropdown}>
-              {alumnosOptions.map((alumno) => (
-                <li
-                  key={alumno.id}
-                  onClick={() => {
-                    setSelectedAlumno(alumno);
-                    setSearchTerm("");
-                  }}
-                  className={styles.alumno}
-                >
-                  {alumno.nombre} {alumno.apellido} - {alumno.dni}
-                </li>
-              ))}
-            </ul>
-          )}
-          {selectedAlumno && (
-            <div className={styles.selectedAlumno}>
-              Seleccionado: {selectedAlumno.nombre} {selectedAlumno.apellido} -{" "}
-              {selectedAlumno.dni}
+          <div className={styles.modeSelector}>
+            <button
+              onClick={() => handleModeChange(false)}
+            >
+              Alumno Registrado
+            </button>
+            <button
+              onClick={() => handleModeChange(true)}
+            >
+              Alumno No Registrado
+            </button>
+          </div>
+          {!isManualMode ? (
+            <div className={styles.buscador}>
+              <h2>Buscar Alumno Registrado</h2>
+              <p>(mínimo 3 caracteres)</p>
+              <input
+                type="text"
+                placeholder="DNI, nombre o apellido"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
+              {isLoadingSearch && <div>Cargando...</div>}
+              {alumnosOptions.length > 0 && (
+                <ul className={styles.dropdown}>
+                  {alumnosOptions.map((alumno) => (
+                    <li
+                      key={alumno.id}
+                      onClick={() => {
+                        setSelectedAlumno(alumno);
+                        setSearchTerm("");
+                      }}
+                      className={styles.alumno}
+                    >
+                      {alumno.nombre} {alumno.apellido} - {alumno.dni}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {selectedAlumno && (
+                <div className={styles.selectedAlumno}>
+                  Seleccionado: {selectedAlumno.nombre}{" "}
+                  {selectedAlumno.apellido} - {selectedAlumno.dni}
+                </div>
+              )}
+            </div>
+          ) : (
+            // Modo manual para alumno no registrado
+            <div className={styles.manual}>
+              <h2>Datos del Alumno No Registrado</h2>
+              <input
+                type="text"
+                placeholder="Nombre"
+                value={manualData.nombre}
+                onChange={(e) =>
+                  setManualData((prev) => ({ ...prev, nombre: e.target.value }))
+                }
+              />
+              <input
+                type="text"
+                placeholder="Apellido"
+                value={manualData.apellido}
+                onChange={(e) =>
+                  setManualData((prev) => ({
+                    ...prev,
+                    apellido: e.target.value,
+                  }))
+                }
+              />
+              <input
+                type="text"
+                placeholder="DNI"
+                value={manualData.dni}
+                onChange={(e) =>
+                  setManualData((prev) => ({ ...prev, dni: e.target.value }))
+                }
+              />
+              <input
+                type="text"
+                placeholder="Carrera (opcional)"
+                value={manualData.carrera}
+                onChange={(e) =>
+                  setManualData((prev) => ({ ...prev, carrera: e.target.value }))
+                }
+              />
+              <input
+                type="text"
+                placeholder="Resolución del plan (opcional)"
+                value={manualData.resolucion}
+                onChange={(e) =>
+                  setManualData((prev) => ({ ...prev, resolucion: e.target.value }))
+                }
+              />
             </div>
           )}
         </div>
+
         <div className={styles.selectorCertificado}>
           <h2>Seleccionar Certificado</h2>
           <select
@@ -122,14 +240,12 @@ const Certificados = () => {
           </select>
           <Boton
             variant="success"
-            onClick={() =>
-              handleEmitirCertificado(
-                selectedAlumno?.id,
-                certificadoSeleccionado
-              )
-            }
+            onClick={handleEmitirCertificado}
+            disabled={emitirCertificado.isPending}
           >
-            Emitir Certificado
+            {emitirCertificado.isPending
+              ? "Generando..."
+              : "Emitir Certificado"}
           </Boton>
         </div>
       </div>
