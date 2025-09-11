@@ -37,6 +37,7 @@ const ConfiguracionCuenta = lazy(() => import("./screens/ConfiguracionCuenta/Con
 const GestionAlumnos = lazy(() => import("./screens/Administrador/GestionAlumnos/GestionAlumnos"));
 const ConfiguracionSistema = lazy(() => import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema"));
 const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
+const GestionExamenesFinales = lazy(() => import("./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"));
 
 function App() {
   return (
@@ -154,6 +155,7 @@ function App() {
                       element={<GestionCorrelativas />}
                     />
                   </Route>
+                  <Route path="examenes-finales" element={<GestionExamenesFinales />} />
                   <Route path="profesores" element={<GestionProfesores />} />
                   <Route path="alumnos" element={<GestionAlumnos />} />
                   <Route path="certificados" element={<Certificados />} />
