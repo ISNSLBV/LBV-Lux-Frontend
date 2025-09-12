@@ -106,9 +106,9 @@ const Configuracion = ({ examen }) => {
         <h4>Información actual</h4>
         <div className={styles.infoGrid}>
           <div className={styles.infoItem}>
-            <Calendar size={20} />
+            <Calendar />
             <div>
-              <strong>Fecha actual:</strong>
+              <p><strong>Fecha actual:</strong></p>
               <span>{formatearFechaSinZonaHoraria(examen.fecha, {
                 year: 'numeric',
                 month: '2-digit',
@@ -119,7 +119,7 @@ const Configuracion = ({ examen }) => {
             </div>
           </div>
           <div className={styles.infoItem}>
-            <User size={20} />
+            <User />
             <div>
               <strong>Profesor actual:</strong>
               <span>
@@ -144,7 +144,7 @@ const Configuracion = ({ examen }) => {
             <div className={styles.formGrid}>
               <div className={styles.campo}>
                 <label htmlFor="fecha">
-                  <Calendar size={16} />
+                  <Calendar />
                   Nueva fecha del examen
                 </label>
                 <input
@@ -163,7 +163,7 @@ const Configuracion = ({ examen }) => {
 
               <div className={styles.campo}>
                 <label htmlFor="id_usuario_profesor">
-                  <User size={16} />
+                  <User />
                   Nuevo profesor
                 </label>
                 {loadingProfesores ? (
