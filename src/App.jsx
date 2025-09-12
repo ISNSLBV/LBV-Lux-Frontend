@@ -37,8 +37,9 @@ const ConfiguracionCuenta = lazy(() => import("./screens/ConfiguracionCuenta/Con
 const GestionAlumnos = lazy(() => import("./screens/Administrador/GestionAlumnos/GestionAlumnos"));
 const ConfiguracionSistema = lazy(() => import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema"));
 const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
-const MisMaterias = lazy(() => import ("./screens/Alumno/MisMaterias/MisMaterias"))
-const MisFinales = lazy(() => import ("./screens/Alumno/MisFinales/MisFinales"))
+const GestionExamenesFinales = lazy(() => import("./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"));
+const AdministrarExamen = lazy(() => import("./screens/Administrador/GestionExamenesFinales/AdministrarExamen/AdministrarExamen"));
+
 function App() {
   return (
     <Router basename="/alumnos2025">
@@ -117,7 +118,9 @@ function App() {
                   element={<RutaPrivada rol={["Profesor"]} />}
                 >
                   <Route index element={<PanelProfesor />} />
-
+                  <Route path="materias-asignadas" element={<GestionMateriasPlanCiclo />}>
+                    <Route path=":idMateria" element={<AdministrarMateria />} />
+                  </Route>
                 </Route>
                 {/* ---- Ruta Administrador ---- */}
                 <Route
@@ -154,6 +157,9 @@ function App() {
                       path="correlativas"
                       element={<GestionCorrelativas />}
                     />
+                  </Route>
+                  <Route path="examenes-finales" element={<GestionExamenesFinales />}>
+                    <Route path=":idExamen" element={<AdministrarExamen />} />
                   </Route>
                   <Route path="profesores" element={<GestionProfesores />} />
                   <Route path="alumnos" element={<GestionAlumnos />} />

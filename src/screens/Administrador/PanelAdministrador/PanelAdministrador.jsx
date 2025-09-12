@@ -10,11 +10,11 @@ import {
   BarChart,
   Settings,
   GraduationCap,
-  Feather
+  Feather,
+  ClipboardCheck,
 } from "lucide-react";
 
 const PanelAdministrador = () => {
-  //Opciones del panel de administrador
   const opciones = [
     {
       titulo: "Gestionar preinscripciones",
@@ -35,6 +35,11 @@ const PanelAdministrador = () => {
       titulo: "Gestionar materias",
       redir: "materias",
       icono: BookOpen,
+    },
+    {
+      titulo: "Gestionar examenes finales",
+      redir: "examenes-finales",
+      icono: ClipboardCheck,
     },
     {
       titulo: "Gestionar profesores",

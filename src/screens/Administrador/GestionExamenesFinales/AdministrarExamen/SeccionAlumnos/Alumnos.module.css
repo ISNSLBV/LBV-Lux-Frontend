@@ -1,0 +1,199 @@
+.container {
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  min-height: 400px;
+}
+
+.header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+}
+
+.loading,
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  font-size: 1.1rem;
+}
+
+.loading {
+  color: #666;
+}
+
+.error {
+  color: #e53e3e;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 16px;
+}
+
+.empty svg {
+  color: #ccc;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.infoAlumno {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.datos {
+  flex: 1;
+}
+
+.nombre {
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.email {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.estado {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.estadoBadge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.estadoBadge.inscripto {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.estadoBadge.presente {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.estadoBadge.ausente {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.asistencia {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.asistenciaLabel {
+  font-weight: 500;
+  color: #374151;
+  min-width: 80px;
+}
+
+.botonesAsistencia {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.accionesAdmin {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  .infoAlumno {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .asistencia {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .botonesAsistencia {
+    width: 100%;
+  }
+  
+  .botonesAsistencia button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .botonesAsistencia {
+    flex-direction: column;
+  }
+  
+  .accionesAdmin {
+    flex-direction: column;
+  }
+}

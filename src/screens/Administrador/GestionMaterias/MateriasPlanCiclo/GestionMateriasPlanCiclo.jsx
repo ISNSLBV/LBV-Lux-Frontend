@@ -10,6 +10,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useAuth } from "../../../../contexts/AuthContext";
 
 const fetchMateriasPlanCiclo = async () => {
   const { data } = await api.get(
@@ -24,13 +25,11 @@ const GestionMateriasPlanCiclo = () => {
   const navigate = useNavigate();
   const params = useParams();
   const mostrandoDetalle = !!params.idMateria;
+  const { user } = useAuth();
 
-  // Función para formatear fecha a dd/mm/aaaa
   const formatearFecha = (fecha) => {
     if (!fecha || fecha === "0000-00-00") return "—";
     try {
-      // Si la fecha viene en formato YYYY-MM-DD, parsearla manualmente
-      // para evitar problemas de zona horaria
       if (typeof fecha === "string" && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
         const [año, mes, dia] = fecha.split("-");
         return `${dia}/${mes}/${año}`;
@@ -101,8 +100,17 @@ const GestionMateriasPlanCiclo = () => {
       {!mostrandoDetalle && (
         <div>
           <div className={styles.titulo}>
-            <h1>Materias por plan de estudio</h1>
-            <p>Registrá y editá las materias por plan de estudio</p>
+            {user.rol === "Administrador" ? (
+              <>
+                <h1>Materias por plan de estudio</h1>
+                <p>Registrá y editá las materias por plan de estudio</p>
+              </>
+            ) : (
+              <>
+                <h1>Materias asignadas</h1>
+                <p>Gestioná las materias que te fueron asignadas</p>
+              </>
+            )}
           </div>
           <div className={styles.barraAcciones}>
             <div className={styles.barraBusqueda}>
@@ -112,89 +120,102 @@ const GestionMateriasPlanCiclo = () => {
                 onChange={(e) => setFiltro(e.target.value)}
               />
             </div>
-            <div className={styles.botonAgregar}>
-              <Boton
-                variant="success"
-                icono={<Plus />}
-                onClick={() => setRegistro(true)}
-              >
-                Registrar materia
-              </Boton>
-            </div>
+            {user.rol === "Administrador" && (
+              <div className={styles.botonAgregar}>
+                <Boton
+                  variant="success"
+                  icono={<Plus />}
+                  onClick={() => setRegistro(true)}
+                >
+                  Registrar materia
+                </Boton>
+              </div>
+            )}
           </div>
           <div className={styles.listaMaterias}>
             <h2>Listado de materias</h2>
-            {materiasFiltradas.map((m, idx) => (
-              <div key={idx} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h3>{m.materiaPlan.materia.nombre}</h3>
-                  <span>
-                    <strong>Año: {m.ciclo_lectivo}</strong>
-                  </span>
-                </div>
-                <div className={styles.fechas}>
-                  <div>
-                    <p>Fecha de inicio</p>
+            {isLoading ? (
+              <div className={styles.mensaje}>Cargando materias...</div>
+            ) : isError ? (
+              <div className={styles.mensaje}>Error al cargar las materias</div>
+            ) : materiasFiltradas.length === 0 ? (
+              <div className={styles.mensaje}>No se encontraron materias</div>
+            ) : (
+              materiasFiltradas.map((m, idx) => (
+                <div key={idx} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h3>{m.materiaPlan.materia.nombre}</h3>
                     <span>
-                      <strong>{formatearFecha(m.fecha_inicio)}</strong>
+                      <strong>Año: {m.ciclo_lectivo}</strong>
                     </span>
                   </div>
-                  <div>
-                    <p>Fecha de cierre</p>
-                    <span>
-                      <strong>{formatearFecha(m.fecha_cierre)}</strong>
-                    </span>
-                  </div>
-                </div>
-                <div className={styles.profesor}>
-                  <p>Profesor/es</p>
-                  <p>
-                    <strong>
-                      {m.profesores && m.profesores.length > 0
-                        ? m.profesores.length === 1
-                          ? `${
-                              m.profesores[0].profesor?.persona?.nombre || ""
-                            } ${
-                              m.profesores[0].profesor?.persona?.apellido || ""
-                            }`.trim()
-                          : m.profesores
-                              .map((p) =>
-                                `${p.profesor?.persona?.nombre || ""} ${
-                                  p.profesor?.persona?.apellido || ""
-                                }`.trim()
-                              )
-                              .join(", ")
-                        : "Sin profesor"}
-                    </strong>
-                  </p>
-                </div>
-                <div className={styles.carrera}>
-                  <div className={styles.datos}>
+                  <div className={styles.fechas}>
                     <div>
-                      <span>Carrera</span>
-                      <p>
-                        <strong>
-                          {m.materiaPlan.planEstudio.carrera.nombre}
-                        </strong>
-                      </p>
+                      <p>Fecha de inicio</p>
+                      <span>
+                        <strong>{formatearFecha(m.fecha_inicio)}</strong>
+                      </span>
                     </div>
                     <div>
-                      <span>Resolución Nº</span>
+                      <p>Fecha de cierre</p>
                       <span>
-                        <strong>{m.materiaPlan.planEstudio.resolucion}</strong>
+                        <strong>{formatearFecha(m.fecha_cierre)}</strong>
                       </span>
                     </div>
                   </div>
-                  <div className={styles.accion}>
-                    <Boton
-                      children="Administrar"
-                      icono={<SquarePen />}
-                      onClick={() => navigate(`${m.id}`)}
-                    />
+                  <div className={styles.profesor}>
+                    <p>Profesor/es</p>
+                    <p>
+                      <strong>
+                        {m.profesores && m.profesores.length > 0
+                          ? m.profesores.length === 1
+                            ? `${
+                                m.profesores[0].profesor?.persona?.nombre || ""
+                              } ${
+                                m.profesores[0].profesor?.persona?.apellido ||
+                                ""
+                              }`.trim()
+                            : m.profesores
+                                .map((p) =>
+                                  `${p.profesor?.persona?.nombre || ""} ${
+                                    p.profesor?.persona?.apellido || ""
+                                  }`.trim()
+                                )
+                                .join(", ")
+                          : "Sin profesor"}
+                      </strong>
+                    </p>
+                  </div>
+                  <div className={styles.carrera}>
+                    <div className={styles.datos}>
+                      <div>
+                        <span>Carrera</span>
+                        <p>
+                          <strong>
+                            {m.materiaPlan.planEstudio.carrera.nombre}
+                          </strong>
+                        </p>
+                      </div>
+                      <div>
+                        <span>Resolución Nº</span>
+                        <span>
+                          <strong>
+                            {m.materiaPlan.planEstudio.resolucion}
+                          </strong>
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.accion}>
+                      <Boton
+                        children="Administrar"
+                        icono={<SquarePen />}
+                        onClick={() => navigate(`${m.id}`)}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
           {registro && (
             <div className={styles.modal}>

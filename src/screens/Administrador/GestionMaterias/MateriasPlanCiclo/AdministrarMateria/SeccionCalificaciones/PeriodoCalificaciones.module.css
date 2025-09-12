@@ -12,7 +12,6 @@
 .tabla td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
 .tabla th {
@@ -21,6 +20,11 @@
 
 .tabla td {
   font-weight: 500;
+}
+
+/* Bordes inferiores en filas excepto la última para consistencia */
+.tabla tr:not(:last-child) {
+  border-bottom: 1px solid #ddd;
 }
 
 .tabla .acciones {

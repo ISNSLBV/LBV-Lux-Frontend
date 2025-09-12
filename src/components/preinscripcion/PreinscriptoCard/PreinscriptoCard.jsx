@@ -3,11 +3,12 @@ import styles from "./PreinscriptoCard.module.css";
 import Boton from "../../Boton/Boton";
 import { User, GraduationCap, Mail, Check, X, EyeOff } from "lucide-react";
 
-const PreinscriptoCard = ({ persona, onAceptar, onOcultar, onRechazar }) => {
+const PreinscriptoCard = ({ persona, onAceptar, onOcultar }) => {
   const observacion = persona.preinscripciones[0]?.comentario;
   const idCarrera = persona.preinscripciones[0]?.id_carrera;
   const idPreinscripcion = persona.preinscripciones[0]?.id;
   const estado = persona.preinscripciones[0]?.estado;
+  const visible = persona.preinscripciones[0]?.visible;
 
   return (
     <div className={styles.card}>
@@ -20,8 +21,6 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar, onRechazar }) => {
           style={
             estado === "Aprobada"
               ? { backgroundColor: "green" }
-              : estado === "Rechazada"
-              ? { backgroundColor: "red" }
               : { backgroundColor: "yellow", color: "black" }
           }
         >
@@ -92,7 +91,7 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar, onRechazar }) => {
             <span>Observaciones: </span>
             <p>
               <strong>
-                {observacion === null
+                {observacion === null || observacion === ""
                   ? "Esta persona no ha dejado observaciones"
                   : observacion}
               </strong>
@@ -100,18 +99,17 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar, onRechazar }) => {
           </div>
         </div>
       </div>
-      {estado === "Pendiente" && (
+      {estado?.toLowerCase() === "pendiente" && (
         <>
           <hr />
           <div className={styles.acciones}>
-            <Boton icono={<EyeOff />} onClick={onOcultar}>
-              Ocultar
-            </Boton>
+            {visible === 1 && (
+              <Boton icono={<EyeOff />} onClick={onOcultar}>
+                Ocultar
+              </Boton>
+            )}
             <Boton variant="success" icono={<Check />} onClick={onAceptar}>
               Aceptar
-            </Boton>
-            <Boton variant="cancel" icono={<X />} onClick={onRechazar}>
-              Rechazar
             </Boton>
           </div>
         </>
