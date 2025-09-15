@@ -109,6 +109,7 @@ const GestionExamenesFinales = () => {
                   variant="success"
                   icono={<Plus />}
                   onClick={() => setRegistro(true)}
+                  fullWidth
                 >
                   Registrar examen final
                 </Boton>
@@ -128,7 +129,10 @@ const GestionExamenesFinales = () => {
                 return (
                   <div key={e.id || idx} className={styles.card}>
                     <div className={styles.cardHeader}>
-                      <h3>{e.ciclo?.materiaPlan?.materia?.nombre || "Materia sin nombre"}</h3>
+                      <h3>
+                        {e.ciclo?.materiaPlan?.materia?.nombre ||
+                          "Materia sin nombre"}
+                      </h3>
                       <span>
                         <strong>Estado: {e.estado || "PENDIENTE"}</strong>
                       </span>
@@ -137,7 +141,9 @@ const GestionExamenesFinales = () => {
                       <div>
                         <p>Fecha del examen</p>
                         <span>
-                          <strong>{formatearFechaSinZonaHoraria(e.fecha)}</strong>
+                          <strong>
+                            {formatearFechaSinZonaHoraria(e.fecha)}
+                          </strong>
                         </span>
                       </div>
                     </div>
@@ -145,7 +151,8 @@ const GestionExamenesFinales = () => {
                       <p>Profesor designado</p>
                       <p>
                         <strong>
-                          {e.Profesor?.persona?.nombre && e.Profesor?.persona?.apellido
+                          {e.Profesor?.persona?.nombre &&
+                          e.Profesor?.persona?.apellido
                             ? `${e.Profesor.persona.nombre} ${e.Profesor.persona.apellido}`
                             : "Sin profesor asignado"}
                         </strong>
@@ -157,7 +164,8 @@ const GestionExamenesFinales = () => {
                           <span>Carrera</span>
                           <p>
                             <strong>
-                              {e.ciclo?.materiaPlan?.planEstudio?.carrera?.nombre || "Sin carrera"}
+                              {e.ciclo?.materiaPlan?.planEstudio?.carrera
+                                ?.nombre || "Sin carrera"}
                             </strong>
                           </p>
                         </div>
@@ -165,20 +173,22 @@ const GestionExamenesFinales = () => {
                           <span>Resolución Nº</span>
                           <span>
                             <strong>
-                              {e.ciclo?.materiaPlan?.planEstudio?.resolucion || "Sin resolución"}
+                              {e.ciclo?.materiaPlan?.planEstudio?.resolucion ||
+                                "Sin resolución"}
                             </strong>
                           </span>
                         </div>
                       </div>
-                      <div className={styles.accion}>
-                        <Boton
-                          icono={<SquarePen />}
-                          children="Administrar"
-                          onClick={() => navigate(`${e.id}`)}
-                        >
-                          Administrar
-                        </Boton>
-                      </div>
+                    </div>
+                    <div className={styles.accion}>
+                      <Boton
+                        icono={<SquarePen />}
+                        children="Administrar"
+                        onClick={() => navigate(`${e.id}`)}
+                        fullWidth
+                      >
+                        Administrar
+                      </Boton>
                     </div>
                   </div>
                 );
@@ -236,100 +246,115 @@ const GestionExamenesFinales = () => {
                     setFieldValue,
                     values,
                   }) => (
-                    <Form>
-                      <div>
-                        <label htmlFor="id_materia">Materia - Resolución</label>
-                        <Field
-                          as="select"
-                          id="id_materia"
-                          name="id_materia"
-                          className={
-                            errors.id_materia && touched.id_materia
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                          onChange={(e) => {
-                            const valor = e.target.value;
-                            setFieldValue("id_materia", valor);
-                            setMateriaSeleccionada(valor);
-                            // Limpiar la selección de profesor cuando cambie la materia
-                            setFieldValue("id_profesor", "");
-                          }}
-                        >
-                          <option value="">Seleccioná una materia</option>
-                          {materias.map((m) => (
-                            <option value={m.id} key={m.id}>
-                              {m.materiaPlan?.materia?.nombre} - (
-                              {m.materiaPlan?.planEstudio?.resolucion})
+                    <Form className={styles.form}>
+                      <div className={styles.selector}>
+                        <button>Registro básico</button>
+                        <button>Registro personalizado</button>
+                      </div>
+                      <div className={styles.campos}>
+                        <div>
+                          <label htmlFor="id_materia">
+                            Materia - Resolución
+                          </label>
+                          <Field
+                            as="select"
+                            id="id_materia"
+                            name="id_materia"
+                            className={
+                              errors.id_materia && touched.id_materia
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                            onChange={(e) => {
+                              const valor = e.target.value;
+                              setFieldValue("id_materia", valor);
+                              setMateriaSeleccionada(valor);
+                              // Limpiar la selección de profesor cuando cambie la materia
+                              setFieldValue("id_profesor", "");
+                            }}
+                          >
+                            <option value="">Seleccioná una materia</option>
+                            {materias.map((m) => (
+                              <option value={m.id} key={m.id}>
+                                {m.materiaPlan?.materia?.nombre} - (
+                                {m.materiaPlan?.planEstudio?.resolucion})
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="id_materia"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="fecha">Fecha del examen</label>
+                          <Field
+                            type="date"
+                            id="fecha"
+                            name="fecha"
+                            min={new Date().toISOString().split("T")[0]}
+                            className={
+                              errors.fecha && touched.fecha
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                          />
+                          <ErrorMessage
+                            name="fecha"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="id_profesor">
+                            Profesor designado
+                          </label>
+                          <Field
+                            as="select"
+                            id="id_profesor"
+                            name="id_profesor"
+                            className={
+                              errors.id_profesor && touched.id_profesor
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                            disabled={
+                              !materiaSeleccionada ||
+                              profesoresDisponibles.length === 0
+                            }
+                          >
+                            <option value="">
+                              {!materiaSeleccionada
+                                ? "Primero seleccioná una materia"
+                                : profesoresDisponibles.length === 0
+                                ? "No hay profesores asignados a esta materia"
+                                : "Seleccioná un profesor"}
                             </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name="id_materia"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
-                        <label htmlFor="fecha">Fecha del examen</label>
-                        <Field
-                          type="date"
-                          id="fecha"
-                          name="fecha"
-                          min={new Date().toISOString().split("T")[0]}
-                          className={
-                            errors.fecha && touched.fecha
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                        />
-                        <ErrorMessage
-                          name="fecha"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
-                        <label htmlFor="id_profesor">Profesor designado</label>
-                        <Field
-                          as="select"
-                          id="id_profesor"
-                          name="id_profesor"
-                          className={
-                            errors.id_profesor && touched.id_profesor
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                          disabled={
-                            !materiaSeleccionada ||
-                            profesoresDisponibles.length === 0
-                          }
-                        >
-                          <option value="">
-                            {!materiaSeleccionada
-                              ? "Primero seleccioná una materia"
-                              : profesoresDisponibles.length === 0
-                              ? "No hay profesores asignados a esta materia"
-                              : "Seleccioná un profesor"}
-                          </option>
-                          {profesoresDisponibles.map((profesor) => (
-                            <option
-                              value={profesor.profesor?.id}
-                              key={profesor.profesor?.id}
-                            >
-                              {profesor.profesor?.persona?.nombre}{" "}
-                              {profesor.profesor?.persona?.apellido}
-                              {profesor.rol && ` (${profesor.rol})`}
-                            </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name="id_profesor"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
+                            {profesoresDisponibles.map((profesor) => (
+                              <option
+                                value={profesor.profesor?.id}
+                                key={profesor.profesor?.id}
+                              >
+                                {profesor.profesor?.persona?.nombre}{" "}
+                                {profesor.profesor?.persona?.apellido}
+                                {profesor.rol && ` (${profesor.rol})`}
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="id_profesor"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
                       </div>
                       <div className={styles.modalActions}>
                         <Boton
                           type="submit"
                           variant="success"
                           disabled={isSubmitting}
+                          fullWidth
                         >
                           {isSubmitting ? "Registrando..." : "Registrar"}
                         </Boton>
@@ -339,6 +364,7 @@ const GestionExamenesFinales = () => {
                             setRegistro(false);
                             setMateriaSeleccionada("");
                           }}
+                          fullWidth
                         >
                           Cancelar
                         </Boton>
