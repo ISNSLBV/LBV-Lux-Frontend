@@ -57,6 +57,11 @@ const PanelAdministrador = () => {
       icono: Feather,
     },
     {
+      titulo: "Solicitudes de equivalencias",
+      redir: "solicitudes-equivalencias",
+      icono: ClipboardList,
+    },
+    {
       titulo: "Ver estadísticas",
       redir: "estadisticas",
       icono: BarChart,

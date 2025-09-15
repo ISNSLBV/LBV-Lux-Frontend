@@ -123,12 +123,24 @@
   gap: 8px;
 }
 
-.form .selector {
+.selector {
   display: flex;
   gap: 6px;
+  margin-bottom: 12px;
 }
 
-.form .selector button {
+.modoActivo {
+  width: 50%;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modo {
   width: 50%;
   height: 30px;
   background-color: rgba(255, 255, 255, 0.05);
@@ -140,7 +152,7 @@
   font-weight: 500;
 }
 
-.form .selector button:hover {
+.modo:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -151,15 +163,28 @@
 }
 
 @media (max-width: 768px) {
-  .form .selector {
+  .selector {
     flex-direction: column;
   }
 
-  .form .selector button {
+  .modo {
     width: 100%;
   }
 
   .barraAcciones {
     flex-direction: column;
+  }
+
+  .botonAgregar button {
+    width: 100%;
+  }
+
+  .accion button {
+    width: 100%;
+  }
+
+  .carrera {
+    flex-direction: column;
+    gap: 16px;
   }
 }

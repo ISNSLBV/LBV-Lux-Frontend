@@ -26,6 +26,7 @@ const GestionExamenesFinales = () => {
   const { user } = useAuth();
   const params = useParams();
   const mostrandoDetalle = !!params.idExamen;
+  const [modoRegistro, setModoRegistro] = useState("basico");
 
   const queryClient = useQueryClient();
 
@@ -109,7 +110,6 @@ const GestionExamenesFinales = () => {
                   variant="success"
                   icono={<Plus />}
                   onClick={() => setRegistro(true)}
-                  fullWidth
                 >
                   Registrar examen final
                 </Boton>
@@ -179,16 +179,15 @@ const GestionExamenesFinales = () => {
                           </span>
                         </div>
                       </div>
-                    </div>
-                    <div className={styles.accion}>
-                      <Boton
-                        icono={<SquarePen />}
-                        children="Administrar"
-                        onClick={() => navigate(`${e.id}`)}
-                        fullWidth
-                      >
-                        Administrar
-                      </Boton>
+                      <div className={styles.accion}>
+                        <Boton
+                          icono={<SquarePen />}
+                          children="Administrar"
+                          onClick={() => navigate(`${e.id}`)}
+                        >
+                          Administrar
+                        </Boton>
+                      </div>
                     </div>
                   </div>
                 );
@@ -205,9 +204,32 @@ const GestionExamenesFinales = () => {
                     onClick={() => {
                       setRegistro(false);
                       setMateriaSeleccionada("");
+                      setModoRegistro("basico");
                     }}
                   >
                     <X />
+                  </button>
+                </div>
+                <div className={styles.selector}>
+                  <button
+                    className={
+                      modoRegistro === "basico"
+                        ? styles.modoActivo
+                        : styles.modo
+                    }
+                    onClick={() => setModoRegistro("basico")}
+                  >
+                    Registro básico
+                  </button>
+                  <button
+                    className={
+                      modoRegistro === "personalizado"
+                        ? styles.modoActivo
+                        : styles.modo
+                    }
+                    onClick={() => setModoRegistro("personalizado")}
+                  >
+                    Registro personalizado
                   </button>
                 </div>
                 <Formik
@@ -247,10 +269,6 @@ const GestionExamenesFinales = () => {
                     values,
                   }) => (
                     <Form className={styles.form}>
-                      <div className={styles.selector}>
-                        <button>Registro básico</button>
-                        <button>Registro personalizado</button>
-                      </div>
                       <div className={styles.campos}>
                         <div>
                           <label htmlFor="id_materia">
