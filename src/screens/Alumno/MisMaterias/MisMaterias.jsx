@@ -1,33 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import api from "../../../api/axios";
 import styles from "./MisMaterias.module.css";
 import { CircularProgress } from "@mui/material";
 import SearchBar from "../../../components/SearchBar/SearchBar"; 
 
 const MisMaterias = () => {
-  const { idAlumno } = useParams();
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
   const [filtro, setFiltro] = useState(""); 
 
-  const { data: personaData, isLoading: isLoadingPersona } = useQuery({
-    queryKey: ["persona", idAlumno],
-    queryFn: async () => {
-      const { data } = await api.get(`/usuario/perfil`);
-      return data;
-    },
-  });
-
-  const idPersona = personaData?.informacionPersonal?.id_persona;
-
   const { data: carreras, isLoading: isLoadingCarreras } = useQuery({
-    queryKey: ["carrerasAlumno", idPersona],
+    queryKey: ["carrerasAlumno"],
     queryFn: async () => {
-      const { data } = await api.get(`/usuario/inscripto/carreras/${idPersona}`);
+      const { data } = await api.get(`/admin/alumno/carreras`);
       return data;
     },
-    enabled: !!idPersona,
   });
 
   useEffect(() => {
@@ -41,17 +28,15 @@ const MisMaterias = () => {
     isLoading: isLoadingMaterias,
     error,
   } = useQuery({
-    queryKey: ["materiasAlumno", idAlumno, carreraSeleccionada],
+    queryKey: ["materiasAlumno", carreraSeleccionada],
     queryFn: async () => {
-      const { data } = await api.get(
-        `/usuario/${idAlumno}/carreras/${carreraSeleccionada}/materias`
-      );
+      const { data } = await api.get(`/admin/alumno/carreras/${carreraSeleccionada}/materias`);
       return data;
     },
     enabled: !!carreraSeleccionada,
   });
 
-  if (isLoadingPersona || isLoadingCarreras || isLoadingMaterias) {
+  if (isLoadingCarreras || isLoadingMaterias) {
     return <CircularProgress className={styles.loadingIndicator} />;
   }
 

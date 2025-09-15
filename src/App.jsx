@@ -39,6 +39,8 @@ const ConfiguracionSistema = lazy(() => import("./screens/Administrador/Configur
 const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
 const GestionExamenesFinales = lazy(() => import("./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"));
 const AdministrarExamen = lazy(() => import("./screens/Administrador/GestionExamenesFinales/AdministrarExamen/AdministrarExamen"));
+const MisMaterias = lazy(() => import("./screens/Alumno/MisMaterias/MisMaterias"))
+const MisFinales = lazy(() => import("./screens/Alumno/MisFinales/MisFinales"))
 
 function App() {
   return (
