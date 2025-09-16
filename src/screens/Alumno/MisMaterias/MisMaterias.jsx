@@ -17,11 +17,11 @@ const MisMaterias = () => {
     },
   });
 
-  useEffect(() => {
-    if (carreras && carreras.length > 0 && !carreraSeleccionada) {
-      setCarreraSeleccionada(carreras[0].id);
-    }
-  }, [carreras, carreraSeleccionada]);
+useEffect(() => {
+  if (carreras && carreras.length > 0 && !carreraSeleccionada) {
+    setCarreraSeleccionada(carreras[0].id);
+  }
+}, [carreras, carreraSeleccionada]);
 
   const {
     data: materias = [],
