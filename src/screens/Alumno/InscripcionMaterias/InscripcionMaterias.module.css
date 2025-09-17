@@ -1,0 +1,173 @@
+.titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.info {
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.resumen {
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.resumenGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.resumenItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.numero {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.etiqueta {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4px;
+}
+
+.listaMaterias {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.seccionMaterias {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tituloSeccion {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.materiaCard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.materiaCard:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.materiaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.aprobado {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.inscripto {
+  background-color: #2196F3;
+  color: white;
+}
+
+.bloqueado {
+  background-color: #f44336;
+  color: white;
+}
+
+.disponible {
+  background-color: green;
+  color: white;
+}
+
+.correlativas {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 4px;
+  padding: 12px;
+  margin: 8px 0;
+}
+
+.correlativas p {
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: rgba(244, 67, 54, 0.86);
+}
+
+.correlativas li {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  margin-bottom: 4px;
+  padding: 2px 8px;
+  font-weight: 500;
+  background-color: rgba(244, 67, 54, 0.2);
+  border-radius: 3px;
+  list-style-type: none;
+}
+
+.accionesMateria {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.selectTipoAlumno {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  min-width: 120px;
+}
+
+.selectTipoAlumno:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -12,44 +12,34 @@ import {
 const PanelAlumno = () => {
   const opciones = [
     {
-      titulo: "Mi perfil",
-      redir: "perfil",
-      icono: User,
-    },
-    {
       titulo: "Mis materias",
       redir: "mis-materias",
       icono: BookOpen,
     },
     {
-      titulo: "Mis examenes finales",
+      titulo: "Mis exámenes finales",
       redir: "examenes-finales",
       icono: FilePenLine,
     },
     {
-      titulo: "Emitir certificados",
-      redir: "certificados",
-      icono: ScrollText,
-    },
-    {
-      titulo: "Inscripcion a materias",
-      redir: "materias",
+      titulo: "Inscripción a materias",
+      redir: "inscripcion-materias",
       icono: NotebookPen,
     },
     {
-      titulo: "Inscripcion a finales",
+      titulo: "Inscripción a exámenes finales",
       redir: "finales",
       icono: NotebookPen,
-    },
-    {
-      titulo: "Configuracion de la cuenta",
-      redir: "cuenta",
-      icono: ShieldUser,
     },
     {
       titulo: "Solicitar equivalencias",
       redir: "solicitar-equivalencias",
       icono: FilePenLine,
+    },
+    {
+      titulo: "Configuración de la cuenta",
+      redir: "/cuenta",
+      icono: ShieldUser,
     },
   ];
   return (

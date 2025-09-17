@@ -74,7 +74,7 @@ const GestionExamenesFinales = () => {
   });
 
   const examenesFiltrados = examenesFinales.filter((e) =>
-    e.ciclo?.materiaPlan?.materia?.nombre
+    e.materiaPlan?.materia?.nombre
       ?.toLowerCase()
       .includes(filtro.toLowerCase())
   );
@@ -130,7 +130,7 @@ const GestionExamenesFinales = () => {
                   <div key={e.id || idx} className={styles.card}>
                     <div className={styles.cardHeader}>
                       <h3>
-                        {e.ciclo?.materiaPlan?.materia?.nombre ||
+                        {e.materiaPlan?.materia?.nombre ||
                           "Materia sin nombre"}
                       </h3>
                       <span>
@@ -164,7 +164,7 @@ const GestionExamenesFinales = () => {
                           <span>Carrera</span>
                           <p>
                             <strong>
-                              {e.ciclo?.materiaPlan?.planEstudio?.carrera
+                              {e.materiaPlan?.planEstudio?.carrera
                                 ?.nombre || "Sin carrera"}
                             </strong>
                           </p>
@@ -173,7 +173,7 @@ const GestionExamenesFinales = () => {
                           <span>Resolución Nº</span>
                           <span>
                             <strong>
-                              {e.ciclo?.materiaPlan?.planEstudio?.resolucion ||
+                              {e.materiaPlan?.planEstudio?.resolucion ||
                                 "Sin resolución"}
                             </strong>
                           </span>
