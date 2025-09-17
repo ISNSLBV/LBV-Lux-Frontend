@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       await api.post("/auth/logout");
       queryClient.removeQueries(["user"]);
     } finally {
-      window.location.href = "/login";
+      window.location.href = "/alumnos2025/login";
     }
   };
 
