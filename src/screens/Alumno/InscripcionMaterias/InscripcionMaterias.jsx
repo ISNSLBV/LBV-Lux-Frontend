@@ -4,11 +4,12 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 
-const obtenerPlanEstudio = async () => {
+const obtenerPlanesYCarrerasAlumno = async () => {
   const { data } = await api.get(
     "/admin/plan-estudio/alumno/obtener-plan-asignado"
   );
-  return data.planAsignado;
+  // backend ahora devuelve { carreras: [ { id, idCarrera, idPlanAsignado, plan, carrera } ] }
+  return data.carreras || [];
 };
 
 const obtenerMateriasCicloActual = async (planId) => {
@@ -26,10 +27,31 @@ const verificarEstadoInscripciones = async (planId) => {
 };
 
 const InscripcionMaterias = () => {
-  const { data: planId, isLoading: planLoading } = useQuery({
-    queryKey: ["planEstudio"],
-    queryFn: obtenerPlanEstudio,
+  const { data: carrerasDelAlumno, isLoading: planLoading } = useQuery({
+    queryKey: ["planesCarrerasAlumno"],
+    queryFn: obtenerPlanesYCarrerasAlumno,
   });
+
+  // state for selected carrera and plan
+  const [selectedCarreraId, setSelectedCarreraId] = React.useState(null);
+  const [selectedPlanId, setSelectedPlanId] = React.useState(null);
+
+  // derive options for selectors (must be declared as a Hook-adjacent constant)
+  const carrerasOptions = carrerasDelAlumno || [];
+
+  // Default selection effect: if the student has exactly one carrera, auto-select it and its plan
+  React.useEffect(() => {
+    if (carrerasOptions.length === 1) {
+      setSelectedCarreraId(
+        carrerasOptions[0].idCarrera || carrerasOptions[0].id
+      );
+      const pid =
+        carrerasOptions[0].idPlanAsignado || carrerasOptions[0].plan?.id;
+      if (pid) setSelectedPlanId(pid);
+    }
+  }, [carrerasOptions]);
+
+  const planId = selectedPlanId;
 
   const { data: response, isLoading: materiasLoading } = useQuery({
     queryKey: ["materiasCicloActual", planId],
@@ -64,6 +86,19 @@ const InscripcionMaterias = () => {
 
   const { materias, planEstudio, cicloLectivo, total } = response || {};
   const { data: estadoMaterias, resumen } = estadoInscripciones || {};
+
+  if (!carrerasOptions || carrerasOptions.length === 0) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.titulo}>
+          <h1>Inscripción a materias</h1>
+        </div>
+        <div className={styles.info}>
+          <p>No se encontraron carreras activas para tu usuario.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Crear un mapa del estado de las materias
   const estadoMateriasMap = new Map();
@@ -128,7 +163,67 @@ const InscripcionMaterias = () => {
       </div>
 
       {/* Información del plan */}
+      {/* Selectors for career and plan when applicable */}
       <div className={styles.info}>
+        {carrerasOptions.length > 1 && (
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="selectCarrera">Seleccionar carrera: </label>
+            <select
+              id="selectCarrera"
+              value={selectedCarreraId ?? ""}
+              onChange={(e) => {
+                const idCarr = Number(e.target.value) || null;
+                setSelectedCarreraId(idCarr);
+                // find first matching carrera entry and set its plan
+                const entry = carrerasOptions.find(
+                  (c) =>
+                    c.idCarrera === idCarr || c.id === Number(e.target.value)
+                );
+                const pid = entry?.idPlanAsignado || entry?.plan?.id || null;
+                setSelectedPlanId(pid);
+              }}
+            >
+              <option value="">-- Seleccionar --</option>
+              {carrerasOptions.map((c) => (
+                <option key={c.id} value={c.idCarrera || c.id}>
+                  {c.carrera?.nombre || `Carrera ${c.idCarrera || c.id}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* If selected carrera has multiple plans (unlikely with current model but keep open), allow choosing plan */}
+        {selectedCarreraId && (
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="selectPlan">Seleccionar plan: </label>
+            <select
+              id="selectPlan"
+              value={selectedPlanId ?? ""}
+              onChange={(e) =>
+                setSelectedPlanId(Number(e.target.value) || null)
+              }
+            >
+              <option value="">-- Seleccionar plan --</option>
+              {carrerasOptions
+                .filter(
+                  (c) =>
+                    c.idCarrera === selectedCarreraId ||
+                    c.id === selectedCarreraId
+                )
+                .map((c) => (
+                  <option
+                    key={c.idPlanAsignado || c.plan?.id || c.id}
+                    value={c.idPlanAsignado || c.plan?.id}
+                  >
+                    {c.plan?.resolucion ||
+                      `Plan ${c.idPlanAsignado || c.plan?.id}`}
+                  </option>
+                ))}
+            </select>
+          </div>
+        )}
+
         <p>
           <strong>Plan de Estudio:</strong> {planEstudio?.resolucion}
         </p>
