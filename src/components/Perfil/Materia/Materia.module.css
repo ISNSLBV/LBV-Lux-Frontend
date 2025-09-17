@@ -1,0 +1,54 @@
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 1rem;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  min-height: 110px;
+}
+
+.nombre {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.cuatrimestre {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.infoDerecha {
+  text-align: right;
+}
+
+.estado {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.Aprobada {
+  background-color: green;
+}
+
+.Cursando {
+  background-color: yellow;
+  color: black;
+}
+
+.nota {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
