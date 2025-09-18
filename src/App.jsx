@@ -45,7 +45,7 @@ const InscripcionMaterias = lazy(() => import("./screens/Alumno/InscripcionMater
 
 function App() {
   return (
-    <Router basename="/alumnos2025">
+    <Router basename="/lux/">
       <AuthProvider>
         <ToastContainer
           position="bottom-right"
