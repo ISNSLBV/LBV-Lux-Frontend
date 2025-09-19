@@ -17,11 +17,11 @@ const MisMaterias = () => {
     },
   });
 
-useEffect(() => {
-  if (carreras && carreras.length > 0 && !carreraSeleccionada) {
-    setCarreraSeleccionada(carreras[0].id);
-  }
-}, [carreras, carreraSeleccionada]);
+  useEffect(() => {
+    if (carreras && carreras.length > 0 && !carreraSeleccionada) {
+      setCarreraSeleccionada(carreras[0].id);
+    }
+  }, [carreras, carreraSeleccionada]);
 
   const {
     data: materias = [],
@@ -57,11 +57,15 @@ useEffect(() => {
 
       {carreras && carreras.length > 0 && (
         <>
-          <SearchBar className={styles.buscador}
+        <div className={styles.barraAcciones}>
+          <div className={styles.barraBusqueda}>
+            <SearchBar
             placeholder="Buscar materia"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
-          />
+            />
+        </div>
+        </div>
 
           <div className={styles.carreraSelector}>
             <label htmlFor="carrera-select">Selecciona una carrera:</label>
