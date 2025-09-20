@@ -110,7 +110,7 @@ function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="cuenta" element={<ConfiguracionCuenta />} />
                 {/* ---- Ruta Alumno ---- */}
-                <Route path="alumno" elemenxt={<RutaPrivada rol={["Alumno"]} />}>
+                <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
                   <Route index element={<PanelAlumno />} />
                   <Route path="ayuda" element={<AyudaAlumno />} />
                   <Route path="mi-perfil" element={<Perfil />} />
