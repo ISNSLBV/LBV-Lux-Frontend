@@ -92,6 +92,8 @@ const MisMaterias = () => {
                 <h3>{materia.nombre}</h3>
                 <span>
                   <strong>Estado: {materia.estado}</strong>
+                  <br />
+                  <strong>Año: {materia.anio || "2025"}</strong>
                 </span>
               </div>
               <div className={styles.datosAdicionales}>

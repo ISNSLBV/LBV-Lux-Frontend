@@ -39,12 +39,18 @@ const ConfiguracionSistema = lazy(() => import("./screens/Administrador/Configur
 const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
 const GestionExamenesFinales = lazy(() => import("./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"));
 const AdministrarExamen = lazy(() => import("./screens/Administrador/GestionExamenesFinales/AdministrarExamen/AdministrarExamen"));
+<<<<<<< HEAD
 const MisMaterias = lazy(() => import("./screens/Alumno/MisMaterias/MisMaterias"))
 const MisFinales = lazy(() => import("./screens/Alumno/MisFinales/MisFinales"))
+=======
+const SolicitudEquivalencias = lazy(() => import("./screens/Administrador/SolicitudEquivalencias/SolicitudEquivalencias"));
+const SolicitarEquivalencias = lazy(() => import("./screens/Alumno/SolicitarEquivalencias/SolicitarEquivalencias"))
+const InscripcionMaterias = lazy(() => import("./screens/Alumno/InscripcionMaterias/InscripcionMaterias"));
+>>>>>>> 8863905c91a2953ac67589986796dc32d195598b
 
 function App() {
   return (
-    <Router basename="/alumnos2025">
+    <Router basename="/lux/">
       <AuthProvider>
         <ToastContainer
           position="bottom-right"
@@ -111,8 +117,13 @@ function App() {
                   <Route index element={<PanelAlumno />} />
                   <Route path="ayuda" element={<AyudaAlumno />} />
                   <Route path="mi-perfil" element={<Perfil />} />
+<<<<<<< HEAD
                   <Route path="mis-materias" element={<MisMaterias />} />
                   <Route path="mis-finales" element={<MisFinales />} />
+=======
+                  <Route path="inscripcion-materias" element={<InscripcionMaterias />} />
+                  <Route path="solicitar-equivalencias" element={<SolicitarEquivalencias />} />
+>>>>>>> 8863905c91a2953ac67589986796dc32d195598b
                 </Route>
                 {/* ---- Ruta Profesor ---- */}
                 <Route
@@ -166,6 +177,7 @@ function App() {
                   <Route path="profesores" element={<GestionProfesores />} />
                   <Route path="alumnos" element={<GestionAlumnos />} />
                   <Route path="certificados" element={<Certificados />} />
+                  <Route path="solicitudes-equivalencias" element={<SolicitudEquivalencias />} />
                   <Route path="estadisticas" element={<Estadisticas />} />
                   <Route
                     path="configuracion-sistema"

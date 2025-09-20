@@ -192,4 +192,14 @@
   .cards {
     display: block;
   }
+
+  .listaHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .listaHeader button {
+    width: 100%;
+  }
 }

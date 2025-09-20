@@ -221,7 +221,7 @@ const GestionMateriasPlanCiclo = () => {
             <div className={styles.modal}>
               <div className={styles.modalContent}>
                 <div className={styles.modalHeader}>
-                  <h3>Registrar materia en ciclo lectivo</h3>
+                  <h3>Registrar materia en el ciclo lectivo actual</h3>
                   <button
                     className={styles.closeButton}
                     onClick={() => setRegistro(false)}
@@ -241,22 +241,79 @@ const GestionMateriasPlanCiclo = () => {
                     id_materia_plan: Yup.string().required(
                       "La materia es obligatoria"
                     ),
-                    // Fecha inicio opcional
+
                     fecha_inicio: Yup.date()
                       .nullable(true)
-                      .transform((curr, orig) => (orig === "" ? null : curr)),
-                    // Fecha cierre opcional, si se ingresa debe ser >= fecha_inicio
+                      .transform(function (curr, orig) {
+                        // normalizar valores que pueden venir como ["undefined"], undefined, ""
+                        let original = orig;
+                        if (Array.isArray(original)) original = original[0];
+                        if (
+                          original === "" ||
+                          original === undefined ||
+                          original === null ||
+                          original === "undefined"
+                        ) {
+                          return null;
+                        }
+                        // curr ya es un Date si Yup pudo parsearlo; si no, mantener curr para que Yup lo marque inválido
+                        return curr;
+                      })
+                      .test(
+                        "year-validation-inicio",
+                        "La fecha debe ser del año del ciclo lectivo",
+                        function (value) {
+                          if (!value) return true; // null es válido
+                          const fechaYear = new Date(value).getFullYear();
+                          const cicloLectivo = this.parent.ciclo_lectivo;
+                          return fechaYear === cicloLectivo;
+                        }
+                      ),
+
                     fecha_cierre: Yup.date()
                       .nullable(true)
-                      .transform((curr, orig) => (orig === "" ? null : curr))
-                      .when("fecha_inicio", (fecha_inicio, schema) =>
-                        fecha_inicio
-                          ? schema.min(
-                              fecha_inicio,
-                              "La fecha de cierre no puede ser anterior a la de inicio"
-                            )
-                          : schema
+                      .transform(function (curr, orig) {
+                        let original = orig;
+                        if (Array.isArray(original)) original = original[0];
+                        if (
+                          original === "" ||
+                          original === undefined ||
+                          original === null ||
+                          original === "undefined"
+                        ) {
+                          return null;
+                        }
+                        return curr;
+                      })
+                      .test(
+                        "year-validation-cierre",
+                        "La fecha debe ser del año del ciclo lectivo",
+                        function (value) {
+                          if (!value) return true;
+                          const fechaYear = new Date(value).getFullYear();
+                          const cicloLectivo = this.parent.ciclo_lectivo;
+                          return fechaYear === cicloLectivo;
+                        }
+                      )
+                      .test(
+                        "order-validation",
+                        "La fecha de cierre no puede ser anterior a la de inicio",
+                        function (fechaCierreValue) {
+                          const fechaInicioValue = this.parent.fecha_inicio;
+                          if (!fechaCierreValue || !fechaInicioValue)
+                            return true; // si falta cualquiera, no aplicamos orden
+                          // ambos están definidos: comparar fechas
+                          const inicio = new Date(fechaInicioValue);
+                          const cierre = new Date(fechaCierreValue);
+                          if (
+                            isNaN(inicio.getTime()) ||
+                            isNaN(cierre.getTime())
+                          )
+                            return false;
+                          return cierre >= inicio;
+                        }
                       ),
+
                     tipo_aprobacion: Yup.string().required(
                       "El tipo de aprobación es obligatorio"
                     ),
@@ -278,91 +335,116 @@ const GestionMateriasPlanCiclo = () => {
                 >
                   {({ isSubmitting, touched, errors }) => (
                     <Form>
-                      <div className="mb-4">
-                        <label htmlFor="id_materia_plan">
-                          Materia - Resolución plan
-                        </label>
-                        <Field
-                          as="select"
-                          id="id_materia_plan"
-                          name="id_materia_plan"
-                          className={
-                            errors.id_materia_plan && touched.id_materia_plan
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                        >
-                          <option value="">Seleccionar materia/plan</option>
-                          {materiasPlan.map((m) => (
-                            <option key={m.id} value={m.id}>
-                              {m.materia?.nombre} - {m.planEstudio?.resolucion}
+                      <div className={styles.form}>
+                        <div>
+                          <label htmlFor="id_materia_plan">
+                            Materia - Resolución de plan de estudio
+                          </label>
+                          <Field
+                            as="select"
+                            id="id_materia_plan"
+                            name="id_materia_plan"
+                            className={
+                              errors.id_materia_plan && touched.id_materia_plan
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                          >
+                            <option value="">Seleccionar materia/plan</option>
+                            {materiasPlan.map((m) => (
+                              <option key={m.id} value={m.id}>
+                                {m.materia?.nombre} -{" "}
+                                {m.planEstudio?.resolucion}
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="id_materia_plan"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="fecha_inicio">
+                            Fecha de inicio{" "}
+                            <small
+                              style={{ fontWeight: "normal", opacity: 0.7 }}
+                            >
+                              (opcional)
+                            </small>
+                          </label>
+                          <Field
+                            type="date"
+                            id="fecha_inicio"
+                            name="fecha_inicio"
+                            min={`${new Date().getFullYear()}-01-01`}
+                            max={`${new Date().getFullYear()}-12-31`}
+                            className={
+                              errors.fecha_inicio && touched.fecha_inicio
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                          />
+                          <ErrorMessage
+                            name="fecha_inicio"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="fecha_cierre">
+                            Fecha de cierre{" "}
+                            <small
+                              style={{ fontWeight: "normal", opacity: 0.7 }}
+                            >
+                              (opcional)
+                            </small>
+                          </label>
+                          <Field
+                            type="date"
+                            id="fecha_cierre"
+                            name="fecha_cierre"
+                            min={`${new Date().getFullYear()}-01-01`}
+                            max={`${new Date().getFullYear()}-12-31`}
+                            className={
+                              errors.fecha_cierre && touched.fecha_cierre
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                          />
+                          <ErrorMessage
+                            name="fecha_cierre"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="tipo_aprobacion">
+                            Tipo de aprobación
+                          </label>
+                          <Field
+                            as="select"
+                            id="tipo_aprobacion"
+                            name="tipo_aprobacion"
+                            className={
+                              errors.tipo_aprobacion && touched.tipo_aprobacion
+                                ? "formikFieldError"
+                                : "formikField"
+                            }
+                          >
+                            <option value="">Seleccioná una opción</option>
+                            <option value="EP">
+                              Exclusivamente promocionable
                             </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name="id_materia_plan"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
-                        <label htmlFor="fecha_inicio">Fecha de inicio</label>
-                        <Field
-                          type="date"
-                          id="fecha_inicio"
-                          name="fecha_inicio"
-                          min={new Date().toISOString().split("T")[0]}
-                          className={
-                            errors.fecha_inicio && touched.fecha_inicio
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                        />
-                        <ErrorMessage
-                          name="fecha_inicio"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
-                        <label htmlFor="fecha_cierre">Fecha de cierre</label>
-                        <Field
-                          type="date"
-                          id="fecha_cierre"
-                          name="fecha_cierre"
-                          min={new Date().toISOString().split("T")[0]}
-                          className={
-                            errors.fecha_cierre && touched.fecha_cierre
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                        />
-                        <ErrorMessage
-                          name="fecha_cierre"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
-                        <label htmlFor="tipo_aprobacion">
-                          Tipo de aprobación
-                        </label>
-                        <Field
-                          as="select"
-                          id="tipo_aprobacion"
-                          name="tipo_aprobacion"
-                          className={
-                            errors.tipo_aprobacion && touched.tipo_aprobacion
-                              ? "formikFieldError"
-                              : "formikField"
-                          }
-                        >
-                          <option value="">Seleccioná una opción</option>
-                          <option value="EP">
-                            Exclusivamente promocionable
-                          </option>
-                          <option value="P">Promocionable</option>
-                          <option value="NP">No promocionable</option>
-                        </Field>
-                        <ErrorMessage
-                          name="tipo_aprobacion"
-                          component="div"
-                          className="formikFieldErrorText"
-                        />
+                            <option value="P">Promocionable</option>
+                            <option value="NP">No promocionable</option>
+                          </Field>
+                          <ErrorMessage
+                            name="tipo_aprobacion"
+                            component="div"
+                            className="formikFieldErrorText"
+                          />
+                        </div>
                       </div>
                       <div className={styles.modalActions}>
                         <Boton

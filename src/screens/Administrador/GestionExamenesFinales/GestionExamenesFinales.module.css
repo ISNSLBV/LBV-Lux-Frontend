@@ -110,3 +110,81 @@
   display: flex;
   flex-direction: column;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form .campos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selector {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.modoActivo {
+  width: 50%;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modo {
+  width: 50%;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 8px;
+  transition: background-color 0.2s, border 0.2s;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modo:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modalActions {
+  display: flex;
+  gap: 6px;
+}
+
+@media (max-width: 768px) {
+  .selector {
+    flex-direction: column;
+  }
+
+  .modo {
+    width: 100%;
+  }
+
+  .barraAcciones {
+    flex-direction: column;
+  }
+
+  .botonAgregar button {
+    width: 100%;
+  }
+
+  .accion button {
+    width: 100%;
+  }
+
+  .carrera {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

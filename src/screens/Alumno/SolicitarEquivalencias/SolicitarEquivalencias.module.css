@@ -1,0 +1,73 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.titulo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.aviso {
+    display: flex;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    border-radius: 8px;
+    justify-content: center;
+}
+
+.aviso div {
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.aviso div h2 {
+    margin-bottom: 8px;
+}
+
+.aviso div ul {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.aviso div ul li {
+    margin-left: 24px;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.formulario form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (max-width: 768px) {
+    .aviso {
+        flex-direction: column;
+    }
+
+    .aviso div {
+        width: 100%;
+    }
+
+    .accion button {
+        width: 100%;
+    }
+}
