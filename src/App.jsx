@@ -39,6 +39,8 @@ const ConfiguracionSistema = lazy(() => import("./screens/Administrador/Configur
 const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
 const GestionExamenesFinales = lazy(() => import("./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"));
 const AdministrarExamen = lazy(() => import("./screens/Administrador/GestionExamenesFinales/AdministrarExamen/AdministrarExamen"));
+const MisMaterias = lazy(() => import("./screens/Alumno/MisMaterias/MisMaterias"))
+const MisFinales = lazy(() => import("./screens/Alumno/MisFinales/MisFinales"))
 const SolicitudEquivalencias = lazy(() => import("./screens/Administrador/SolicitudEquivalencias/SolicitudEquivalencias"));
 const SolicitarEquivalencias = lazy(() => import("./screens/Alumno/SolicitarEquivalencias/SolicitarEquivalencias"))
 const InscripcionMaterias = lazy(() => import("./screens/Alumno/InscripcionMaterias/InscripcionMaterias"));
@@ -112,6 +114,8 @@ function App() {
                   <Route index element={<PanelAlumno />} />
                   <Route path="ayuda" element={<AyudaAlumno />} />
                   <Route path="mi-perfil" element={<Perfil />} />
+                  <Route path="mis-materias" element={<MisMaterias />} />
+                  <Route path="mis-finales" element={<MisFinales />} />
                   <Route path="inscripcion-materias" element={<InscripcionMaterias />} />
                   <Route path="solicitar-equivalencias" element={<SolicitarEquivalencias />} />
                 </Route>

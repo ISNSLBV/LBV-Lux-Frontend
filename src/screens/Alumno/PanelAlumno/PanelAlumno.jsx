@@ -18,7 +18,7 @@ const PanelAlumno = () => {
     },
     {
       titulo: "Mis exámenes finales",
-      redir: "examenes-finales",
+      redir: "mis-examenes-finales",
       icono: FilePenLine,
     },
     {
@@ -28,7 +28,7 @@ const PanelAlumno = () => {
     },
     {
       titulo: "Inscripción a exámenes finales",
-      redir: "finales",
+      redir: "inscripcion-emanenes-finales",
       icono: NotebookPen,
     },
     {

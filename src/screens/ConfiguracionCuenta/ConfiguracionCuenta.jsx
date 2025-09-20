@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../api/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ConfiguracionCuenta = () => {
   const { user } = useAuth();
@@ -87,7 +88,7 @@ const ConfiguracionCuenta = () => {
         <div className={styles.card}>
           <h2>Información personal</h2>
           {isLoading ? (
-            <p>Cargando datos...</p>
+            <CircularProgress color="inherit" />
           ) : isError ? (
             <p>Error al cargar los datos</p>
           ) : (
