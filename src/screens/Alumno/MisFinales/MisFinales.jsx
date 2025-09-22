@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import api from "../../../api/axios";
 import styles from "./MisFinales.module.css";
 import { CircularProgress } from "@mui/material";
@@ -11,25 +10,13 @@ const MisFinales = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
   const [filtro, setFiltro] = useState("");
 
-  
-  const { data: personaData, isLoading: isLoadingPersona } = useQuery({
-    queryKey: ["persona", idAlumno],
-    queryFn: async () => {
-      const { data } = await api.get(`/usuario/perfil/${idAlumno}`);
-      return data;
-    },
-  });
-
-  const idPersona = personaData?.informacionPersonal?.id_persona;
-
-  
+  // Carreras del usuario autenticado
   const { data: carreras, isLoading: isLoadingCarreras } = useQuery({
-    queryKey: ["carrerasAlumno", idPersona],
+    queryKey: ["carrerasAlumno"],
     queryFn: async () => {
-      const { data } = await api.get(`/usuario/inscripto/carreras/${idPersona}`);
+      const { data } = await api.get(`/admin/alumno/carreras`);
       return data;
     },
-    enabled: !!idPersona,
   });
 
   useEffect(() => {
@@ -38,34 +25,38 @@ const MisFinales = () => {
     }
   }, [carreras, carreraSeleccionada]);
 
-  // Traer finales disponibles (según materias aprobadas + correlativas)
   const {
-    data: finales = [],
+    data: finalesData,
     isLoading: isLoadingFinales,
     error,
   } = useQuery({
-    queryKey: ["finalesAlumno", idAlumno, carreraSeleccionada],
+    queryKey: ["finalesAlumno", carreraSeleccionada],
     queryFn: async () => {
       const { data } = await api.get(
-        `/usuario/${idAlumno}/carreras/${carreraSeleccionada}/finales`
+        `/carreras/${carreraSeleccionada}/finales`
       );
       return data;
     },
     enabled: !!carreraSeleccionada,
   });
 
-  if (isLoadingPersona || isLoadingCarreras || isLoadingFinales) {
-    return <CircularProgress className={styles.loadingIndicator} />;
+  if (isLoadingCarreras || isLoadingFinales) {
+    return <div className={styles.loadingContainer}><CircularProgress className={styles.loadingIndicator} /></div>;
   }
 
   if (error) {
     return <div>Error al cargar los finales.</div>;
   }
 
+  // Filtrado por nombre de materia
+  const filtrarPorNombre = (arr) =>
+    arr?.filter((f) =>
+      (f.nombre || "").toLowerCase().includes(filtro.toLowerCase())
+    ) || [];
 
-  const finalesFiltrados = finales.filter((f) =>
-    f.materia.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const finalesAprobados = filtrarPorNombre(finalesData?.finalesAprobados || []);
+  const finalesInscriptos = filtrarPorNombre(finalesData?.finalesInscriptos || []);
+  const finalesDisponibles = filtrarPorNombre(finalesData?.finalesDisponibles || []);
 
   return (
     <div>
@@ -75,12 +66,15 @@ const MisFinales = () => {
 
       {carreras && carreras.length > 0 && (
         <>
-          <SearchBar
-            className={styles.buscador}
-            placeholder="Buscar final"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          />
+          <div className={styles.barraAcciones}>
+            <div className={styles.barraBusqueda}>
+              <SearchBar
+                placeholder="Buscar final"
+                value={filtro}
+                onChange={(e) => setFiltro(e.target.value)}
+              />
+            </div>
+          </div>
 
           <div className={styles.carreraSelector}>
             <label htmlFor="carrera-select">Selecciona una carrera:</label>
@@ -99,46 +93,60 @@ const MisFinales = () => {
         </>
       )}
 
-      {finalesFiltrados.length > 0 ? (
-        <div className={styles.listaFinales}>
-          {finalesFiltrados.map((final) => (
+      <div className={styles.listaFinales}>
+        <h3>Finales Aprobados</h3>
+        {finalesAprobados.length > 0 ? (
+          finalesAprobados.map((final) => (
             <div key={final.id} className={styles.card}>
               <div className={styles.cardHeader}>
-                <h3>{final.materia}</h3>
+                <h4>{final.nombre}</h4>
                 <span>
-                  <strong>Estado Final: {final.estado}</strong>
+                  <strong>Nota: {final.nota}</strong>
                 </span>
               </div>
               <div className={styles.datosAdicionales}>
                 <div>
-                  <p>Profesor</p>
-                  <p>
-                    <strong>{final.profesor}</strong>
-                  </p>
-                </div>
-                <div>
                   <p>Fecha</p>
                   <p>
-                    <strong>{final.fecha || "A confirmar"}</strong>
-                  </p>
-                </div>
-                <div>
-                  <p>Correlativas</p>
-                  <p>
-                    <strong>
-                      {final.correlativasAprobadas ? "Aprobadas ✅" : "Pendientes ❌"}
-                    </strong>
+                    <strong>{final.fecha || "—"}</strong>
                   </p>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className={styles.noFinales}>
-          No hay finales disponibles para la carrera seleccionada.
-        </p>
-      )}
+          ))
+        ) : (
+          <p className={styles.noFinales}>No hay finales aprobados.</p>
+        )}
+
+        <h3>Finales Inscriptos</h3>
+        {finalesInscriptos.length > 0 ? (
+          finalesInscriptos.map((final) => (
+            <div key={final.id} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h4>{final.nombre}</h4>
+                <span>
+                  <strong>Fecha: {final.fecha || "A confirmar"}</strong>
+                </span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className={styles.noFinales}>No hay finales inscriptos.</p>
+        )}
+
+        <h3>Finales Disponibles</h3>
+        {finalesDisponibles.length > 0 ? (
+          finalesDisponibles.map((final) => (
+            <div key={final.id} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h4>{final.nombre}</h4>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className={styles.noFinales}>No hay finales disponibles.</p>
+        )}
+      </div>
     </div>
   );
 };
