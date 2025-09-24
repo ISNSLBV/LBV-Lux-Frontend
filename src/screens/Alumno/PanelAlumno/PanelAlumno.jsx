@@ -28,7 +28,7 @@ const PanelAlumno = () => {
     },
     {
       titulo: "Inscripción a exámenes finales",
-      redir: "inscripcion-emanenes-finales",
+      redir: "inscripcion-examenes-finales",
       icono: NotebookPen,
     },
     {

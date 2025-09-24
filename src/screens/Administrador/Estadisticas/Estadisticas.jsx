@@ -15,8 +15,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import CircularProgress from "@mui/material/CircularProgress";
 import api from "../../../api/axios";
-
-//Colores de los Gráficos
+import styles from "./Estadisticas.module.css";
 
 const COLOR_HOMBRES = "#26e859ff";
 const COLOR_MUJERES = "#f47710ff";
@@ -41,7 +40,7 @@ const Estadisticas = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className={styles.loading}>
         <CircularProgress />
       </div>
     );
@@ -49,7 +48,7 @@ const Estadisticas = () => {
 
   if (isError) {
     return (
-      <div className="text-red-500 text-center mt-8">
+      <div className={styles.sinDatos}>
         Error al cargar las estadísticas.
       </div>
     );
@@ -82,122 +81,140 @@ const Estadisticas = () => {
   }));
 
   return (
-    <div className="p-8">
+    <div className={styles.container}>
+      <div className={styles.titulo}>
+        <h1>Estadísticas del instituto</h1>
+      </div>
       {/* Gráfico 1: Género por Carrera General */}
-      <h2 className="text-2xl font-bold mb-4">
-        Estadísticas por Género y Carrera (General)
-      </h2>
-      {generoData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart
-            data={generoData}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nombre" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="hombres" fill={COLOR_HOMBRES} name="Hombres" />
-            <Bar dataKey="mujeres" fill={COLOR_MUJERES} name="Mujeres" />
-            <Bar dataKey="noBin" fill={COLOR_NO_BINARIO} name="No Binario" />
-          </BarChart>
-        </ResponsiveContainer>
-      ) : (
-        <div className="text-center mt-8 text-gray-500">
-          No hay datos de género por carrera para mostrar.
+      <div className={styles.graficosContainer}>
+        <div className={styles.grafico}>
+          <h2 className={styles.graficoTitulo}>
+            Estadísticas por Género y Carrera (General)
+          </h2>
+          {generoData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={generoData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="nombre" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="hombres" fill={COLOR_HOMBRES} name="Hombres" />
+                <Bar dataKey="mujeres" fill={COLOR_MUJERES} name="Mujeres" />
+                <Bar
+                  dataKey="noBin"
+                  fill={COLOR_NO_BINARIO}
+                  name="No Binario"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={styles.sinDatos}>
+              No hay datos de género por carrera para mostrar.
+            </div>
+          )}
         </div>
-      )}
 
-      <hr className="my-12" />
-      {/* Gráfico 2: Género por Carrera y Curso */}
-      <h2 className="text-2xl font-bold mb-4">
-        Estadísticas por Género y Curso
-      </h2>
-      {generoCursoData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart
-            data={generoCursoData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nombre" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="hombres" fill={COLOR_HOMBRES} name="Hombres" />
-            <Bar dataKey="mujeres" fill={COLOR_MUJERES} name="Mujeres" />
-            <Bar dataKey="noBin" fill={COLOR_NO_BINARIO} name="No Binario" />
-          </BarChart>
-        </ResponsiveContainer>
-      ) : (
-        <div className="text-center mt-8 text-gray-500">
-          No hay datos de género por curso para mostrar.
+        {/* Gráfico 2: Género por Carrera y Curso */}
+        <div className={styles.grafico}>
+          <h2 className={styles.graficoTitulo}>
+            Estadísticas por Género y Curso
+          </h2>
+          {generoCursoData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={generoCursoData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="nombre" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="hombres" fill={COLOR_HOMBRES} name="Hombres" />
+                <Bar dataKey="mujeres" fill={COLOR_MUJERES} name="Mujeres" />
+                <Bar
+                  dataKey="noBin"
+                  fill={COLOR_NO_BINARIO}
+                  name="No Binario"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={styles.sinDatos}>
+              No hay datos de género por curso para mostrar.
+            </div>
+          )}
         </div>
-      )}
 
-      <hr className="my-12" />
-
-      {/* Gráfico 3: Rango Etario */}
-      <h2 className="text-2xl font-bold mb-4">Estadísticas por Rango Etario</h2>
-      {rangoEtario.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart
-            data={rangoEtario}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="rango" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar
-              dataKey="estudiantes"
-              fill={COLOR_ESTUDIANTES}
-              name="Estudiantes"
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      ) : (
-        <div className="text-center mt-8 text-gray-500">
-          No hay datos de rango etario para mostrar.
+        {/* Gráfico 3: Rango Etario */}
+        <div className={styles.grafico}>
+          <h2 className={styles.graficoTitulo}>
+            Estadísticas por Rango Etario
+          </h2>
+          {rangoEtario.length > 0 ? (
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={rangoEtario}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="rango" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="estudiantes"
+                  fill={COLOR_ESTUDIANTES}
+                  name="Estudiantes"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={styles.sinDatos}>
+              No hay datos de rango etario para mostrar.
+            </div>
+          )}
         </div>
-      )}
 
-      <hr className="my-12" />
-
-      {/* Gráfico 4: Egresados por Año */}
-      <h2 className="text-2xl font-bold mb-4">
-        Estadísticas de Egresados por Año
-      </h2>
-      {egresadosData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart
-            data={egresadosData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="anio" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar
-              dataKey="cantidad"
-              fill={COLOR_EGRESADOS}
-              name="Cantidad de Egresados"
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      ) : (
-        <div className="text-center mt-8 text-gray-500">
-          No hay datos de egresados para mostrar.
+        {/* Gráfico 4: Egresados por Año */}
+        <div className={styles.grafico}>
+          <h2 className={styles.graficoTitulo}>
+            Estadísticas de Egresados por Año
+          </h2>
+          {egresadosData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={egresadosData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="anio" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="cantidad"
+                  fill={COLOR_EGRESADOS}
+                  name="Cantidad de Egresados"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={styles.sinDatos}>
+              No hay datos de egresados para mostrar.
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

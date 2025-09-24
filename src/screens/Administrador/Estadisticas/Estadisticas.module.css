@@ -1,53 +1,38 @@
 .container {
-  padding: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .titulo {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 32px;
 }
 
-.chartContainer {
+.graficosContainer {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.grafico {
+  background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 24px;
-  background-color: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  flex: 1 1 50%;
+  min-width: 360px;
+  max-width: calc(50% - 10px);
 }
 
-.loadingContainer,
-.errorContainer,
-.noDataContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  min-height: 400px; /* Para que el contenido de carga/error esté centrado */
-  color: rgba(255, 255, 255, 0.77);
+.graficoTitulo {
   text-align: center;
-  padding: 32px;
 }
 
-h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.77);
-}
-
-p {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.5);
+.sinDatos, .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }

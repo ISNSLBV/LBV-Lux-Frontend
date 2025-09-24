@@ -44,6 +44,7 @@ const MisFinales = lazy(() => import("./screens/Alumno/MisFinales/MisFinales"))
 const SolicitudEquivalencias = lazy(() => import("./screens/Administrador/SolicitudEquivalencias/SolicitudEquivalencias"));
 const SolicitarEquivalencias = lazy(() => import("./screens/Alumno/SolicitarEquivalencias/SolicitarEquivalencias"))
 const InscripcionMaterias = lazy(() => import("./screens/Alumno/InscripcionMaterias/InscripcionMaterias"));
+const InscripcionFinales = lazy(() => import("./screens/Alumno/InscripcionFinales/InscripcionFinales"))
 
 function App() {
   return (
@@ -117,6 +118,7 @@ function App() {
                   <Route path="mis-materias" element={<MisMaterias />} />
                   <Route path="mis-finales" element={<MisFinales />} />
                   <Route path="inscripcion-materias" element={<InscripcionMaterias />} />
+                  <Route path="inscripcion-examenes-finales" element={<InscripcionFinales />} />
                   <Route path="solicitar-equivalencias" element={<SolicitarEquivalencias />} />
                 </Route>
                 {/* ---- Ruta Profesor ---- */}
