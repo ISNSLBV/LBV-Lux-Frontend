@@ -84,7 +84,7 @@ const datosPreguntas = [
       "Sí, se puede optar por rendir la mayoría de las materias en condición de alumno libre, siempre que sean materias teóricas. Las excepciones, que no se pueden rendir libre, son las Prácticas Profesionalizantes, el Seminario de Actualización, y cualquier formato de Taller, Laboratorio o Ateneo.",
   },
   {
-    titulo: "¿Cómo es la modalidad de aprobación del exámen libre?",
+    titulo: "¿Cómo es la modalidad de aprobación del examen libre?",
     descripcion:
       'El examen en condición de alumno libre generalmente consta de dos instancias de evaluación: una parte escrita y una parte oral. Deberás obtener una nota igual o superior a 4 en ambas instancias para aprobar. Es posible que el docente elabore un "Trabajo Previo" a defender durante el examen; en esos casos, se te entregará la consigna con anticipación. Es fundamental consultar con el docente de la materia para conocer las condiciones específicas y si hay un trabajo previo.',
   },
@@ -103,7 +103,7 @@ const datosPreguntas = [
   {
     titulo: "¿Cómo es el método de aprobación de las materias?",
     descripcion:
-      "El método de aprobación dependerá de cada materia: \n\n• Promoción Directa (sin examen final): Aplica a Prácticas Profesionalizantes y Seminarios. Se aprueban con una nota de 7 (siete) o más en cada evaluación, incluyendo recuperatorios. Si no se alcanza esta nota, la materia se recursa. \n\n• Promoción con examen final: Si tu nota final de cursada está entre 4 (cuatro) y 6 (seis) puntos (inclusive), aprobás la cursada y accedés a la instancia de examen final. La nota mínima para promocionar directamente sin exámen final es de 7 (siete) o más en cada evaluación (incluidos recuperatorios). \n\n• Final obligatorio: Algunas materias específicas (detalladas en el plan de estudios) siempre requieren examen final, para acceder al mismo necesitás una nota mayor o igual a 4 (cuatro). \n\n La nota mínima para aprobar un examen final es de 4 (cuatro) o más puntos. La escala de calificaciones es del 1 al 10.",
+      "El método de aprobación dependerá de cada materia: \n\n• Promoción Directa (sin examen final): Aplica a Prácticas Profesionalizantes y Seminarios. Se aprueban con una nota de 7 (siete) o más en cada evaluación, incluyendo recuperatorios. Si no se alcanza esta nota, la materia se recursa. \n\n• Promoción con examen final: Si tu nota final de cursada está entre 4 (cuatro) y 6 (seis) puntos (inclusive), aprobás la cursada y accedés a la instancia de examen final. La nota mínima para promocionar directamente sin examen final es de 7 (siete) o más en cada evaluación (incluidos recuperatorios). \n\n• Final obligatorio: Algunas materias específicas (detalladas en el plan de estudios) siempre requieren examen final, para acceder al mismo necesitás una nota mayor o igual a 4 (cuatro). \n\n La nota mínima para aprobar un examen final es de 4 (cuatro) o más puntos. La escala de calificaciones es del 1 al 10.",
   },
   {
     titulo: "¿Cómo consulto mis notas finales?",

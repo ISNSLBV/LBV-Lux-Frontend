@@ -1,6 +1,7 @@
-.titulo {
-  text-align: center;
-  margin-bottom: 20px;
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .titulo h2 {
@@ -9,10 +10,18 @@
   color: #ffffff;
 }
 
-.buscador {
-  margin: 10px auto;
-  display: block;
-  max-width: 400px;
+.barraAcciones {
+  display: flex;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 24px;
+}
+
+.barraBusqueda {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .carreraSelector {
@@ -92,11 +101,20 @@
   color: #2c3e50;
 }
 
+.mensaje {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+
 .noFinales {
   text-align: center;
-  margin-top: 40px;
-  font-size: 1rem;
-  color: #888;
+  color: white;
 }
 
 .loadingIndicator {

@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import api from "../../../api/axios";
 import styles from "./MisFinales.module.css";
 import { CircularProgress } from "@mui/material";
 import SearchBar from "../../../components/SearchBar/SearchBar";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const MisFinales = () => {
-  const { idAlumno } = useParams();
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
   const [filtro, setFiltro] = useState("");
+  const { user } = useAuth();
+  const idAlumno = user?.id;
 
-  
-  const { data: personaData, isLoading: isLoadingPersona } = useQuery({
-    queryKey: ["persona", idAlumno],
+  const { data: idPersonaData, isLoading: isLoadingPersona } = useQuery({
+    queryKey: ["idPersona"],
     queryFn: async () => {
-      const { data } = await api.get(`/usuario/perfil/${idAlumno}`);
+      const { data } = await api.get(`/usuario/obtener-id-persona`);
       return data;
     },
   });
 
-  const idPersona = personaData?.informacionPersonal?.id_persona;
+  const idPersona = idPersonaData?.id_persona;
 
-  
   const { data: carreras, isLoading: isLoadingCarreras } = useQuery({
     queryKey: ["carrerasAlumno", idPersona],
     queryFn: async () => {
-      const { data } = await api.get(`/usuario/inscripto/carreras/${idPersona}`);
+      const { data } = await api.get(`/alumno/carreras`);
       return data;
     },
     enabled: !!idPersona,
@@ -47,7 +46,7 @@ const MisFinales = () => {
     queryKey: ["finalesAlumno", idAlumno, carreraSeleccionada],
     queryFn: async () => {
       const { data } = await api.get(
-        `/usuario/${idAlumno}/carreras/${carreraSeleccionada}/finales`
+        `/alumno/carreras/${carreraSeleccionada}/finales`
       );
       return data;
     },
@@ -62,40 +61,44 @@ const MisFinales = () => {
     return <div>Error al cargar los finales.</div>;
   }
 
-
   const finalesFiltrados = finales.filter((f) =>
     f.materia.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.titulo}>
-        <h2>Mis Finales</h2>
+        <h2>Mis Exámenes Finales</h2>
       </div>
 
       {carreras && carreras.length > 0 && (
         <>
-          <SearchBar
-            className={styles.buscador}
-            placeholder="Buscar final"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          />
-
-          <div className={styles.carreraSelector}>
-            <label htmlFor="carrera-select">Selecciona una carrera:</label>
-            <select
-              id="carrera-select"
-              value={carreraSeleccionada || ""}
-              onChange={(e) => setCarreraSeleccionada(e.target.value)}
-            >
-              {carreras.map((carrera) => (
-                <option key={carrera.id} value={carrera.id}>
-                  {carrera.nombre}
-                </option>
-              ))}
-            </select>
+          <div className={styles.barraAcciones}>
+            <div className={styles.barraBusqueda}>
+              <SearchBar
+                placeholder="Buscar final"
+                value={filtro}
+                onChange={(e) => setFiltro(e.target.value)}
+              />
+            </div>
           </div>
+
+          {carreras.length > 1 && (
+            <div className={styles.carreraSelector}>
+              <label htmlFor="carrera-select">Selecciona una carrera:</label>
+              <select
+                id="carrera-select"
+                value={carreraSeleccionada || ""}
+                onChange={(e) => setCarreraSeleccionada(e.target.value)}
+              >
+                {carreras.map((carrera) => (
+                  <option key={carrera.id} value={carrera.id}>
+                    {carrera.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </>
       )}
 
@@ -126,7 +129,9 @@ const MisFinales = () => {
                   <p>Correlativas</p>
                   <p>
                     <strong>
-                      {final.correlativasAprobadas ? "Aprobadas ✅" : "Pendientes ❌"}
+                      {final.correlativasAprobadas
+                        ? "Aprobadas ✅"
+                        : "Pendientes ❌"}
                     </strong>
                   </p>
                 </div>
@@ -135,9 +140,11 @@ const MisFinales = () => {
           ))}
         </div>
       ) : (
-        <p className={styles.noFinales}>
-          No hay finales disponibles para la carrera seleccionada.
-        </p>
+        <div className={styles.mensaje}>
+          <p className={styles.noFinales}>
+            No estás inscripto a ningún examen final
+          </p>
+        </div>
       )}
     </div>
   );

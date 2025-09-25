@@ -1,8 +1,13 @@
-.titulo {
+.container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 32px;
+  gap: 24px;
+}
+
+.titulo h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 .carreraSelector {
@@ -63,13 +68,6 @@
   margin: 40px auto;
 }
 
-@media (max-width: 768px) {
-  .carreraSelector {
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
 .barraAcciones {
   display: flex;
   gap: 16px;
@@ -77,10 +75,16 @@
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 24px;
-  margin-bottom: 32px;
 }
 
 .barraBusqueda {
   flex: 1 1 auto;
   min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .carreraSelector {
+    flex-direction: column;
+    gap: 16px;
+  }
 }

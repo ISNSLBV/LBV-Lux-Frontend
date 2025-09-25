@@ -7,13 +7,14 @@ import { RutaPublicaSinRedireccion } from "./components/RutaPublica/RutaPublicaS
 import Login from "./screens/Login/Login";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
 
 //=======================
 // Lazy loading de componentes
 //=======================
 const Layout = lazy(() => import("./screens/Layout/Layout"));
 const RutaPrivada = lazy(() => import("./components/RutaPrivada/RutaPrivada"));
-const Dashboard = lazy(() => import("./screens/Dashboard/Dashboard"));
 const Preinscripcion = lazy(() => import("./screens/Preinscripcion/Preinscripcion"));
 const Estadisticas = lazy(() => import("./screens/Administrador/Estadisticas/Estadisticas"));
 const Perfil = lazy(() => import("./screens/Perfil/Perfil"));
@@ -45,6 +46,18 @@ const SolicitudEquivalencias = lazy(() => import("./screens/Administrador/Solici
 const SolicitarEquivalencias = lazy(() => import("./screens/Alumno/SolicitarEquivalencias/SolicitarEquivalencias"))
 const InscripcionMaterias = lazy(() => import("./screens/Alumno/InscripcionMaterias/InscripcionMaterias"));
 const InscripcionFinales = lazy(() => import("./screens/Alumno/InscripcionFinales/InscripcionFinales"))
+
+function IndexRedirect() {
+  const { user } = useAuth();
+  const rol = user?.rol;
+
+  let to = "/403";
+  if (rol === "Administrador") to = "/admin";
+  else if (rol === "Profesor") to = "/profesor";
+  else if (rol === "Alumno") to = "/alumno";
+
+  return <Navigate to={to} replace />;
+}
 
 function App() {
   return (
@@ -108,7 +121,7 @@ function App() {
               {/* Index */}
               <Route element={<Layout />}>
                 {/* ---- Ruta usuario ---- */}
-                <Route index element={<Dashboard />} />
+                <Route index element={<IndexRedirect />} />
                 <Route path="cuenta" element={<ConfiguracionCuenta />} />
                 {/* ---- Ruta Alumno ---- */}
                 <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
@@ -116,7 +129,7 @@ function App() {
                   <Route path="ayuda" element={<AyudaAlumno />} />
                   <Route path="mi-perfil" element={<Perfil />} />
                   <Route path="mis-materias" element={<MisMaterias />} />
-                  <Route path="mis-finales" element={<MisFinales />} />
+                  <Route path="mis-examenes-finales" element={<MisFinales />} />
                   <Route path="inscripcion-materias" element={<InscripcionMaterias />} />
                   <Route path="inscripcion-examenes-finales" element={<InscripcionFinales />} />
                   <Route path="solicitar-equivalencias" element={<SolicitarEquivalencias />} />

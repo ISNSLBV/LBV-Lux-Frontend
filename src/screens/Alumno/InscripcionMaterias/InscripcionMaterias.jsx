@@ -3,12 +3,19 @@ import styles from "./InscripcionMaterias.module.css";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
+import { toast } from "react-toastify";
 
 const obtenerPlanEstudio = async () => {
   const { data } = await api.get(
     "/admin/plan-estudio/alumno/obtener-plan-asignado"
   );
-  return data.planAsignado;
+
+  const planId =
+    data?.carreras?.[0]?.plan?.id ??
+    data?.carreras?.[0]?.idPlanAsignado ??
+    null;
+
+  return planId;
 };
 
 const obtenerMateriasCicloActual = async (planId) => {
@@ -29,18 +36,30 @@ const InscripcionMaterias = () => {
   const { data: planId, isLoading: planLoading } = useQuery({
     queryKey: ["planEstudio"],
     queryFn: obtenerPlanEstudio,
+    onError: (error) => {
+      console.error("Error al obtener el plan de estudio: ", error);
+    },
   });
 
   const { data: response, isLoading: materiasLoading } = useQuery({
     queryKey: ["materiasCicloActual", planId],
     queryFn: () => obtenerMateriasCicloActual(planId),
     enabled: !!planId,
+    onError: (error) => {
+      console.error("Error al obtener las materias del ciclo actual: ", error);
+    },
   });
 
   const { data: estadoInscripciones, isLoading: estadoLoading } = useQuery({
     queryKey: ["estadoInscripciones", planId],
     queryFn: () => verificarEstadoInscripciones(planId),
     enabled: !!planId,
+    onError: (error) => {
+      console.error(
+        "Error al verificar el estado de las inscripciones: ",
+        error
+      );
+    },
   });
 
   const registrarInscripcion = useMutation({
@@ -50,9 +69,12 @@ const InscripcionMaterias = () => {
         data
       ),
     onSuccess: () => {
-      // Refetch para actualizar el estado
       queryClient.invalidateQueries(["estadoInscripciones", planId]);
       queryClient.invalidateQueries(["materiasCicloActual", planId]);
+      toast.success("Inscripción registrada correctamente");
+    },
+    onError: (error) => {
+      console.error("Error al registrar la inscripción: ", error);
     },
   });
 
@@ -127,20 +149,6 @@ const InscripcionMaterias = () => {
         <h1>Inscripción a materias</h1>
       </div>
 
-      {/* Información del plan */}
-      <div className={styles.info}>
-        <p>
-          <strong>Plan de Estudio:</strong> {planEstudio?.resolucion}
-        </p>
-        <p>
-          <strong>Ciclo Lectivo:</strong> {cicloLectivo}
-        </p>
-        <p>
-          <strong>Total de Materias:</strong> {total}
-        </p>
-      </div>
-
-      {/* Resumen de estado */}
       {resumen && (
         <div className={styles.resumen}>
           <h3>Resumen de Inscripciones</h3>
@@ -243,7 +251,6 @@ const InscripcionMaterias = () => {
           </div>
         )}
 
-        {/* Materias no disponibles */}
         {materias?.filter((materia) => {
           const estado = estadoMateriasMap.get(materia.id);
           return !estado?.puedeInscribirse;

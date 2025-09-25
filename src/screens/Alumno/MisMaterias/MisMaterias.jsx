@@ -3,16 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import styles from "./MisMaterias.module.css";
 import { CircularProgress } from "@mui/material";
-import SearchBar from "../../../components/SearchBar/SearchBar"; 
+import SearchBar from "../../../components/SearchBar/SearchBar";
 
 const MisMaterias = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
-  const [filtro, setFiltro] = useState(""); 
+  const [filtro, setFiltro] = useState("");
 
   const { data: carreras, isLoading: isLoadingCarreras } = useQuery({
     queryKey: ["carrerasAlumno"],
     queryFn: async () => {
-      const { data } = await api.get(`/admin/alumno/carreras`);
+      const { data } = await api.get(`/alumno/carreras`);
       return data;
     },
   });
@@ -30,7 +30,9 @@ const MisMaterias = () => {
   } = useQuery({
     queryKey: ["materiasAlumno", carreraSeleccionada],
     queryFn: async () => {
-      const { data } = await api.get(`/admin/alumno/carreras/${carreraSeleccionada}/materias`);
+      const { data } = await api.get(
+        `/alumno/carreras/${carreraSeleccionada}/materias`
+      );
       return data;
     },
     enabled: !!carreraSeleccionada,
@@ -44,43 +46,44 @@ const MisMaterias = () => {
     return <div>Error al cargar las materias.</div>;
   }
 
-  
   const materiasFiltradas = materias.filter((m) =>
     m.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.titulo}>
-        <h2>Mis Materias</h2>
+        <h1>Mis Materias</h1>
       </div>
 
       {carreras && carreras.length > 0 && (
         <>
-        <div className={styles.barraAcciones}>
-          <div className={styles.barraBusqueda}>
-            <SearchBar
-            placeholder="Buscar materia"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-            />
-        </div>
-        </div>
-
-          <div className={styles.carreraSelector}>
-            <label htmlFor="carrera-select">Selecciona una carrera:</label>
-            <select
-              id="carrera-select"
-              value={carreraSeleccionada || ""}
-              onChange={(e) => setCarreraSeleccionada(e.target.value)}
-            >
-              {carreras.map((carrera) => (
-                <option key={carrera.id} value={carrera.id}>
-                  {carrera.nombre}
-                </option>
-              ))}
-            </select>
+          <div className={styles.barraAcciones}>
+            <div className={styles.barraBusqueda}>
+              <SearchBar
+                placeholder="Buscar materia"
+                value={filtro}
+                onChange={(e) => setFiltro(e.target.value)}
+              />
+            </div>
           </div>
+
+          {carreras.length > 1 && (
+            <div className={styles.carreraSelector}>
+              <label htmlFor="carrera-select">Selecciona una carrera:</label>
+              <select
+                id="carrera-select"
+                value={carreraSeleccionada || ""}
+                onChange={(e) => setCarreraSeleccionada(e.target.value)}
+              >
+                {carreras.map((carrera) => (
+                  <option key={carrera.id} value={carrera.id}>
+                    {carrera.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </>
       )}
 
@@ -114,9 +117,11 @@ const MisMaterias = () => {
           ))}
         </div>
       ) : (
-        <p className={styles.noMaterias}>
-          No hay materias registradas para la carrera seleccionada.
-        </p>
+        <div className={styles.mensaje}>
+          <p className={styles.noMaterias}>
+            No estás inscripto a ninguna materia
+          </p>
+        </div>
       )}
     </div>
   );
