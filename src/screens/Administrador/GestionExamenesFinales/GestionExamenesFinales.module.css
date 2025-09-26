@@ -162,6 +162,27 @@
   gap: 6px;
 }
 
+.checkboxAlternativo {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.checkboxAlternativo label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.selectAlternativo {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 @media (max-width: 768px) {
   .selector {
     flex-direction: column;

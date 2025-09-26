@@ -15,7 +15,7 @@ import { formatearFechaSinZonaHoraria } from "../../../utils/dateUtils";
 
 const fetchExamenesFinales = async () => {
   const { data } = await api.get("/admin/examen-final/listar-examenes");
-  return data.data; // Extraer el array de la propiedad 'data'
+  return data.data;
 };
 
 const GestionExamenesFinales = () => {
@@ -49,10 +49,23 @@ const GestionExamenesFinales = () => {
     },
   });
 
-  // Obtener profesores de la materia seleccionada
-  const profesoresDisponibles =
-    materias.find((m) => m.id === parseInt(materiaSeleccionada))?.profesores ||
-    [];
+  const { data: profesoresInstituto = [], isLoading: cargandoProfesores } =
+    useQuery({
+      queryKey: ["profesoresInstituto"],
+      queryFn: async () => {
+        const { data } = await api.get("/admin/profesor/listar-profesores");
+        return data;
+      },
+    });
+
+  const materiaPlanSeleccionada = materiaSeleccionada
+    ? parseInt(materiaSeleccionada, 10)
+    : null;
+
+  const profesoresDisponibles = materiaPlanSeleccionada
+    ? materias.find((m) => m.materiaPlan?.id === materiaPlanSeleccionada)
+        ?.profesores || []
+    : [];
 
   const registrarExamen = useMutation({
     mutationFn: ({ idMateria, fecha, idProfesor }) =>
@@ -74,9 +87,7 @@ const GestionExamenesFinales = () => {
   });
 
   const examenesFiltrados = examenesFinales.filter((e) =>
-    e.materiaPlan?.materia?.nombre
-      ?.toLowerCase()
-      .includes(filtro.toLowerCase())
+    e.materiaPlan?.materia?.nombre?.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
@@ -130,8 +141,7 @@ const GestionExamenesFinales = () => {
                   <div key={e.id || idx} className={styles.card}>
                     <div className={styles.cardHeader}>
                       <h3>
-                        {e.materiaPlan?.materia?.nombre ||
-                          "Materia sin nombre"}
+                        {e.materiaPlan?.materia?.nombre || "Materia sin nombre"}
                       </h3>
                       <span>
                         <strong>Estado: {e.estado || "PENDIENTE"}</strong>
@@ -164,8 +174,8 @@ const GestionExamenesFinales = () => {
                           <span>Carrera</span>
                           <p>
                             <strong>
-                              {e.materiaPlan?.planEstudio?.carrera
-                                ?.nombre || "Sin carrera"}
+                              {e.materiaPlan?.planEstudio?.carrera?.nombre ||
+                                "Sin carrera"}
                             </strong>
                           </p>
                         </div>
@@ -237,6 +247,8 @@ const GestionExamenesFinales = () => {
                     id_materia: "",
                     fecha: "",
                     id_profesor: "",
+                    asignar_otro_profesor: false,
+                    id_profesor_general: "",
                   }}
                   validationSchema={Yup.object({
                     id_materia: Yup.string().required(
@@ -245,16 +257,34 @@ const GestionExamenesFinales = () => {
                     fecha: Yup.date()
                       .nullable(true)
                       .transform((curr, orig) => (orig === "" ? null : curr)),
-                    id_profesor: Yup.string().required(
-                      "Este campo es obligatorio"
+                    asignar_otro_profesor: Yup.boolean(),
+                    id_profesor: Yup.string().when("asignar_otro_profesor", {
+                      is: false,
+                      then: (schema) =>
+                        schema.required("Este campo es obligatorio"),
+                      otherwise: (schema) => schema.notRequired(),
+                    }),
+                    id_profesor_general: Yup.string().when(
+                      "asignar_otro_profesor",
+                      {
+                        is: true,
+                        then: (schema) =>
+                          schema.required("Este campo es obligatorio"),
+                        otherwise: (schema) => schema.notRequired(),
+                      }
                     ),
                   })}
                   onSubmit={(values, { resetForm }) => {
                     const fecha = values.fecha || null;
+                    const idMateria = Number(values.id_materia);
+                    const idProfesorSeleccionado = values.asignar_otro_profesor
+                      ? Number(values.id_profesor_general)
+                      : Number(values.id_profesor);
+
                     registrarExamen.mutate({
-                      idMateria: values.id_materia,
+                      idMateria,
                       fecha,
-                      idProfesor: values.id_profesor,
+                      idProfesor: idProfesorSeleccionado,
                     });
                     resetForm();
                     setRegistro(false);
@@ -287,17 +317,25 @@ const GestionExamenesFinales = () => {
                               const valor = e.target.value;
                               setFieldValue("id_materia", valor);
                               setMateriaSeleccionada(valor);
-                              // Limpiar la selección de profesor cuando cambie la materia
                               setFieldValue("id_profesor", "");
+                              setFieldValue("asignar_otro_profesor", false);
+                              setFieldValue("id_profesor_general", "");
                             }}
                           >
                             <option value="">Seleccioná una materia</option>
-                            {materias.map((m) => (
-                              <option value={m.id} key={m.id}>
-                                {m.materiaPlan?.materia?.nombre} - (
-                                {m.materiaPlan?.planEstudio?.resolucion})
-                              </option>
-                            ))}
+                            {materias.map((m) => {
+                              const materiaPlanId = m.materiaPlan?.id ?? "";
+
+                              return (
+                                <option
+                                  value={materiaPlanId}
+                                  key={materiaPlanId || m.id}
+                                >
+                                  {m.materiaPlan?.materia?.nombre} - (
+                                  {m.materiaPlan?.planEstudio?.resolucion})
+                                </option>
+                              );
+                            })}
                           </Field>
                           <ErrorMessage
                             name="id_materia"
@@ -338,6 +376,7 @@ const GestionExamenesFinales = () => {
                                 : "formikField"
                             }
                             disabled={
+                              values.asignar_otro_profesor ||
                               !materiaSeleccionada ||
                               profesoresDisponibles.length === 0
                             }
@@ -365,6 +404,68 @@ const GestionExamenesFinales = () => {
                             component="div"
                             className="formikFieldErrorText"
                           />
+                          <div className={styles.checkboxAlternativo}>
+                            <label>
+                              <Field
+                                type="checkbox"
+                                name="asignar_otro_profesor"
+                                checked={values.asignar_otro_profesor}
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setFieldValue(
+                                    "asignar_otro_profesor",
+                                    checked
+                                  );
+                                  if (checked) {
+                                    setFieldValue("id_profesor", "");
+                                  } else {
+                                    setFieldValue("id_profesor_general", "");
+                                  }
+                                }}
+                              />
+                              Asignar otro profesor
+                            </label>
+                          </div>
+                          {values.asignar_otro_profesor && (
+                            <div className={styles.selectAlternativo}>
+                              <label htmlFor="id_profesor_general">
+                                Profesor del instituto
+                              </label>
+                              <Field
+                                as="select"
+                                id="id_profesor_general"
+                                name="id_profesor_general"
+                                className={
+                                  errors.id_profesor_general &&
+                                  touched.id_profesor_general
+                                    ? "formikFieldError"
+                                    : "formikField"
+                                }
+                              >
+                                <option value="">
+                                  {cargandoProfesores
+                                    ? "Cargando profesores..."
+                                    : "Seleccioná un profesor"}
+                                </option>
+                                {!cargandoProfesores &&
+                                  profesoresInstituto.map((profesor) => (
+                                    <option
+                                      value={profesor.id}
+                                      key={profesor.id}
+                                    >
+                                      {profesor.persona?.nombre}{" "}
+                                      {profesor.persona?.apellido} - DNI{" "}
+                                      {profesor.persona?.dni}
+                                    </option>
+                                  ))}
+                              </Field>
+                              <ErrorMessage
+                                name="id_profesor_general"
+                                component="div"
+                                className="formikFieldErrorText"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className={styles.modalActions}>

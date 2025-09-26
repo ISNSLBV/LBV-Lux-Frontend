@@ -29,3 +29,12 @@
     display: flex;
     justify-content: space-between;
 }
+
+.observaciones {
+    color: white;
+    width: 100%;
+    background-color: rgba(185, 176, 49, 0.34);
+    border: 1px solid rgba(185, 176, 49, 0.5);
+    padding: 8px;
+    border-radius: 8px;
+}
