@@ -4,6 +4,7 @@ import { useQuery, useQueries } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { formatearFechaSinZonaHoraria } from "../../../utils/dateUtils";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver"
 
 const obtenerPlanEstudio = async () => {
   const { data } = await api.get(
@@ -92,6 +93,7 @@ const InscripcionFinales = () => {
 
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Inscripción a exámenes finales</h1>
       </div>
@@ -133,6 +135,7 @@ const InscripcionFinales = () => {
                 </div>
                 <div className={styles.botonInscribirse}>
                   <Boton
+                    variant="primary"
                     disabled={
                       requisitosLoading ||
                       requisitosError ||

@@ -5,6 +5,7 @@ import styles from "./MisFinales.module.css";
 import { CircularProgress } from "@mui/material";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { useAuth } from "../../../contexts/AuthContext";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const MisFinales = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
@@ -53,20 +54,13 @@ const MisFinales = () => {
     enabled: !!carreraSeleccionada,
   });
 
-  if (isLoadingPersona || isLoadingCarreras || isLoadingFinales) {
-    return <CircularProgress className={styles.loadingIndicator} />;
-  }
-
-  if (error) {
-    return <div>Error al cargar los finales.</div>;
-  }
-
   const finalesFiltrados = finales.filter((f) =>
     f.materia.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h2>Mis Exámenes Finales</h2>
       </div>
@@ -102,7 +96,11 @@ const MisFinales = () => {
         </>
       )}
 
-      {finalesFiltrados.length > 0 ? (
+      {isLoadingCarreras || isLoadingFinales || isLoadingPersona ? (
+        <CircularProgress className={styles.loadingIndicator} />
+      ) : error ? (
+        <div>Error al cargar los finales.</div>
+      ) : finalesFiltrados.length > 0 ? (
         <div className={styles.listaFinales}>
           {finalesFiltrados.map((final) => (
             <div key={final.id} className={styles.card}>

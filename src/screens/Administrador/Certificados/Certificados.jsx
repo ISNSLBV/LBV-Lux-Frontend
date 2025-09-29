@@ -4,9 +4,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import { toast } from "react-toastify";
 import Boton from "../../../components/Boton/Boton";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver"
 
 const Certificados = () => {
-  // Estados para búsqueda de alumnos
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAlumno, setSelectedAlumno] = useState(null);
   const [certificadoSeleccionado, setCertificadoSeleccionado] = useState("");
@@ -124,6 +124,7 @@ const Certificados = () => {
 
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <h1>Certificados</h1>
       <div className={styles.panel}>
         <div className={styles.selectorAlumno}>

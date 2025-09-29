@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './ConfiguracionSistema.module.css'
 import Boton from '../../../components/Boton/Boton'
 import api from '../../../api/axios'
+import BotonVolver from '../../../components/BotonVolver/BotonVolver'
 
 const ConfiguracionSistema = () => {
     const [estadoPreinscripciones, setEstadoPreinscripciones] = useState(false)
@@ -9,7 +10,6 @@ const ConfiguracionSistema = () => {
     const [mostrarModal, setMostrarModal] = useState(false)
     const [procesando, setProcesando] = useState(false)
 
-    // Obtener estado actual al cargar el componente
     useEffect(() => {
         obtenerEstadoActual()
     }, [])
@@ -50,6 +50,7 @@ const ConfiguracionSistema = () => {
 
     return (
         <div className={styles.container}>
+            <BotonVolver />
             <h1>Configuración del sistema</h1>
             <div className={styles.listaConfiguraciones}>
                 <div className={styles.opcionConfiguracion}>

@@ -8,11 +8,15 @@ import api from "../../api/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import BotonVolver from "../../components/BotonVolver/BotonVolver";
 
 const ConfiguracionCuenta = () => {
   const { user } = useAuth();
   const idUsuario = user.id;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const personalSchema = Yup.object({
     email: Yup.string().email("Formato inválido").required("Campo obligatorio"),
@@ -83,6 +87,7 @@ const ConfiguracionCuenta = () => {
 
   return (
     <div className={styles.formContainer}>
+      <BotonVolver />
       <h1 className={styles.title}>Configuración de Cuenta</h1>
       <div className={styles.container}>
         <div className={styles.card}>
@@ -142,6 +147,7 @@ const ConfiguracionCuenta = () => {
                     />
                   </div>
                   <Boton
+                    variant="primary"
                     type="submit"
                     size="md"
                     fullWidth
@@ -235,6 +241,7 @@ const ConfiguracionCuenta = () => {
                 </div>
 
                 <Boton
+                  variant="primary"
                   type="submit"
                   size="md"
                   fullWidth

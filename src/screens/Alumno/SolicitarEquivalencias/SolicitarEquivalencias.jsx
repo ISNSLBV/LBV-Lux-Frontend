@@ -6,6 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../../../api/axios";
 import { toast } from "react-toastify";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver"
 
 const SolicitarEquivalencias = () => {
   const queryClient = useQueryClient();
@@ -23,6 +24,7 @@ const SolicitarEquivalencias = () => {
   });
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Solicitar equivalencias</h1>
         <p>

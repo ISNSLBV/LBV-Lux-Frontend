@@ -13,7 +13,12 @@ const Informacion = ({ nombre, condicion, carrera }) => {
         <p className={styles.condicion}>{condicion}</p>
         <p className={styles.carrera}>{carrera}</p>
       </div>
-      <Boton fullWidth icono={<SquarePen />} children="Editar" />
+      <Boton
+        variant="primary"
+        fullWidth
+        icono={<SquarePen />}
+        children="Editar"
+      />
     </div>
   );
 };

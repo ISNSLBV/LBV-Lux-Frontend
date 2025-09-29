@@ -4,6 +4,7 @@ import api from "../../../api/axios";
 import styles from "./MisMaterias.module.css";
 import { CircularProgress } from "@mui/material";
 import SearchBar from "../../../components/SearchBar/SearchBar";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const MisMaterias = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
@@ -38,20 +39,13 @@ const MisMaterias = () => {
     enabled: !!carreraSeleccionada,
   });
 
-  if (isLoadingCarreras || isLoadingMaterias) {
-    return <CircularProgress className={styles.loadingIndicator} />;
-  }
-
-  if (error) {
-    return <div>Error al cargar las materias.</div>;
-  }
-
   const materiasFiltradas = materias.filter((m) =>
     m.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Mis Materias</h1>
       </div>
@@ -87,7 +81,11 @@ const MisMaterias = () => {
         </>
       )}
 
-      {materiasFiltradas.length > 0 ? (
+      {isLoadingCarreras || isLoadingMaterias ? (
+        <CircularProgress className={styles.loadingIndicator} />
+      ) : error ? (
+        <div>Error al cargar las materias</div>
+      ) : materiasFiltradas.length > 0 ? (
         <div className={styles.listaMaterias}>
           {materiasFiltradas.map((materia) => (
             <div key={materia.id} className={styles.card}>
@@ -119,7 +117,7 @@ const MisMaterias = () => {
       ) : (
         <div className={styles.mensaje}>
           <p className={styles.noMaterias}>
-            No estás inscripto a ninguna materia
+            No se encontraron materias con el nombre buscado
           </p>
         </div>
       )}

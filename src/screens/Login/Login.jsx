@@ -155,7 +155,12 @@ const Login = () => {
                 />
               </div>
             </fieldset>
-            <Boton type="submit" fullWidth disabled={formik.isSubmitting}>
+            <Boton
+              variant="primary"
+              type="submit"
+              fullWidth
+              disabled={formik.isSubmitting}
+            >
               Iniciar sesión
             </Boton>
             <div className={styles.actionContainer}>

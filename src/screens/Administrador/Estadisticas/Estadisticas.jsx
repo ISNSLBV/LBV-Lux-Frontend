@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import CircularProgress from "@mui/material/CircularProgress";
 import api from "../../../api/axios";
 import styles from "./Estadisticas.module.css";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const COLOR_HOMBRES = "#26e859ff";
 const COLOR_MUJERES = "#f47710ff";
@@ -82,6 +83,7 @@ const Estadisticas = () => {
 
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Estadísticas del instituto</h1>
       </div>

@@ -4,6 +4,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { toast } from "react-toastify";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver"
 
 const obtenerPlanEstudio = async () => {
   const { data } = await api.get(
@@ -87,14 +88,11 @@ const InscripcionMaterias = () => {
   const { materias, planEstudio, cicloLectivo, total } = response || {};
   const { data: estadoMaterias, resumen } = estadoInscripciones || {};
 
-  // Crear un mapa del estado de las materias
   const estadoMateriasMap = new Map();
   estadoMaterias?.forEach((estado) => {
-    // si el backend devuelve idMateriaPlanCicloLectivo (id del MPCL), lo indexamos
     if (estado?.idMateriaPlanCicloLectivo) {
       estadoMateriasMap.set(estado.idMateriaPlanCicloLectivo, estado);
     }
-    // además indexamos por idMateriaPlan (id del MateriaPlan) por si el frontend usa ese id
     if (estado?.idMateriaPlan) {
       estadoMateriasMap.set(estado.idMateriaPlan, estado);
     }
@@ -145,6 +143,7 @@ const InscripcionMaterias = () => {
 
   return (
     <div className={styles.container}>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Inscripción a materias</h1>
       </div>
