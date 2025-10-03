@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import estilos from "./PreguntasFrecuentesDesplegable.module.css";
+import styles from "./PreguntasFrecuentesDesplegable.module.css";
 
 const PreguntasFrecuentesDesplegable = ({ items }) => {
   const [activo, setActivo] = useState(null);
@@ -8,21 +8,21 @@ const PreguntasFrecuentesDesplegable = ({ items }) => {
   };
 
   return (
-    <div className={estilos.contenedor}>
+    <div className={styles.container}>
       {items.map((item, i) => (
-        <div key={i} className={estilos.item}>
-          <button className={estilos.pregunta} onClick={() => alternar(i)}>
-            <span className={estilos.titulo}>{item.titulo}</span>
+        <div key={i} className={styles.item}>
+          <button className={styles.pregunta} onClick={() => alternar(i)}>
+            <span className={styles.titulo}>{item.titulo}</span>
             <span
-              className={`${estilos.flecha} ${
-                activo === i ? estilos.abierto : ""
+              className={`${styles.flecha} ${
+                activo === i ? styles.abierto : ""
               }`}
             >
               &#9656;
             </span>
           </button>
           {activo === i && (
-            <div className={estilos.respuesta}>
+            <div className={styles.respuesta}>
               <p>{item.descripcion}</p>
             </div>
           )}

@@ -191,6 +191,7 @@ const GestionExamenesFinales = () => {
                       </div>
                       <div className={styles.accion}>
                         <Boton
+                          variant="primary"
                           icono={<SquarePen />}
                           children="Administrar"
                           onClick={() => navigate(`${e.id}`)}
