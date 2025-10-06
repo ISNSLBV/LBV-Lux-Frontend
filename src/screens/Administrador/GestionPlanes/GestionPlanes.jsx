@@ -7,6 +7,7 @@ import styles from "./GestionPlanes.module.css";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Boton from "../../../components/Boton/Boton";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const fetchPlanes = async () => {
   const { data } = await api.get("/admin/plan-estudio/listar-planes");
@@ -129,7 +130,8 @@ const GestionPlanes = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Planes de estudio</h1>
         <p>Registrá y editá los planes de estudio del instituto</p>
@@ -268,10 +270,7 @@ const GestionPlanes = () => {
                 <Boton type="submit" variant="success">
                   Crear
                 </Boton>
-                <Boton
-                  variant="cancel"
-                  onClick={() => setRegistro(false)}
-                >
+                <Boton variant="cancel" onClick={() => setRegistro(false)}>
                   Cancelar
                 </Boton>
               </div>
@@ -432,7 +431,7 @@ const GestionPlanes = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

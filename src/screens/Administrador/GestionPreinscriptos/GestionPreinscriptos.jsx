@@ -7,6 +7,7 @@ import SearchBar from "../../../components/SearchBar/SearchBar";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 export default function GestionPreinscriptos() {
   const [form, setForm] = useState({});
@@ -81,7 +82,8 @@ export default function GestionPreinscriptos() {
   };
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Preinscripciones</h1>
       </div>
@@ -150,7 +152,9 @@ export default function GestionPreinscriptos() {
               <option value="" disabled>
                 Seleccioná una opción
               </option>
-              <option defaultChecked value={1}>Regular</option>
+              <option defaultChecked value={1}>
+                Regular
+              </option>
               <option value={3}>Oyente</option>
               <option value={4}>Itinerante</option>
             </select>
@@ -182,6 +186,6 @@ export default function GestionPreinscriptos() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

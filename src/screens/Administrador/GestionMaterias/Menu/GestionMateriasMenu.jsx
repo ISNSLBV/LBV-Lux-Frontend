@@ -1,6 +1,7 @@
 import React from "react";
 import PanelOpcion from "../../../../components/PanelOpcion/PanelOpcion";
 import styles from "./GestionMateriasMenu.module.css";
+import BotonVolver from "../../../../components/BotonVolver/BotonVolver";
 
 const GestionMateriasMenu = () => {
   const opciones = [
@@ -23,7 +24,8 @@ const GestionMateriasMenu = () => {
   ];
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.panel}>
         {opciones.map((o, idx) => (
           <PanelOpcion
@@ -33,7 +35,7 @@ const GestionMateriasMenu = () => {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

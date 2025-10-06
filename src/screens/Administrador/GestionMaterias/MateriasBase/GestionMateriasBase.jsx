@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TablaGestion from "../../../../components/Gestion/Tabla/TablaGestion";
 import CardGestion from "../../../../components/Gestion/Card/CardGestion";
+import BotonVolver from "../../../../components/BotonVolver/BotonVolver";
 
 const fetchMaterias = async () => {
   const { data } = await api.get("/admin/materia/listar-materias");
@@ -99,7 +100,8 @@ const GestionMateriasGenericas = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Materias</h1>
         <p>
@@ -263,7 +265,7 @@ const GestionMateriasGenericas = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

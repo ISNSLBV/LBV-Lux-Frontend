@@ -2,13 +2,14 @@ import React from "react";
 import { useState } from "react";
 import styles from "./GestionCarreras.module.css";
 import Boton from "../../../components/Boton/Boton";
-import { Plus, SquarePen, X } from "lucide-react";
+import { Bot, Plus, SquarePen, X } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import api from "../../../api/axios";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const schemaCarrera = Yup.object().shape({
   nombre: Yup.string()
@@ -77,7 +78,8 @@ const GestionCarreras = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Carreras</h1>
         <p>Gestioná las carreras del instituto</p>
@@ -356,7 +358,7 @@ const GestionCarreras = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
