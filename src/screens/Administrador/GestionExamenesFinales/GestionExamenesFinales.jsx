@@ -408,26 +408,21 @@ const GestionExamenesFinales = () => {
                             className="formikFieldErrorText"
                           />
                           <div className={styles.checkboxAlternativo}>
-                            <label>
-                              <Field
-                                type="checkbox"
-                                name="asignar_otro_profesor"
-                                checked={values.asignar_otro_profesor}
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setFieldValue(
-                                    "asignar_otro_profesor",
-                                    checked
-                                  );
-                                  if (checked) {
-                                    setFieldValue("id_profesor", "");
-                                  } else {
-                                    setFieldValue("id_profesor_general", "");
-                                  }
-                                }}
-                              />
-                              Asignar otro profesor
-                            </label>
+                            <Field
+                              type="checkbox"
+                              name="asignar_otro_profesor"
+                              checked={values.asignar_otro_profesor}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("asignar_otro_profesor", checked);
+                                if (checked) {
+                                  setFieldValue("id_profesor", "");
+                                } else {
+                                  setFieldValue("id_profesor_general", "");
+                                }
+                              }}
+                            />
+                            <label>Asignar otro profesor</label>
                           </div>
                           {values.asignar_otro_profesor && (
                             <div className={styles.selectAlternativo}>

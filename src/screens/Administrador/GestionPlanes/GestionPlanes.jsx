@@ -8,6 +8,33 @@ import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Boton from "../../../components/Boton/Boton";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+// Esquema de validación para registrar plan de estudio
+const registroPlanSchema = Yup.object({
+  id_carrera: Yup.string().required("Este campo es obligatorio"),
+  resolucion: Yup.string().required("Este campo es obligatorio"),
+  anio_implementacion: Yup.number()
+    .typeError("Debe ser un número válido")
+    .required("Este campo es obligatorio")
+    .integer("Debe ser un año válido")
+    .min(1900, "El año debe ser mayor a 1900")
+    .max(new Date().getFullYear() + 10, "El año no puede ser tan futuro"),
+});
+
+// Esquema de validación para editar plan de estudio
+const edicionPlanSchema = Yup.object({
+  id_carrera: Yup.string().required("Este campo es obligatorio"),
+  resolucion: Yup.string().required("Este campo es obligatorio"),
+  anio_implementacion: Yup.number()
+    .typeError("Debe ser un número válido")
+    .required("Este campo es obligatorio")
+    .integer("Debe ser un año válido")
+    .min(1900, "El año debe ser mayor a 1900")
+    .max(new Date().getFullYear() + 10, "El año no puede ser tan futuro"),
+  vigente: Yup.number(),
+});
 
 const fetchPlanes = async () => {
   const { data } = await api.get("/admin/plan-estudio/listar-planes");
@@ -15,11 +42,6 @@ const fetchPlanes = async () => {
 };
 
 const GestionPlanes = () => {
-  const [nuevoPlan, setNuevoPlan] = useState({
-    id_carrera: "",
-    resolucion: "",
-    anio_implementacion: "",
-  });
   const [filtro, setFiltro] = useState("");
   const [edicion, setEdicion] = useState(false);
   const [registro, setRegistro] = useState(false);
@@ -78,27 +100,6 @@ const GestionPlanes = () => {
     },
     onError: () => toast.error("Error al registrar el plan de estudio"),
   });
-
-  const handleRegistrar = async (e) => {
-    e.preventDefault();
-    if (
-      !nuevoPlan.id_carrera ||
-      !nuevoPlan.resolucion ||
-      !nuevoPlan.anio_implementacion
-    )
-      return;
-    registrarPlan.mutate({
-      idCarrera: nuevoPlan.id_carrera,
-      resolucion: nuevoPlan.resolucion,
-      anio_implementacion: nuevoPlan.anio_implementacion,
-    });
-    setNuevoPlan({
-      id_carrera: "",
-      resolucion: "",
-      anio_implementacion: "",
-    });
-    setRegistro(false);
-  };
 
   const editarPlan = useMutation({
     mutationFn: ({ id, id_carrera, resolucion, anio_implementacion }) =>
@@ -209,72 +210,112 @@ const GestionPlanes = () => {
                 <X />
               </button>
             </div>
-            <form onSubmit={handleRegistrar}>
-              <div className="mb-4">
-                <label htmlFor="resolucion" className="block mb-1">
-                  Resolución Nº
-                </label>
-                <input
-                  type="text"
-                  id="resolucion"
-                  value={nuevoPlan.resolucion}
-                  onChange={(e) =>
-                    setNuevoPlan((prev) => ({
-                      ...prev,
-                      resolucion: e.target.value,
-                    }))
-                  }
-                  className="w-full border rounded px-2 py-1"
-                  required
-                />
-                <label htmlFor="carrera" className="block mb-1">
-                  Carrera
-                </label>
-                <select
-                  name="carrera"
-                  id="carrera"
-                  value={nuevoPlan.id_carrera}
-                  onChange={(e) =>
-                    setNuevoPlan((prev) => ({
-                      ...prev,
-                      id_carrera: e.target.value,
-                    }))
-                  }
-                  className="w-full border rounded px-2 py-1"
-                  required
-                >
-                  <option value="" disabled>
-                    Seleccioná una opción
-                  </option>
-                  <option value="1">Técnico Analista de Sistemas</option>
-                  <option value="2">Técnico en Redes Informáticas</option>
-                </select>
-                <label htmlFor="anio_implementacion" className="block mb-1">
-                  Año de implementación
-                </label>
-                <input
-                  type="text"
-                  id="anio_implementacion"
-                  value={nuevoPlan.anio_implementacion}
-                  onChange={(e) =>
-                    setNuevoPlan((prev) => ({
-                      ...prev,
-                      anio_implementacion: e.target.value,
-                    }))
-                  }
-                  className="w-full border rounded px-2 py-1"
-                  required
-                />
-              </div>
-              <div className={styles.modalActions}>
-                <Boton type="submit" variant="success">
-                  Crear
-                </Boton>
-                <Boton variant="cancel" onClick={() => setRegistro(false)}>
-                  Cancelar
-                </Boton>
-              </div>
-            </form>
+            <Formik
+              initialValues={{
+                id_carrera: "",
+                resolucion: "",
+                anio_implementacion: "",
+              }}
+              validationSchema={registroPlanSchema}
+              onSubmit={(values, { resetForm }) => {
+                registrarPlan.mutate({
+                  idCarrera: values.id_carrera,
+                  resolucion: values.resolucion,
+                  anio_implementacion: values.anio_implementacion,
+                });
+                resetForm();
+                setRegistro(false);
+              }}
+            >
+              {({ isSubmitting, errors, touched }) => (
+                <Form>
+                  <div className={styles.modalForm}>
+                    <div>
+                      <label htmlFor="resolucion" className="block mb-1">
+                        Resolución Nº
+                      </label>
+                      <Field
+                        type="text"
+                        id="resolucion"
+                        name="resolucion"
+                        className={
+                          errors.resolucion && touched.resolucion
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      />
+                      <ErrorMessage
+                        name="resolucion"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="carrera" className="block mb-1">
+                        Carrera
+                      </label>
+                      <Field
+                        as="select"
+                        name="id_carrera"
+                        id="carrera"
+                        className={
+                          errors.id_carrera && touched.id_carrera
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      >
+                        <option value="">Seleccioná una opción</option>
+                        <option value="1">Técnico Analista de Sistemas</option>
+                        <option value="2">Técnico en Redes Informáticas</option>
+                      </Field>
+                      <ErrorMessage
+                        name="id_carrera"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="anio_implementacion" className="block mb-1">
+                        Año de implementación
+                      </label>
+                      <Field
+                        type="number"
+                        id="anio_implementacion"
+                        name="anio_implementacion"
+                        className={
+                          errors.anio_implementacion && touched.anio_implementacion
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      />
+                      <ErrorMessage
+                        name="anio_implementacion"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.modalActions}>
+                    <Boton
+                      type="submit"
+                      variant="success"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Creando..." : "Crear"}
+                    </Boton>
+                    <Boton
+                      variant="cancel"
+                      type="button"
+                      onClick={() => setRegistro(false)}
+                    >
+                      Cancelar
+                    </Boton>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       )}
@@ -292,112 +333,140 @@ const GestionPlanes = () => {
                 <X />
               </button>
             </div>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
+            <Formik
+              initialValues={{
+                id_carrera: planEditado.id_carrera || "",
+                resolucion: planEditado.resolucion || "",
+                anio_implementacion: planEditado.anio_implementacion || "",
+                vigente: planEditado.vigente || 0,
+              }}
+              validationSchema={edicionPlanSchema}
+              enableReinitialize
+              onSubmit={(values) => {
                 editarPlan.mutate({
                   id: planEditado.id,
-                  id_carrera: planEditado.id_carrera,
-                  resolucion: planEditado.resolucion,
-                  anio_implementacion: planEditado.anio_implementacion,
+                  id_carrera: values.id_carrera,
+                  resolucion: values.resolucion,
+                  anio_implementacion: values.anio_implementacion,
                 });
               }}
             >
-              <div className="mb-4">
-                <label htmlFor="resolucion-edit" className="block mb-1">
-                  Resolución Nº
-                </label>
-                <input
-                  type="text"
-                  id="resolucion-edit"
-                  value={planEditado.resolucion}
-                  onChange={(e) =>
-                    setPlanEditado((prev) => ({
-                      ...prev,
-                      resolucion: e.target.value,
-                    }))
-                  }
-                  className="w-full border rounded px-2 py-1"
-                  required
-                />
-                <label htmlFor="carrera-edit" className="block mb-1">
-                  Carrera
-                </label>
-                <select
-                  name="carrera-edit"
-                  id="carrera-edit"
-                  value={planEditado.id_carrera}
-                  onChange={(e) =>
-                    setPlanEditado((prev) => ({
-                      ...prev,
-                      id_carrera: e.target.value,
-                    }))
-                  }
-                  className="w-full border rounded px-2 py-1"
-                  required
-                >
-                  <option value="" disabled>
-                    Seleccioná una opción
-                  </option>
-                  <option value="1">Técnico Analista de Sistemas</option>
-                  <option value="2">Técnico en Redes Informáticas</option>
-                </select>
-                <label
-                  htmlFor="anio_implementacion-edit"
-                  className="block mb-1"
-                >
-                  Año de implementación
-                </label>
-                <input
-                  type="text"
-                  id="anio_implementacion-edit"
-                  value={planEditado.anio_implementacion}
-                  onChange={(e) =>
-                    setPlanEditado((prev) => ({
-                      ...prev,
-                      anio_implementacion: e.target.value,
-                    }))
-                  }
-                  className="w-full border rounded px-2 py-1"
-                  required
-                />
-                <label className="block mb-1">Estado</label>
-                <div className={styles.switchContainer}>
-                  <input
-                    type="checkbox"
-                    id="vigente-switch"
-                    checked={!!planEditado.vigente}
-                    onChange={() => setConfirmarVigente(!planEditado.vigente)}
-                    className={styles.switchInput}
-                  />
-                  <label
-                    htmlFor="vigente-switch"
-                    className={styles.switchLabel}
-                  >
-                    <span className={styles.switchSlider}></span>
-                    <span className={styles.switchText}>
-                      {planEditado.vigente ? "Vigente" : "No vigente"}
-                    </span>
-                  </label>
-                </div>
-              </div>
-              <div className={styles.modalActions}>
-                <Boton
-                  type="submit"
-                  variant="success"
-                  loading={editarPlan.isLoading}
-                >
-                  Guardar
-                </Boton>
-                <Boton
-                  variant="cancel"
-                  type="button"
-                  onClick={() => setEdicion(false)}
-                >
-                  Cancelar
-                </Boton>
-              </div>
-            </form>
+              {({ isSubmitting, errors, touched, values, setFieldValue }) => (
+                <Form>
+                  <div className={styles.modalForm}>
+                    <div>
+                      <label htmlFor="resolucion-edit" className="block mb-1">
+                        Resolución Nº
+                      </label>
+                      <Field
+                        type="text"
+                        id="resolucion-edit"
+                        name="resolucion"
+                        className={
+                          errors.resolucion && touched.resolucion
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      />
+                      <ErrorMessage
+                        name="resolucion"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="carrera-edit" className="block mb-1">
+                        Carrera
+                      </label>
+                      <Field
+                        as="select"
+                        name="id_carrera"
+                        id="carrera-edit"
+                        className={
+                          errors.id_carrera && touched.id_carrera
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      >
+                        <option value="">Seleccioná una opción</option>
+                        <option value="1">Técnico Analista de Sistemas</option>
+                        <option value="2">Técnico en Redes Informáticas</option>
+                      </Field>
+                      <ErrorMessage
+                        name="id_carrera"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="anio_implementacion-edit"
+                        className="block mb-1"
+                      >
+                        Año de implementación
+                      </label>
+                      <Field
+                        type="number"
+                        id="anio_implementacion-edit"
+                        name="anio_implementacion"
+                        className={
+                          errors.anio_implementacion && touched.anio_implementacion
+                            ? "formikFieldError"
+                            : "formikField"
+                        }
+                      />
+                      <ErrorMessage
+                        name="anio_implementacion"
+                        component="div"
+                        className="formikFieldErrorText"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block mb-1">Estado</label>
+                      <div className={styles.switchContainer}>
+                        <input
+                          type="checkbox"
+                          id="vigente-switch"
+                          checked={!!values.vigente}
+                          onChange={() => setConfirmarVigente(!values.vigente)}
+                          className={styles.switchInput}
+                        />
+                        <label
+                          htmlFor="vigente-switch"
+                          className={styles.switchLabel}
+                        >
+                          <span className={styles.switchSlider}></span>
+                          <span className={styles.switchText}>
+                            {values.vigente ? "Vigente" : "No vigente"}
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.modalActions}>
+                    <Boton
+                      type="submit"
+                      variant="success"
+                      disabled={isSubmitting || editarPlan.isLoading}
+                    >
+                      {isSubmitting || editarPlan.isLoading
+                        ? "Guardando..."
+                        : "Guardar"}
+                    </Boton>
+                    <Boton
+                      variant="cancel"
+                      type="button"
+                      onClick={() => setEdicion(false)}
+                    >
+                      Cancelar
+                    </Boton>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       )}
