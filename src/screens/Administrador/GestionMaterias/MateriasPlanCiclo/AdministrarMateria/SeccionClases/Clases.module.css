@@ -199,4 +199,19 @@
   .listaAlumnosAsistencia {
     max-height: 250px;
   }
+
+  .infoAlumnosHeader, .infoTemasHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .infoAlumnosHeader button, .infoTemasHeader button {
+    width: 100%;
+  }
+
+  .infoAlumnosHeader p, .infoTemasHeader p {
+    display: none;
+  }
 }

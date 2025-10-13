@@ -125,6 +125,7 @@ const PeriodoCalificaciones = ({ periodo, idMateriaPlanCiclo, userRole }) => {
                   ) : (
                     canEdit && (
                       <Boton
+                        variant='primary'
                         onClick={() => handleEdit(cal.inscripcionId, cal.calificacion)}
                         title={cal.bloqueada ? "Editar (como administrador)" : "Editar"}
                       >

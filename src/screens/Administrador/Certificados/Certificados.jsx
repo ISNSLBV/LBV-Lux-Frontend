@@ -123,7 +123,7 @@ const Certificados = () => {
   if (errorSearch) return <div>Error al buscar los alumnos</div>;
 
   return (
-    <div className={styles.container}>
+    <>
       <BotonVolver />
       <h1>Certificados</h1>
       <div className={styles.panel}>
@@ -250,7 +250,7 @@ const Certificados = () => {
           </Boton>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

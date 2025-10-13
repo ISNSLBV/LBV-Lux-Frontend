@@ -56,11 +56,7 @@ const AdministrarExamen = () => {
   if (isError) return <div>Error al cargar el examen</div>;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.botonVolver} onClick={() => navigate(-1)}>
-        <ArrowLeft />
-        <span>Volver</span>
-      </div>
+    <>
       {examen && (
         <div className={styles.titulo}>
           <h1>
@@ -69,11 +65,6 @@ const AdministrarExamen = () => {
           <h2>
             {examen.carrera} - Resolución Nº {examen.resolucion}
           </h2>
-          <div className={styles.infoExamen}>
-            <p><strong>Estado:</strong> {examen.estado}</p>
-            <p><strong>Fecha:</strong> {formatearFechaSinZonaHoraria(examen.fecha)}</p>
-            <p><strong>Profesor:</strong> {examen.profesor?.nombre} {examen.profesor?.apellido}</p>
-          </div>
         </div>
       )}
       <nav className={styles.navbar}>
@@ -89,7 +80,7 @@ const AdministrarExamen = () => {
         ))}
       </nav>
       <div className={styles.seccionContenido}>{renderSeccion()}</div>
-    </div>
+    </>
   );
 };
 

@@ -259,7 +259,11 @@ const GestionCarreras = () => {
                     >
                       Crear
                     </Boton>
-                    <Boton type="button" onClick={() => setRegistro(false)}>
+                    <Boton
+                      variant="cancel"
+                      type="button"
+                      onClick={() => setRegistro(false)}
+                    >
                       Cancelar
                     </Boton>
                   </div>
@@ -348,7 +352,11 @@ const GestionCarreras = () => {
                     >
                       Guardar
                     </Boton>
-                    <Boton type="button" onClick={() => setEdicion(false)}>
+                    <Boton
+                      variant="cancel"
+                      type="button"
+                      onClick={() => setEdicion(false)}
+                    >
                       Cancelar
                     </Boton>
                   </div>

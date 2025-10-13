@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const fetchAlumnos = async (filtros) => {
   const params = new URLSearchParams();
@@ -89,7 +90,8 @@ export default function GestionAlumnos() {
   };
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Alumnos</h1>
         <p>Gestioná los alumnos del instituto</p>
@@ -244,27 +246,37 @@ export default function GestionAlumnos() {
                     {alumno.activo ? "Activo" : "Inactivo"}
                   </span>
                 </div>
-                
+
                 <div className={styles.cardContent}>
                   <div className={styles.cardInfo}>
                     <div className={styles.cardField}>
                       <span className={styles.cardLabel}>Email:</span>
-                      <span className={styles.cardValue}>{alumno.email || "—"}</span>
+                      <span className={styles.cardValue}>
+                        {alumno.email || "—"}
+                      </span>
                     </div>
                     <div className={styles.cardField}>
                       <span className={styles.cardLabel}>Teléfono:</span>
-                      <span className={styles.cardValue}>{alumno.telefono || "—"}</span>
+                      <span className={styles.cardValue}>
+                        {alumno.telefono || "—"}
+                      </span>
                     </div>
                     <div className={styles.cardField}>
                       <span className={styles.cardLabel}>Carrera:</span>
-                      <span className={styles.cardValue}>{alumno.carrera.nombre}</span>
+                      <span className={styles.cardValue}>
+                        {alumno.carrera.nombre}
+                      </span>
                     </div>
                     <div className={styles.cardField}>
-                      <span className={styles.cardLabel}>Fecha inscripción:</span>
-                      <span className={styles.cardValue}>{formatearFecha(alumno.fechaInscripcion)}</span>
+                      <span className={styles.cardLabel}>
+                        Fecha inscripción:
+                      </span>
+                      <span className={styles.cardValue}>
+                        {formatearFecha(alumno.fechaInscripcion)}
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className={styles.cardActions}>
                     <Boton
                       variant="primary"
@@ -281,6 +293,6 @@ export default function GestionAlumnos() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

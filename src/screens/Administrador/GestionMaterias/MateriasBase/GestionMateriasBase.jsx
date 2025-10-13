@@ -45,7 +45,11 @@ const GestionMateriasGenericas = () => {
   const campos = [
     { label: "ID", accessor: (m) => m.id },
     { label: "Nombre", accessor: (m) => m.nombre },
-    { label: "Estado", accessor: (m) => (m.plan_estudio && m.plan_estudio.length > 0 ? "En uso" : "Sin asignar") },
+    {
+      label: "Estado",
+      accessor: (m) =>
+        m.plan_estudio && m.plan_estudio.length > 0 ? "En uso" : "Sin asignar",
+    },
     {
       label: "Plan(es) de estudio",
       accessor: (m) => m.plan_estudio.map((p) => p.resolucion).join(", "),
@@ -196,7 +200,11 @@ const GestionMateriasGenericas = () => {
                 <Boton type="submit" variant="success">
                   Crear
                 </Boton>
-                <Boton type="button" onClick={() => setRegistro(false)}>
+                <Boton
+                  variant="cancel"
+                  type="button"
+                  onClick={() => setRegistro(false)}
+                >
                   Cancelar
                 </Boton>
               </div>
@@ -257,7 +265,11 @@ const GestionMateriasGenericas = () => {
                 <Boton type="submit" variant="success">
                   Guardar
                 </Boton>
-                <Boton type="button" onClick={() => setEdicion(false)}>
+                <Boton
+                  variant="cancel"
+                  type="button"
+                  onClick={() => setEdicion(false)}
+                >
                   Cancelar
                 </Boton>
               </div>

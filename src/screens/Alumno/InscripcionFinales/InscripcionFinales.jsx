@@ -4,7 +4,8 @@ import { useQuery, useQueries } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { formatearFechaSinZonaHoraria } from "../../../utils/dateUtils";
-import BotonVolver from "../../../components/BotonVolver/BotonVolver"
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
+import EstadoBadge from "../../../components/EstadoBadge/EstadoBadge";
 
 const obtenerPlanEstudio = async () => {
   const { data } = await api.get(
@@ -92,7 +93,7 @@ const InscripcionFinales = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       <BotonVolver />
       <div className={styles.titulo}>
         <h1>Inscripción a exámenes finales</h1>
@@ -111,9 +112,7 @@ const InscripcionFinales = () => {
             <div key={final.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <h3>{final.materiaPlan?.materia?.nombre}</h3>
-                <span>
-                  <strong>Estado: {final.estado}</strong>
-                </span>
+                <EstadoBadge estado={final.estado} />
               </div>
               <div className={styles.datosAdicionales}>
                 <div>
@@ -163,7 +162,7 @@ const InscripcionFinales = () => {
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 

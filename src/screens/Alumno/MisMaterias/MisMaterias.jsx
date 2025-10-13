@@ -5,6 +5,8 @@ import styles from "./MisMaterias.module.css";
 import { CircularProgress } from "@mui/material";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
+import EstadoBadge from "../../../components/EstadoBadge/EstadoBadge";
+import { getMensajeAyuda } from "../../../utils/estadosInscripcion";
 
 const MisMaterias = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
@@ -44,7 +46,7 @@ const MisMaterias = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
       <BotonVolver />
       <div className={styles.titulo}>
         <h1>Mis Materias</h1>
@@ -91,11 +93,12 @@ const MisMaterias = () => {
             <div key={materia.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <h3>{materia.nombre}</h3>
-                <span>
-                  <strong>Estado: {materia.estado}</strong>
-                  <br />
-                  <strong>Año: {materia.anio || "2025"}</strong>
-                </span>
+                <div className={styles.estadoContainer}>
+                  <EstadoBadge estado={materia.estado} />
+                  <span className={styles.anio}>
+                    <strong>Año: {materia.anio || "2025"}</strong>
+                  </span>
+                </div>
               </div>
               <div className={styles.datosAdicionales}>
                 <div>
@@ -121,7 +124,7 @@ const MisMaterias = () => {
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

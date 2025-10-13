@@ -9,6 +9,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, SquarePen } from "lucide-react";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const fetchProfesores = async () => {
   const { data } = await api.get("/admin/profesor/listar-profesores");
@@ -49,7 +50,8 @@ export default function GestionProfesores() {
   );
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Profesores</h1>
         <p>Gestioná los profesores del instituto</p>
@@ -65,6 +67,7 @@ export default function GestionProfesores() {
         <div>
           <Boton
             variant="success"
+            fullWidth
             icono={<Plus />}
             onClick={() => setRegistro(true)}
           >
@@ -277,7 +280,10 @@ export default function GestionProfesores() {
                       >
                         Registrar
                       </Boton>
-                      <Boton type="button" onClick={() => setRegistro(false)}>
+                      <Boton
+                        variant="cancel"
+                        onClick={() => setRegistro(false)}
+                      >
                         Cancelar
                       </Boton>
                     </div>
@@ -512,7 +518,11 @@ export default function GestionProfesores() {
                       >
                         Registrar
                       </Boton>
-                      <Boton type="button" onClick={() => setRegistro(false)}>
+                      <Boton
+                        variant="cancel"
+                        type="button"
+                        onClick={() => setRegistro(false)}
+                      >
                         Cancelar
                       </Boton>
                     </div>
@@ -523,6 +533,6 @@ export default function GestionProfesores() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

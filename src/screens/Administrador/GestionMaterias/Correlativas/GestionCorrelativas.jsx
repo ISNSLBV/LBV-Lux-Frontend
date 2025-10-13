@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TablaGestion from "../../../../components/Gestion/Tabla/TablaGestion";
 import CardGestion from "../../../../components/Gestion/Card/CardGestion";
 import api from "../../../../api/axios";
+import BotonVolver from "../../../../components/BotonVolver/BotonVolver";
 
 const fetchCorrelativas = async () => {
   const { data } = await api.get("/admin/correlativa/listar-correlativas");
@@ -124,7 +125,8 @@ const GestionCorrelativas = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Correlatividades</h1>
         <p>Gestioná las correlatividades entre materias</p>
@@ -246,7 +248,7 @@ const GestionCorrelativas = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

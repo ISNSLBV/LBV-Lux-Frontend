@@ -23,7 +23,7 @@ const SECCIONES = [
   { key: "clases", label: "Clases" },
   { key: "profesores", label: "Profesor/es asignado/s" },
   { key: "calificaciones", label: "Calificaciones" },
-  { key: 'configuracion', label: "Configuración" }
+  { key: "configuracion", label: "Configuración" },
 ];
 
 const AdministrarMateria = () => {
@@ -49,7 +49,12 @@ const AdministrarMateria = () => {
       case "clases":
         return <Clases materiaId={idMateria} />;
       case "profesores":
-        return <Profesores profesores={materia?.profesores ?? []} idMateria={idMateria} />;
+        return (
+          <Profesores
+            profesores={materia?.profesores ?? []}
+            idMateria={idMateria}
+          />
+        );
       case "calificaciones":
         return <Calificaciones idMateriaPlanCiclo={idMateria} />;
       case "configuracion":
@@ -61,10 +66,6 @@ const AdministrarMateria = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.botonVolver} onClick={() => navigate(-1)}>
-        <ArrowLeft />
-        <span>Volver</span>
-      </div>
       {materia && (
         <div className={styles.titulo}>
           <h1>

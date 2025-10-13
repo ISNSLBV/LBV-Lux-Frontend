@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from "./ConfiguracionCuenta.module.css";
 import Boton from "../../components/Boton/Boton";
@@ -8,7 +8,6 @@ import api from "../../api/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import BotonVolver from "../../components/BotonVolver/BotonVolver";
 
@@ -86,7 +85,7 @@ const ConfiguracionCuenta = () => {
   });
 
   return (
-    <div className={styles.formContainer}>
+    <>
       <BotonVolver />
       <h1 className={styles.title}>Configuración de Cuenta</h1>
       <div className={styles.container}>
@@ -254,7 +253,7 @@ const ConfiguracionCuenta = () => {
           </Formik>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

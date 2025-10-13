@@ -389,7 +389,11 @@ const GestionPlanes = () => {
                 >
                   Guardar
                 </Boton>
-                <Boton type="button" onClick={() => setEdicion(false)}>
+                <Boton
+                  variant="cancel"
+                  type="button"
+                  onClick={() => setEdicion(false)}
+                >
                   Cancelar
                 </Boton>
               </div>

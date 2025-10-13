@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TablaGestion from "../../../../components/Gestion/Tabla/TablaGestion";
 import CardGestion from "../../../../components/Gestion/Card/CardGestion";
+import BotonVolver from "../../../../components/BotonVolver/BotonVolver";
 
 const fetchMateriasPlan = async () => {
   const { data } = await api.get("/admin/materia/materia-plan/listar-materias");
@@ -151,7 +152,8 @@ const GestionMateriasPlan = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
+      <BotonVolver />
       <div className={styles.titulo}>
         <h1>Materias por plan de estudio</h1>
         <p>Registrá y editá las materias por plan de estudio</p>
@@ -348,7 +350,11 @@ const GestionMateriasPlan = () => {
                 <Boton type="submit" variant="success">
                   Crear
                 </Boton>
-                <Boton type="button" onClick={() => setRegistro(false)}>
+                <Boton
+                  variant="cancel"
+                  type="button"
+                  onClick={() => setRegistro(false)}
+                >
                   Cancelar
                 </Boton>
               </div>
@@ -480,7 +486,7 @@ const GestionMateriasPlan = () => {
                 >
                   Guardar
                 </Boton>
-                <Boton type="button" onClick={() => setEdicion(false)}>
+                <Boton variant="cancel" type="button" onClick={() => setEdicion(false)}>
                   Cancelar
                 </Boton>
               </div>
@@ -488,7 +494,7 @@ const GestionMateriasPlan = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../../../contexts/AuthContext";
+import BotonVolver from "../../../../components/BotonVolver/BotonVolver";
 
 const fetchMateriasPlanCiclo = async () => {
   const { data } = await api.get(
@@ -97,8 +98,9 @@ const GestionMateriasPlanCiclo = () => {
 
   return (
     <>
+      <BotonVolver />
       {!mostrandoDetalle && (
-        <div>
+        <>
           <div className={styles.titulo}>
             {user.rol === "Administrador" ? (
               <>
@@ -207,10 +209,12 @@ const GestionMateriasPlanCiclo = () => {
                     </div>
                     <div className={styles.accion}>
                       <Boton
-                        children="Administrar"
+                        variant="primary"
                         icono={<SquarePen />}
                         onClick={() => navigate(`${m.id}`)}
-                      />
+                      >
+                        Administrar
+                      </Boton>
                     </div>
                   </div>
                 </div>
@@ -464,7 +468,7 @@ const GestionMateriasPlanCiclo = () => {
               </div>
             </div>
           )}
-        </div>
+        </>
       )}
       <Outlet />
     </>

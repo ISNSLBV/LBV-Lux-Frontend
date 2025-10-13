@@ -48,6 +48,7 @@ const PreinscripcionForm = () => {
     apellido: "",
     sexo: "",
     fechaNacimiento: "",
+    nacionalidad: "",
     email: "",
     confirmarEmail: "",
     calle: "",
@@ -143,7 +144,7 @@ const PreinscripcionForm = () => {
             </fieldset>
 
             <div className="botonera">
-              <Boton type="submit" fullWidth size="lg">
+              <Boton variant="primary" type="submit" fullWidth size="lg">
                 Enviar preinscripción
               </Boton>
             </div>

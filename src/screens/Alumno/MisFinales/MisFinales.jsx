@@ -59,7 +59,7 @@ const MisFinales = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <>
       <BotonVolver />
       <div className={styles.titulo}>
         <h2>Mis Exámenes Finales</h2>
@@ -144,7 +144,7 @@ const MisFinales = () => {
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

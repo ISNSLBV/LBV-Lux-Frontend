@@ -49,9 +49,7 @@ const Estadisticas = () => {
 
   if (isError) {
     return (
-      <div className={styles.sinDatos}>
-        Error al cargar las estadísticas.
-      </div>
+      <div className={styles.sinDatos}>Error al cargar las estadísticas.</div>
     );
   }
 

@@ -23,7 +23,7 @@ const SolicitarEquivalencias = () => {
     },
   });
   return (
-    <div className={styles.container}>
+    <>
       <BotonVolver />
       <div className={styles.titulo}>
         <h1>Solicitar equivalencias</h1>
@@ -178,7 +178,7 @@ const SolicitarEquivalencias = () => {
           )}
         </Formik>
       </div>
-    </div>
+    </>
   );
 };
 

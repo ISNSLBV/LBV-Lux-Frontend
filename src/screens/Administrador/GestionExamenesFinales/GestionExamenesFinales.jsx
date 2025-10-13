@@ -12,6 +12,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import api from "../../../api/axios";
 import * as Yup from "yup";
 import { formatearFechaSinZonaHoraria } from "../../../utils/dateUtils";
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const fetchExamenesFinales = async () => {
   const { data } = await api.get("/admin/examen-final/listar-examenes");
@@ -92,8 +93,9 @@ const GestionExamenesFinales = () => {
 
   return (
     <>
+      <BotonVolver />
       {!mostrandoDetalle && (
-        <div>
+        <>
           <div className={styles.titulo}>
             {user.rol === "Administrador" ? (
               <>
@@ -495,7 +497,7 @@ const GestionExamenesFinales = () => {
               </div>
             </div>
           )}
-        </div>
+        </>
       )}
       <Outlet />
     </>

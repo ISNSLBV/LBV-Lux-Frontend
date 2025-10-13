@@ -17,7 +17,6 @@
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 24px;
-  margin-bottom: 32px;
 }
 
 .listaMaterias {
@@ -43,7 +42,35 @@
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.estadoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.anio {
+  font-size: 0.875rem;
+  color: #ccc;
+}
+
+.mensajeAyuda {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.mensajeAyuda p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #ccc;
+  font-style: italic;
 }
 
 .datosAdicionales {

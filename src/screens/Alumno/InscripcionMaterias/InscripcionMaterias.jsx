@@ -117,7 +117,7 @@ const InscripcionMaterias = () => {
     if (estado?.yaInscripto) {
       return (
         <span className={`${styles.badge} ${styles.inscripto}`}>
-          Ya inscripto/a
+          Inscripto/a
         </span>
       );
     }
@@ -136,13 +136,13 @@ const InscripcionMaterias = () => {
   const getBotonTexto = (estado) => {
     if (registrarInscripcion.isPending) return "Inscribiendo...";
     if (estado?.yaAprobado) return "Materia Aprobada";
-    if (estado?.yaInscripto) return "Ya Inscripto";
+    if (estado?.yaInscripto) return "Inscripto/a";
     if (!estado?.correlativasCumplidas) return "Correlativas Pendientes";
     return "Inscribirse";
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <BotonVolver />
       <div className={styles.titulo}>
         <h1>Inscripción a materias</h1>
@@ -160,7 +160,7 @@ const InscripcionMaterias = () => {
             </div>
             <div className={styles.resumenItem}>
               <span className={styles.numero}>{resumen.yaInscriptas}</span>
-              <span className={styles.etiqueta}>Ya inscripto/a</span>
+              <span className={styles.etiqueta}>Inscripto/a</span>
             </div>
             <div className={styles.resumenItem}>
               <span className={styles.numero}>{resumen.yaAprobadas}</span>
@@ -341,7 +341,7 @@ const InscripcionMaterias = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

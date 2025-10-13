@@ -103,9 +103,14 @@
     .panel {
         flex-direction: column;
         height: 100%;
+        align-items: center;
     }
 
     .selectorCertificado {
         width: 300px;
+    }
+
+    .buscador {
+        align-items: flex-start;
     }
 }

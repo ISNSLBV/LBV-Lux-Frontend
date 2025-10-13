@@ -210,8 +210,7 @@ const Configuracion = ({ examen }) => {
           <div className={styles.modalContent}>
             <h4>Confirmar cambios</h4>
             <p>
-              ¿Estás seguro de que quieres actualizar la configuración del examen?
-              Esta acción afectará a todos los alumnos inscriptos.
+              ¿Estás seguro de actualizar los detalles del examen?
             </p>
             <div className={styles.modalActions}>
               <Boton
