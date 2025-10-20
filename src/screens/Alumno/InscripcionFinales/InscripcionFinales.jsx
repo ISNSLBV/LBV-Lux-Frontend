@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./InscripcionFinales.module.css";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { formatearFechaSinZonaHoraria } from "../../../utils/dateUtils";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 import EstadoBadge from "../../../components/EstadoBadge/EstadoBadge";
+import { toast } from "react-toastify";
 
 const obtenerPlanEstudio = async () => {
   const { data } = await api.get(
@@ -43,7 +44,18 @@ const validarRequisitosInscripcion = async (planId) => {
   }
 };
 
+const inscribirseExamenFinal = async ({ idExamenFinal, idInscripcionMateria }) => {
+  const { data } = await api.post(
+    `/alumno/examen-final/inscripcion/${idExamenFinal}`,
+    { idInscripcionMateria }
+  );
+  return data;
+};
+
 const InscripcionFinales = () => {
+  const [mensaje, setMensaje] = useState(null);
+  const queryClient = useQueryClient();
+
   const { data: planId, isLoading: planLoading } = useQuery({
     queryKey: ["planId"],
     queryFn: obtenerPlanEstudio,
@@ -65,6 +77,28 @@ const InscripcionFinales = () => {
     enabled: !!planId,
     retry: false,
   });
+
+  const inscripcionMutation = useMutation({
+    mutationFn: inscribirseExamenFinal,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["finales", planId]);
+      queryClient.invalidateQueries(["requisitosFinales", planId]);
+      toast.success("Inscripción realizada con éxito");
+    },
+    onError: (error) => {
+      const mensajeError =
+        error?.response?.data?.message || "Error al realizar la inscripción";
+      toast.error(mensajeError);
+    },
+  });
+
+  const handleInscribirse = (idExamenFinal, idInscripcionMateria) => {
+    if (!idInscripcionMateria) {
+      toast.error("No se encontró una inscripción para esta materia.");
+      return;
+    }
+    inscripcionMutation.mutate({ idExamenFinal, idInscripcionMateria });
+  };
 
   if (
     finalesLoading ||
@@ -138,11 +172,15 @@ const InscripcionFinales = () => {
                     disabled={
                       requisitosLoading ||
                       requisitosError ||
-                      puedeInscribirse === false
+                      puedeInscribirse === false ||
+                      inscripcionMutation.isPending
                     }
                     title={mensajeBloqueo}
+                    onClick={() => handleInscribirse(final.id, requisito?.idInscripcionMateria)}
                   >
-                    {requisitosLoading
+                    {inscripcionMutation.isPending
+                      ? "Inscribiendo..."
+                      : requisitosLoading
                       ? "Validando..."
                       : puedeInscribirse
                       ? "Inscribirse"
