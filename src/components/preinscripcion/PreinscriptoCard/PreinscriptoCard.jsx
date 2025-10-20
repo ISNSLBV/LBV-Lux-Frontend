@@ -6,6 +6,7 @@ import { User, GraduationCap, Mail, Check, X, EyeOff } from "lucide-react";
 const PreinscriptoCard = ({ persona, onAceptar, onOcultar }) => {
   const observacion = persona.preinscripciones[0]?.comentario;
   const idCarrera = persona.preinscripciones[0]?.id_carrera;
+  const nombreCarrera = persona.preinscripciones[0]?.carrera?.nombre || "Sin especificar";
   const idPreinscripcion = persona.preinscripciones[0]?.id;
   const estado = persona.preinscripciones[0]?.estado;
   const visible = persona.preinscripciones[0]?.visible;
@@ -80,11 +81,7 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar }) => {
           <div>
             <span>Carrera a inscribirse: </span>
             <p>
-              <strong>
-                {idCarrera === 1
-                  ? "Técnico Analista de Sistemas"
-                  : "Técnico en Redes Informáticas"}
-              </strong>
+              <strong>{nombreCarrera}</strong>
             </p>
           </div>
           <div className={styles.observaciones}>

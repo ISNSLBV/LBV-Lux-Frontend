@@ -109,6 +109,8 @@ input:checked + .slider:before {
   padding: 24px;
   min-width: 300px;
   max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal h3 {

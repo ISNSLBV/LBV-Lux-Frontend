@@ -63,14 +63,15 @@
 
 .modal {
   width: 340px;
-  height: 280px;
+  max-height: 90vh;
+  overflow-y: auto;
   border-radius: 6px;
   background-color: var(--color-form);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 16px;
+  padding: 24px 16px;
   gap: 16px;
 }
 

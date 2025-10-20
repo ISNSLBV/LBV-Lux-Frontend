@@ -10,7 +10,6 @@ import { CircularProgress } from "@mui/material";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 export default function GestionPreinscriptos() {
-  const [form, setForm] = useState({});
   const [personaSeleccionada, setPersonaSeleccionada] = useState(null);
   const [showAceptarModal, setShowAceptarModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,15 +29,18 @@ export default function GestionPreinscriptos() {
   });
 
   const aceptarMutation = useMutation({
-    mutationFn: async ({ id, tipoAlumnoId, carreraId }) =>
+    mutationFn: async ({ id, carreraId }) =>
       await api.post(`/admin/preinscripcion/${id}/aceptar`, {
-        tipoAlumnoId,
         carreraId,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries(["preinscriptos"]);
+      toast.success("Inscripción realizada exitosamente");
     },
-    onError: () => toast.error("Error al realizar la inscripción"),
+    onError: (error) => {
+      const mensaje = error?.response?.data?.error || "Error al realizar la inscripción";
+      toast.error(mensaje);
+    },
   });
 
   const ocultarMutation = useMutation({
@@ -67,14 +69,18 @@ export default function GestionPreinscriptos() {
     });
   }, [searchTerm, statusFilter, visibilityFilter, allPersonas]);
 
-  const aceptar = (tipoAlumnoId) => {
+  const aceptar = () => {
     if (!personaSeleccionada) return;
     const carreraId = personaSeleccionada.preinscripciones?.[0]?.id_carrera;
+    const carreraNombre = personaSeleccionada.preinscripciones?.[0]?.carrera?.nombre || 'la carrera seleccionada';
+    
     aceptarMutation.mutate({
       id: personaSeleccionada.id,
-      tipoAlumnoId,
       carreraId,
     });
+    
+    setShowAceptarModal(false);
+    setPersonaSeleccionada(null);
   };
 
   const ocultar = (p) => {
@@ -139,38 +145,28 @@ export default function GestionPreinscriptos() {
       {showAceptarModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <p className={styles.modalHeader}>
-              Inscribir a {personaSeleccionada.nombre}{" "}
-              {personaSeleccionada.apellido} como alumno/a
+            <p className={styles.modalHeader}>Confirmar inscripción</p>
+            <p>
+              ¿Estás seguro que deseas inscribir a{" "}
+              <strong>
+                {personaSeleccionada.nombre} {personaSeleccionada.apellido}
+              </strong>{" "}
+              en la carrera de{" "}
+              <strong>
+                {personaSeleccionada.preinscripciones?.[0]?.carrera?.nombre || "No especificada"}
+              </strong>
+              ?
             </p>
-            <select
-              value={form.tipoAlumnoId || ""}
-              onChange={(e) =>
-                setForm({ ...form, tipoAlumnoId: Number(e.target.value) })
-              }
-            >
-              <option value="" disabled>
-                Seleccioná una opción
-              </option>
-              <option defaultChecked value={1}>
-                Regular
-              </option>
-              <option value={3}>Oyente</option>
-              <option value={4}>Itinerante</option>
-            </select>
+            <p style={{ fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.7)", marginTop: "8px" }}>
+              El alumno será inscripto como <strong>Regular</strong> en el plan de estudios vigente de la carrera.
+            </p>
             <div className={styles.modalActions}>
               <Boton
                 variant="success"
-                onClick={() => {
-                  aceptar(form.tipoAlumnoId);
-                  setShowAceptarModal(false);
-                  setPersonaSeleccionada(null);
-                  toast.success("Inscripción realizada");
-                }}
-                disabled={!form.tipoAlumnoId}
+                onClick={aceptar}
                 fullWidth
               >
-                Confirmar
+                Confirmar inscripción
               </Boton>
               <Boton
                 variant="cancel"
