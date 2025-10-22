@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import InformacionPersonal from "../InformacionPersonal/InformacionPersonal";
 import Materia from "../Materia/Materia";
-import Notas from "../Notas/Notas";
-import Horarios from "../Horario/Horario";
 import styles from "./BarraSecciones.module.css";
 
 const BarraSecciones = ({ informacionPersonal, materias, promedioNotas, horarios }) => {
@@ -12,17 +10,6 @@ const BarraSecciones = ({ informacionPersonal, materias, promedioNotas, horarios
     switch (activeTab) {
       case "Materias":
         return materias.map((m, i) => <Materia key={i} materia={m} />);
-      case "Notas":
-        return <Notas promedio={promedioNotas} />;
-      case "Horarios":
-        return horarios.map((h, i) => (
-          <Horarios
-            key={i}
-            nombre={h.nombre}
-            profesor={h.profesor}
-            horario={h.horario}
-          />
-        ));
       default:
         return (
           <InformacionPersonal
@@ -37,7 +24,7 @@ const BarraSecciones = ({ informacionPersonal, materias, promedioNotas, horarios
   return (
     <>
       <div className={styles.tabHeader}>
-        {["Info", "Materias", "Notas", "Horarios"].map((tab) => (
+        {["Info", "Materias"].map((tab) => (
           <button
             key={tab}
             className={`${styles.button} ${
