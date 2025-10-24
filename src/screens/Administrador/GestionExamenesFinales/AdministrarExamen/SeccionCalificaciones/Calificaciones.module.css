@@ -44,7 +44,7 @@
 .tablaContainer {
   overflow-x: auto;
   border-radius: 8px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tabla {
@@ -54,47 +54,29 @@
 }
 
 .tabla th {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.05);
   padding: 12px 16px;
   text-align: left;
   font-weight: 600;
-  color: #374151;
-  border-bottom: 2px solid #e5e5e5;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   white-space: nowrap;
 }
 
 .tabla td {
   padding: 12px 16px;
-  border-bottom: 1px solid #f1f1f1;
   vertical-align: middle;
-}
-
-.tabla tr:hover {
-  background: #fafafa;
 }
 
 .tabla tr.bloqueada {
   background: #fef3c7;
 }
 
-.tabla tr.bloqueada:hover {
-  background: #fde68a;
-}
-
 .tabla tr.aprobado {
   background: #f0fdf4;
 }
 
-.tabla tr.aprobado:hover {
-  background: #dcfce7;
-}
-
 .tabla tr.desaprobado {
   background: #fef2f2;
-}
-
-.tabla tr.desaprobado:hover {
-  background: #fee2e2;
 }
 
 .alumno {
@@ -102,10 +84,6 @@
   align-items: center;
   gap: 8px;
   font-weight: 500;
-}
-
-.alumno svg {
-  color: #6b7280;
 }
 
 .asistenciaBadge {

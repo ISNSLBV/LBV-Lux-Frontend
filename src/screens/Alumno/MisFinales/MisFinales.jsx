@@ -8,55 +8,45 @@ import { useAuth } from "../../../contexts/AuthContext";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const MisFinales = () => {
-  const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState("todas");
   const [filtro, setFiltro] = useState("");
   const { user } = useAuth();
-  const idAlumno = user?.id;
 
-  const { data: idPersonaData, isLoading: isLoadingPersona } = useQuery({
-    queryKey: ["idPersona"],
-    queryFn: async () => {
-      const { data } = await api.get(`/usuario/obtener-id-persona`);
-      return data;
-    },
-  });
-
-  const idPersona = idPersonaData?.id_persona;
-
-  const { data: carreras, isLoading: isLoadingCarreras } = useQuery({
-    queryKey: ["carrerasAlumno", idPersona],
-    queryFn: async () => {
-      const { data } = await api.get(`/alumno/carreras`);
-      return data;
-    },
-    enabled: !!idPersona,
-  });
-
-  useEffect(() => {
-    if (carreras && carreras.length > 0 && !carreraSeleccionada) {
-      setCarreraSeleccionada(carreras[0].id);
-    }
-  }, [carreras, carreraSeleccionada]);
-
-  // Traer finales disponibles (según materias aprobadas + correlativas)
+  // Traer los exámenes en los que está inscripto el alumno
   const {
-    data: finales = [],
+    data: examenesData,
     isLoading: isLoadingFinales,
     error,
   } = useQuery({
-    queryKey: ["finalesAlumno", idAlumno, carreraSeleccionada],
+    queryKey: ["examenesInscripto"],
     queryFn: async () => {
-      const { data } = await api.get(
-        `/alumno/carreras/${carreraSeleccionada}/finales`
-      );
+      const { data } = await api.get(`/alumno/examenes-inscripto`);
       return data;
     },
-    enabled: !!carreraSeleccionada,
   });
 
-  const finalesFiltrados = finales.filter((f) =>
-    f.materia.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const finales = examenesData?.data || [];
+
+  // Extraer carreras únicas de los exámenes
+  const carrerasUnicas = finales.reduce((acc, examen) => {
+    const carreraId = examen.carrera?.id;
+    const carreraNombre = examen.carrera?.nombre;
+    if (carreraId && !acc.find((c) => c.id === carreraId)) {
+      acc.push({ id: carreraId, nombre: carreraNombre });
+    }
+    return acc;
+  }, []);
+
+  // Filtrar finales por carrera seleccionada y búsqueda
+  const finalesFiltrados = finales.filter((examen) => {
+    const matchCarrera =
+      carreraSeleccionada === "todas" ||
+      examen.carrera?.id === Number(carreraSeleccionada);
+    const matchBusqueda =
+      examen.materia?.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+      false;
+    return matchCarrera && matchBusqueda;
+  });
 
   return (
     <>
@@ -65,27 +55,26 @@ const MisFinales = () => {
         <h2>Mis Exámenes Finales</h2>
       </div>
 
-      {carreras && carreras.length > 0 && (
-        <>
-          <div className={styles.barraAcciones}>
-            <div className={styles.barraBusqueda}>
-              <SearchBar
-                placeholder="Buscar final"
-                value={filtro}
-                onChange={(e) => setFiltro(e.target.value)}
-              />
-            </div>
+      {carrerasUnicas.length > 0 && (
+        <div className={styles.barraAcciones}>
+          <div className={styles.barraBusqueda}>
+            <SearchBar
+              placeholder="Buscar por materia"
+              value={filtro}
+              onChange={(e) => setFiltro(e.target.value)}
+            />
           </div>
 
-          {carreras.length > 1 && (
+          {carrerasUnicas.length > 1 && (
             <div className={styles.carreraSelector}>
-              <label htmlFor="carrera-select">Selecciona una carrera:</label>
+              <label htmlFor="carrera-select">Filtrar por carrera:</label>
               <select
                 id="carrera-select"
-                value={carreraSeleccionada || ""}
+                value={carreraSeleccionada}
                 onChange={(e) => setCarreraSeleccionada(e.target.value)}
               >
-                {carreras.map((carrera) => (
+                <option value="todas">Todas las carreras</option>
+                {carrerasUnicas.map((carrera) => (
                   <option key={carrera.id} value={carrera.id}>
                     {carrera.nombre}
                   </option>
@@ -93,54 +82,89 @@ const MisFinales = () => {
               </select>
             </div>
           )}
-        </>
+        </div>
       )}
 
-      {isLoadingCarreras || isLoadingFinales || isLoadingPersona ? (
+      {isLoadingFinales ? (
         <CircularProgress className={styles.loadingIndicator} />
       ) : error ? (
-        <div>Error al cargar los finales.</div>
+        <div className={styles.mensaje}>
+          <p>Error al cargar los exámenes finales.</p>
+        </div>
       ) : finalesFiltrados.length > 0 ? (
         <div className={styles.listaFinales}>
-          {finalesFiltrados.map((final) => (
-            <div key={final.id} className={styles.card}>
-              <div className={styles.cardHeader}>
-                <h3>{final.materia}</h3>
-                <span>
-                  <strong>Estado Final: {final.estado}</strong>
-                </span>
+          {finalesFiltrados.map((examen, index) => {
+            const profesorNombre = examen.profesor
+              ? `${examen.profesor.nombre} ${examen.profesor.apellido}`
+              : "No asignado";
+            
+            const fechaFormateada = examen.examenFinal?.fecha
+              ? new Date(examen.examenFinal.fecha).toLocaleDateString("es-AR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "A confirmar";
+
+            return (
+              <div
+                key={`${examen.idInscripcion?.idExamenFinal}-${index}`}
+                className={styles.card}
+              >
+                <div className={styles.cardHeader}>
+                  <h3>{examen.materia?.nombre || "Sin nombre"}</h3>
+                  <span className={styles.estadoBadge}>
+                    {examen.examenFinal?.estado || "Pendiente"}
+                  </span>
+                </div>
+                <div className={styles.datosAdicionales}>
+                  <div>
+                    <p>Carrera</p>
+                    <p>
+                      <strong>{examen.carrera?.nombre || "N/A"}</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>Profesor</p>
+                    <p>
+                      <strong>{profesorNombre}</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>Fecha</p>
+                    <p>
+                      <strong>{fechaFormateada}</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>Estado Inscripción</p>
+                    <p>
+                      <strong>
+                        {examen.inscripcionMateria?.estado || "N/A"}
+                      </strong>
+                    </p>
+                  </div>
+                  {examen.nota && (
+                    <div>
+                      <p>Nota</p>
+                      <p>
+                        <strong>{examen.nota}</strong>
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className={styles.datosAdicionales}>
-                <div>
-                  <p>Profesor</p>
-                  <p>
-                    <strong>{final.profesor}</strong>
-                  </p>
-                </div>
-                <div>
-                  <p>Fecha</p>
-                  <p>
-                    <strong>{final.fecha || "A confirmar"}</strong>
-                  </p>
-                </div>
-                <div>
-                  <p>Correlativas</p>
-                  <p>
-                    <strong>
-                      {final.correlativasAprobadas
-                        ? "Aprobadas ✅"
-                        : "Pendientes ❌"}
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className={styles.mensaje}>
           <p className={styles.noFinales}>
-            No estás inscripto a ningún examen final
+            {filtro || carreraSeleccionada !== "todas"
+              ? "No se encontraron exámenes con los filtros aplicados"
+              : "No estás inscripto a ningún examen final"}
           </p>
         </div>
       )}

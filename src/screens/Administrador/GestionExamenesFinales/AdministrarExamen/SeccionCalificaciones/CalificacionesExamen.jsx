@@ -219,7 +219,6 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                           <Boton
                             onClick={() => handleSave(cal.id_inscripcion)}
                             variant="success"
-                            size="small"
                             disabled={actualizarCalificacionMutation.isLoading}
                           >
                             Guardar
@@ -227,7 +226,6 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                           <Boton
                             onClick={() => handleCancel(cal.id_inscripcion)}
                             variant="cancel"
-                            size="small"
                           >
                             Cancelar
                           </Boton>
@@ -239,7 +237,6 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                               onClick={() =>
                                 handleEdit(cal.id_inscripcion, cal.calificacion)
                               }
-                              size="small"
                               title={
                                 cal.bloqueada
                                   ? "Editar (como administrador)"
@@ -254,8 +251,7 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                               onClick={() =>
                                 handleToggleBloqueo(cal.id_inscripcion, cal.bloqueada)
                               }
-                              variant={cal.bloqueada ? "success" : "warning"}
-                              size="small"
+                              variant={cal.bloqueada ? "success" : "primary"}
                               disabled={bloquearCalificacionMutation.isLoading}
                             >
                               {cal.bloqueada ? "Desbloquear" : "Bloquear"}

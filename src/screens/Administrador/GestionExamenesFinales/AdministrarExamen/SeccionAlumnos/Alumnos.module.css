@@ -7,7 +7,6 @@
 }
 
 .header {
-  margin-bottom: 24px;
   padding-bottom: 16px;
 }
 
@@ -43,28 +42,24 @@
 
 .lista {
   display: flex;
-  flex-direction: column;
   gap: 16px;
 }
 
 .card {
-  border: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 20px;
-  background: #fafafa;
-  transition: all 0.2s ease;
-}
-
-.card:hover {
-  border-color: #2563eb;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  width: calc(50% - 8px);
 }
 
 .infoAlumno {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 16px;
 }
 
 .avatar {
@@ -81,22 +76,17 @@
 }
 
 .nombre {
-  margin: 0 0 4px 0;
   font-weight: 600;
-  color: #333;
   font-size: 1.1rem;
 }
 
 .email {
-  margin: 0 0 8px 0;
-  color: #666;
   font-size: 0.9rem;
 }
 
 .estado {
   margin: 0;
   font-size: 0.85rem;
-  color: #666;
 }
 
 .estadoBadge {
@@ -137,14 +127,13 @@
 
 .asistenciaLabel {
   font-weight: 500;
-  color: #374151;
   min-width: 80px;
 }
 
 .botonesAsistencia {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .accionesAdmin {

@@ -148,34 +148,6 @@ const InscripcionMaterias = () => {
         <h1>Inscripción a materias</h1>
       </div>
 
-      {resumen && (
-        <div className={styles.resumen}>
-          <h3>Resumen de Inscripciones</h3>
-          <div className={styles.resumenGrid}>
-            <div className={styles.resumenItem}>
-              <span className={styles.numero}>
-                {resumen.disponiblesParaInscripcion}
-              </span>
-              <span className={styles.etiqueta}>Disponibles</span>
-            </div>
-            <div className={styles.resumenItem}>
-              <span className={styles.numero}>{resumen.yaInscriptas}</span>
-              <span className={styles.etiqueta}>Inscripto/a</span>
-            </div>
-            <div className={styles.resumenItem}>
-              <span className={styles.numero}>{resumen.yaAprobadas}</span>
-              <span className={styles.etiqueta}>Ya aprobada</span>
-            </div>
-            <div className={styles.resumenItem}>
-              <span className={styles.numero}>
-                {resumen.bloqueadasPorCorrelativas}
-              </span>
-              <span className={styles.etiqueta}>Bloqueadas</span>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className={styles.listaMaterias}>
         {materias?.filter((materia) => {
           const estado = estadoMateriasMap.get(materia.id);

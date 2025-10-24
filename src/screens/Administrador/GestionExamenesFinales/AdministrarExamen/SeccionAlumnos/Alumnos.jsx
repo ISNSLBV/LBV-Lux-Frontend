@@ -38,11 +38,15 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
         presente,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["alumnosInscriptos", idExamen] });
+      queryClient.invalidateQueries({
+        queryKey: ["alumnosInscriptos", idExamen],
+      });
       toast.success("Asistencia registrada correctamente");
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "Error al registrar asistencia");
+      toast.error(
+        error.response?.data?.message || "Error al registrar asistencia"
+      );
     },
   });
 
@@ -53,8 +57,10 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
     });
   };
 
-  if (isLoading) return <div className={styles.loading}>Cargando alumnos...</div>;
-  if (isError) return <div className={styles.error}>Error al cargar los alumnos</div>;
+  if (isLoading)
+    return <div className={styles.loading}>Cargando alumnos...</div>;
+  if (isError)
+    return <div className={styles.error}>Error al cargar los alumnos</div>;
 
   return (
     <div className={styles.container}>
@@ -76,11 +82,6 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
                     {alumno.nombre} {alumno.apellido}
                   </p>
                   <p className={styles.email}>{alumno.email}</p>
-                  <p className={styles.estado}>
-                    Estado: <span className={`${styles.estadoBadge} ${styles[alumno.estado?.toLowerCase()]}`}>
-                      {alumno.estado || 'INSCRIPTO'}
-                    </span>
-                  </p>
                 </div>
               </div>
 
@@ -91,20 +92,20 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
                   <div className={styles.botonesAsistencia}>
                     <Boton
                       variant="success"
-                      size="small"
                       onClick={() => handleAsistencia(alumno.id_usuario, true)}
                       disabled={registrarAsistenciaMutation.isLoading}
+                      icono={<Check />}
+                      fullWidth
                     >
-                      <Check size={16} />
                       Presente
                     </Boton>
                     <Boton
-                      variant="danger"
-                      size="small"
+                      variant="cancel"
                       onClick={() => handleAsistencia(alumno.id_usuario, false)}
                       disabled={registrarAsistenciaMutation.isLoading}
+                      icono={<X />}
+                      fullWidth
                     >
-                      <X size={16} />
                       Ausente
                     </Boton>
                   </div>
@@ -112,15 +113,14 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
 
                 {/* Acciones adicionales para admin */}
                 {admin && (
-                  <div className={styles.accionesAdmin}>
-                    <Boton
-                      variant="outline"
-                      size="small"
-                      onClick={() => navigate(`/admin/perfil/${alumno.id_usuario}`)}
-                    >
-                      Ver perfil
-                    </Boton>
-                  </div>
+                  <Boton
+                    variant="primary"
+                    onClick={() =>
+                      navigate(`/admin/perfil/${alumno.id_usuario}`)
+                    }
+                  >
+                    Ver perfil
+                  </Boton>
                 )}
               </div>
             </div>
