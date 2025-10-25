@@ -15,37 +15,111 @@ import { useAuth } from "./contexts/AuthContext";
 //=======================
 const Layout = lazy(() => import("./screens/Layout/Layout"));
 const RutaPrivada = lazy(() => import("./components/RutaPrivada/RutaPrivada"));
-const Preinscripcion = lazy(() => import("./screens/Preinscripcion/Preinscripcion"));
-const Estadisticas = lazy(() => import("./screens/Administrador/Estadisticas/Estadisticas"));
+const Preinscripcion = lazy(() =>
+  import("./screens/Preinscripcion/Preinscripcion")
+);
+const Estadisticas = lazy(() =>
+  import("./screens/Administrador/Estadisticas/Estadisticas")
+);
 const Perfil = lazy(() => import("./screens/Perfil/Perfil"));
-const PreguntasFrecuentes = lazy(() => import("./screens/PreguntasFrecuentes/PreguntasFrecuentes"));
-const GestionProfesores = lazy(() => import("./screens/Administrador/GestionProfesores/GestionProfesores"));
-const AyudaAlumno = lazy(() => import("./screens/Alumno/AyudaAlumno/AyudaAlumno"));
-const GestionMateriasMenu = lazy(() => import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu"));
-const GestionMateriasBase = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasBase/GestionMateriasBase"));
-const GestionMateriasPlan = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan"));
-const GestionMateriasPlanCiclo = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo"));
-const GestionPreinscriptos = lazy(() => import("./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos"));
-const GestionCarreras = lazy(() => import("./screens/Administrador/GestionCarreras/GestionCarreras"));
-const GestionMaterias = lazy(() => import("./screens/Administrador/GestionMaterias/GestionMaterias"));
-const GestionPlanes = lazy(() => import("./screens/Administrador/GestionPlanes/GestionPlanes"));
-const PanelAdministrador = lazy(() => import("./screens/Administrador/PanelAdministrador/PanelAdministrador"));
-const GestionCorrelativas = lazy(() => import("./screens/Administrador/GestionMaterias/Correlativas/GestionCorrelativas"));
-const AdministrarMateria = lazy(() => import("./screens/Administrador/GestionMaterias/MateriasPlanCiclo/AdministrarMateria/AdministrarMateria"));
-const PanelProfesor = lazy(() => import("./screens/Profesor/PanelProfesor/PanelProfesor"));
-const PanelAlumno = lazy(() => import("./screens/Alumno/PanelAlumno/PanelAlumno"));
-const ConfiguracionCuenta = lazy(() => import("./screens/ConfiguracionCuenta/ConfiguracionCuenta"));
-const GestionAlumnos = lazy(() => import("./screens/Administrador/GestionAlumnos/GestionAlumnos"));
-const ConfiguracionSistema = lazy(() => import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema"));
-const Certificados = lazy(() => import("./screens/Administrador/Certificados/Certificados"));
-const GestionExamenesFinales = lazy(() => import("./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"));
-const AdministrarExamen = lazy(() => import("./screens/Administrador/GestionExamenesFinales/AdministrarExamen/AdministrarExamen"));
-const MisMaterias = lazy(() => import("./screens/Alumno/MisMaterias/MisMaterias"))
-const MisFinales = lazy(() => import("./screens/Alumno/MisFinales/MisFinales"))
-const SolicitudEquivalencias = lazy(() => import("./screens/Administrador/SolicitudEquivalencias/SolicitudEquivalencias"));
-const SolicitarEquivalencias = lazy(() => import("./screens/Alumno/SolicitarEquivalencias/SolicitarEquivalencias"))
-const InscripcionMaterias = lazy(() => import("./screens/Alumno/InscripcionMaterias/InscripcionMaterias"));
-const InscripcionFinales = lazy(() => import("./screens/Alumno/InscripcionFinales/InscripcionFinales"))
+const PreguntasFrecuentes = lazy(() =>
+  import("./screens/PreguntasFrecuentes/PreguntasFrecuentes")
+);
+const GestionProfesores = lazy(() =>
+  import("./screens/Administrador/GestionProfesores/GestionProfesores")
+);
+const AyudaAlumno = lazy(() =>
+  import("./screens/Alumno/AyudaAlumno/AyudaAlumno")
+);
+const GestionMateriasMenu = lazy(() =>
+  import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu")
+);
+const GestionMateriasBase = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasBase/GestionMateriasBase"
+  )
+);
+const GestionMateriasPlan = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasPlan/GestionMateriasPlan"
+  )
+);
+const GestionMateriasPlanCiclo = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/GestionMateriasPlanCiclo"
+  )
+);
+const GestionPreinscriptos = lazy(() =>
+  import("./screens/Administrador/GestionPreinscriptos/GestionPreinscriptos")
+);
+const GestionCarreras = lazy(() =>
+  import("./screens/Administrador/GestionCarreras/GestionCarreras")
+);
+const GestionMaterias = lazy(() =>
+  import("./screens/Administrador/GestionMaterias/GestionMaterias")
+);
+const GestionPlanes = lazy(() =>
+  import("./screens/Administrador/GestionPlanes/GestionPlanes")
+);
+const PanelAdministrador = lazy(() =>
+  import("./screens/Administrador/PanelAdministrador/PanelAdministrador")
+);
+const GestionCorrelativas = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/Correlativas/GestionCorrelativas"
+  )
+);
+const AdministrarMateria = lazy(() =>
+  import(
+    "./screens/Administrador/GestionMaterias/MateriasPlanCiclo/AdministrarMateria/AdministrarMateria"
+  )
+);
+const PanelProfesor = lazy(() =>
+  import("./screens/Profesor/PanelProfesor/PanelProfesor")
+);
+const PanelAlumno = lazy(() =>
+  import("./screens/Alumno/PanelAlumno/PanelAlumno")
+);
+const ConfiguracionCuenta = lazy(() =>
+  import("./screens/ConfiguracionCuenta/ConfiguracionCuenta")
+);
+const GestionAlumnos = lazy(() =>
+  import("./screens/Administrador/GestionAlumnos/GestionAlumnos")
+);
+const ConfiguracionSistema = lazy(() =>
+  import("./screens/Administrador/ConfiguracionSistema/ConfiguracionSistema")
+);
+const Certificados = lazy(() =>
+  import("./screens/Administrador/Certificados/Certificados")
+);
+const GestionExamenesFinales = lazy(() =>
+  import(
+    "./screens/Administrador/GestionExamenesFinales/GestionExamenesFinales"
+  )
+);
+const AdministrarExamen = lazy(() =>
+  import(
+    "./screens/Administrador/GestionExamenesFinales/AdministrarExamen/AdministrarExamen"
+  )
+);
+const MisMaterias = lazy(() =>
+  import("./screens/Alumno/MisMaterias/MisMaterias")
+);
+const MisFinales = lazy(() => import("./screens/Alumno/MisFinales/MisFinales"));
+const SolicitudEquivalencias = lazy(() =>
+  import(
+    "./screens/Administrador/SolicitudEquivalencias/SolicitudEquivalencias"
+  )
+);
+const SolicitarEquivalencias = lazy(() =>
+  import("./screens/Alumno/SolicitarEquivalencias/SolicitarEquivalencias")
+);
+const InscripcionMaterias = lazy(() =>
+  import("./screens/Alumno/InscripcionMaterias/InscripcionMaterias")
+);
+const InscripcionFinales = lazy(() =>
+  import("./screens/Alumno/InscripcionFinales/InscripcionFinales")
+);
 
 function IndexRedirect() {
   const { user } = useAuth();
@@ -130,9 +204,18 @@ function App() {
                   <Route path="mi-perfil" element={<Perfil />} />
                   <Route path="mis-materias" element={<MisMaterias />} />
                   <Route path="mis-examenes-finales" element={<MisFinales />} />
-                  <Route path="inscripcion-materias" element={<InscripcionMaterias />} />
-                  <Route path="inscripcion-examenes-finales" element={<InscripcionFinales />} />
-                  <Route path="solicitar-equivalencias" element={<SolicitarEquivalencias />} />
+                  <Route
+                    path="inscripcion-materias"
+                    element={<InscripcionMaterias />}
+                  />
+                  <Route
+                    path="inscripcion-examenes-finales"
+                    element={<InscripcionFinales />}
+                  />
+                  <Route
+                    path="solicitar-equivalencias"
+                    element={<SolicitarEquivalencias />}
+                  />
                 </Route>
                 {/* ---- Ruta Profesor ---- */}
                 <Route
@@ -140,8 +223,17 @@ function App() {
                   element={<RutaPrivada rol={["Profesor"]} />}
                 >
                   <Route index element={<PanelProfesor />} />
-                  <Route path="materias-asignadas" element={<GestionMateriasPlanCiclo />}>
+                  <Route
+                    path="materias-asignadas"
+                    element={<GestionMateriasPlanCiclo />}
+                  >
                     <Route path=":idMateria" element={<AdministrarMateria />} />
+                  </Route>
+                  <Route
+                    path="examenes-finales"
+                    element={<GestionExamenesFinales />}
+                  >
+                    <Route path=":idExamen" element={<AdministrarExamen />} />
                   </Route>
                 </Route>
                 {/* ---- Ruta Administrador ---- */}
@@ -180,13 +272,19 @@ function App() {
                       element={<GestionCorrelativas />}
                     />
                   </Route>
-                  <Route path="examenes-finales" element={<GestionExamenesFinales />}>
+                  <Route
+                    path="examenes-finales"
+                    element={<GestionExamenesFinales />}
+                  >
                     <Route path=":idExamen" element={<AdministrarExamen />} />
                   </Route>
                   <Route path="profesores" element={<GestionProfesores />} />
                   <Route path="alumnos" element={<GestionAlumnos />} />
                   <Route path="certificados" element={<Certificados />} />
-                  <Route path="solicitudes-equivalencias" element={<SolicitudEquivalencias />} />
+                  <Route
+                    path="solicitudes-equivalencias"
+                    element={<SolicitudEquivalencias />}
+                  />
                   <Route path="estadisticas" element={<Estadisticas />} />
                   <Route
                     path="configuracion-sistema"

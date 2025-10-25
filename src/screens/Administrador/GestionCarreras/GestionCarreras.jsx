@@ -124,7 +124,7 @@ const GestionCarreras = () => {
                   <td>{c.id}</td>
                   <td>{c.nombre}</td>
                   <td>{c.duracion} años</td>
-                  <td>{c.planesEstudio[0].resolucion}</td>
+                  <td>{c.planesEstudio[0]?.resolucion}</td>
                   <td>
                     <Boton
                       variant="onlyIcon"

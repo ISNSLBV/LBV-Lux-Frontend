@@ -37,10 +37,15 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
         calificacion,
       });
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["calificacionesExamen", idExamen] });
       toast.success("Calificación actualizada correctamente");
-      setEditingStates({});
+      // Solo limpiar el estado del alumno específico que se guardó
+      setEditingStates((prev) => {
+        const newState = { ...prev };
+        delete newState[variables.id_inscripcion];
+        return newState;
+      });
     },
     onError: (error) => {
       toast.error(
@@ -232,7 +237,7 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                         </div>
                       ) : (
                         <div className={styles.accionesVer}>
-                          {canEdit && cal.asistencia === "PRESENTE" && (
+                          {cal.asistencia === "PRESENTE" && canEdit && (
                             <Boton
                               onClick={() =>
                                 handleEdit(cal.id_inscripcion, cal.calificacion)
@@ -246,7 +251,12 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                               Editar
                             </Boton>
                           )}
-                          {canEditBlocked && (
+                          {cal.asistencia !== "PRESENTE" && (
+                            <span className={styles.noDisponible}>
+                              No disponible (ausente)
+                            </span>
+                          )}
+                          {canEditBlocked && cal.asistencia === "PRESENTE" && (
                             <Boton
                               onClick={() =>
                                 handleToggleBloqueo(cal.id_inscripcion, cal.bloqueada)
