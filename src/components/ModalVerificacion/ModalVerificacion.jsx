@@ -3,14 +3,16 @@ import styles from "./ModalVerificacion.module.css";
 import Boton from "../Boton/Boton";
 import { CircularProgress } from "@mui/material";
 
-const ModalVerificacion = ({ 
-  isOpen, 
-  onClose, 
-  onVerify, 
-  campo, 
-  nuevoValor, 
+const ModalVerificacion = ({
+  isOpen,
+  onClose,
+  onVerify,
+  onCancel,
+  campo,
+  nuevoValor,
   isLoading,
-  timeRemaining 
+  isCancelling,
+  timeRemaining,
 }) => {
   const [codigo, setCodigo] = useState("");
   const [error, setError] = useState("");
@@ -34,12 +36,12 @@ const ModalVerificacion = ({
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (codigo.length !== 6) {
       setError("El código debe tener 6 dígitos");
       return;
@@ -50,14 +52,14 @@ const ModalVerificacion = ({
   };
 
   const handleCodigoChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
     setCodigo(value);
     setError("");
   };
 
   if (!isOpen) return null;
 
-  const campoLabel = campo === 'email' ? 'correo electrónico' : 'teléfono';
+  const campoLabel = campo === "email" ? "correo electrónico" : "teléfono";
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -71,16 +73,12 @@ const ModalVerificacion = ({
 
         <div className={styles.content}>
           <p className={styles.info}>
-            Hemos enviado un código de verificación a tu {campoLabel} actual.
+            Para confirmar los cambios, ingresá el código de confirmación que
+            enviamos a tu dirección de email.
           </p>
-
-          <div className={styles.changeInfo}>
-            <strong>Nuevo {campoLabel}:</strong> {nuevoValor}
-          </div>
-
           <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
-              <label htmlFor="codigo">Código de verificación</label>
+              <label htmlFor="codigo">Código de confirmación</label>
               <input
                 id="codigo"
                 type="text"
@@ -103,29 +101,54 @@ const ModalVerificacion = ({
 
             <div className={styles.actions}>
               <Boton
-                variant="secondary"
+                variant="primary"
                 type="button"
                 onClick={onClose}
-                disabled={isLoading}
+                disabled={isLoading || isCancelling}
                 fullWidth
               >
-                Cancelar
+                Cerrar
               </Boton>
               <Boton
-                variant="primary"
+                variant="success"
                 type="submit"
-                disabled={isLoading || codigo.length !== 6}
+                disabled={isLoading || isCancelling || codigo.length !== 6}
                 fullWidth
               >
-                {isLoading ? <CircularProgress size={20} color="inherit" /> : "Verificar"}
+                {isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  "Verificar"
+                )}
               </Boton>
             </div>
           </form>
 
+          {onCancel && (
+            <div className={styles.cancelSection}>
+              <p className={styles.cancelText}>
+                ¿No podés acceder al código o cambiaste de opinión?
+              </p>
+              <Boton
+                variant="cancel"
+                type="button"
+                onClick={onCancel}
+                disabled={isLoading || isCancelling}
+                fullWidth
+              >
+                {isCancelling ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  "Cancelar solicitud de cambio"
+                )}
+              </Boton>
+            </div>
+          )}
+
           <div className={styles.help}>
             <p>
-              ⚠️ Si no solicitaste este cambio, cierra esta ventana y 
-              cambia tu contraseña inmediatamente.
+              Si no solicitaste este cambio, cerrá esta ventana y cambiá tu
+              contraseña inmediatamente.
             </p>
           </div>
         </div>

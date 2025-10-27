@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from "./ConfiguracionCuenta.module.css";
 import Boton from "../../components/Boton/Boton";
@@ -60,6 +60,34 @@ const ConfiguracionCuenta = () => {
     queryFn: fetchDatos,
   });
 
+  // Query para verificar si hay verificaciones pendientes
+  const { data: verificacionesPendientes } = useQuery({
+    queryKey: ["verificacionesPendientes", idUsuario],
+    queryFn: async () => {
+      const { data } = await api.get(`/usuario/${idUsuario}/verificaciones-pendientes`);
+      return data.pendientes;
+    },
+    refetchOnMount: true,
+  });
+
+  // Efecto para restaurar el modal si hay verificaciones pendientes
+  useEffect(() => {
+    if (verificacionesPendientes) {
+      // Verificar si hay alguna verificación pendiente para email o teléfono
+      if (verificacionesPendientes.email) {
+        setCampoAVerificar('email');
+        setNuevoValorPendiente(verificacionesPendientes.email.newValue);
+        setTimeRemaining(verificacionesPendientes.email.timeRemaining);
+        setModalOpen(true);
+      } else if (verificacionesPendientes.telefono) {
+        setCampoAVerificar('telefono');
+        setNuevoValorPendiente(verificacionesPendientes.telefono.newValue);
+        setTimeRemaining(verificacionesPendientes.telefono.timeRemaining);
+        setModalOpen(true);
+      }
+    }
+  }, [verificacionesPendientes]);
+
   const actualizarDatosPersonales = useMutation({
     mutationFn: ({ email, telefono }) =>
       api.put(`/usuario/${idUsuario}/actualizar-datos-personales`, {
@@ -112,10 +140,35 @@ const ConfiguracionCuenta = () => {
       queryClient.invalidateQueries({
         queryKey: ["datosPersonales", idUsuario],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["verificacionesPendientes", idUsuario],
+      });
       toast.success(response.data.message);
     },
     onError: (error) => {
       const message = error.response?.data?.message || "Código inválido o expirado";
+      toast.error(message);
+    },
+  });
+
+  // Mutación para cancelar cambio pendiente
+  const cancelarCambio = useMutation({
+    mutationFn: (campo) =>
+      api.post(`/usuario/${idUsuario}/cancelar-cambio-dato`, {
+        campo,
+      }),
+    onSuccess: () => {
+      setModalOpen(false);
+      setCampoAVerificar(null);
+      setNuevoValorPendiente("");
+      setTimeRemaining(0);
+      queryClient.invalidateQueries({
+        queryKey: ["verificacionesPendientes", idUsuario],
+      });
+      toast.success("Solicitud de cambio cancelada");
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message || "Error al cancelar cambio";
       toast.error(message);
     },
   });
@@ -156,6 +209,13 @@ const ConfiguracionCuenta = () => {
     verificarCambio.mutate({ campo: campoAVerificar, codigo });
   };
 
+  // Manejar la cancelación de la verificación
+  const handleCancelarVerificacion = () => {
+    if (campoAVerificar) {
+      cancelarCambio.mutate(campoAVerificar);
+    }
+  };
+
   return (
     <>
       <BotonVolver />
@@ -166,9 +226,11 @@ const ConfiguracionCuenta = () => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onVerify={handleVerificarCodigo}
+        onCancel={handleCancelarVerificacion}
         campo={campoAVerificar}
         nuevoValor={nuevoValorPendiente}
         isLoading={verificarCambio.isPending}
+        isCancelling={cancelarCambio.isPending}
         timeRemaining={timeRemaining}
       />
 
@@ -227,8 +289,8 @@ const ConfiguracionCuenta = () => {
                     />
                   </div>
                   <div className={styles.infoBox}>
-                    ℹ️ Al cambiar tu email o teléfono, recibirás un código de 
-                    verificación en tu correo actual.
+                    Al cambiar tu email o teléfono, vas a recibir un código de 
+                    confirmación.
                   </div>
                   <Boton
                     variant="primary"
