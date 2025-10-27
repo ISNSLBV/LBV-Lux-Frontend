@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from "./ConfiguracionCuenta.module.css";
 import Boton from "../../components/Boton/Boton";
+import ModalVerificacion from "../../components/ModalVerificacion/ModalVerificacion";
 import * as Yup from "yup";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../api/axios";
@@ -16,6 +17,12 @@ const ConfiguracionCuenta = () => {
   const idUsuario = user.id;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  // Estados para el modal de verificación
+  const [modalOpen, setModalOpen] = useState(false);
+  const [campoAVerificar, setCampoAVerificar] = useState(null);
+  const [nuevoValorPendiente, setNuevoValorPendiente] = useState("");
+  const [timeRemaining, setTimeRemaining] = useState(0);
 
   const personalSchema = Yup.object({
     email: Yup.string().email("Formato inválido").required("Campo obligatorio"),
@@ -70,6 +77,49 @@ const ConfiguracionCuenta = () => {
     },
   });
 
+  // Mutación para solicitar cambio de dato
+  const solicitarCambio = useMutation({
+    mutationFn: ({ campo, nuevoValor }) =>
+      api.post(`/usuario/${idUsuario}/solicitar-cambio-dato`, {
+        campo,
+        nuevoValor,
+      }),
+    onSuccess: (response, variables) => {
+      const expiresIn = response.data.expiresIn || 900; // 15 minutos por defecto
+      setTimeRemaining(expiresIn);
+      setCampoAVerificar(variables.campo);
+      setNuevoValorPendiente(variables.nuevoValor);
+      setModalOpen(true);
+      toast.success(response.data.message);
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message || "Error al solicitar cambio";
+      toast.error(message);
+    },
+  });
+
+  // Mutación para verificar el código
+  const verificarCambio = useMutation({
+    mutationFn: ({ campo, codigo }) =>
+      api.post(`/usuario/${idUsuario}/verificar-cambio-dato`, {
+        campo,
+        codigo,
+      }),
+    onSuccess: (response) => {
+      setModalOpen(false);
+      setCampoAVerificar(null);
+      setNuevoValorPendiente("");
+      queryClient.invalidateQueries({
+        queryKey: ["datosPersonales", idUsuario],
+      });
+      toast.success(response.data.message);
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message || "Código inválido o expirado";
+      toast.error(message);
+    },
+  });
+
   const actualizarPassword = useMutation({
     mutationFn: ({ actual, nueva }) =>
       api.put(`/usuario/${idUsuario}/actualizar-password`, {
@@ -84,10 +134,44 @@ const ConfiguracionCuenta = () => {
     },
   });
 
+  // Manejar el envío del formulario de datos personales
+  const handlePersonalDataSubmit = (values, actions) => {
+    const emailChanged = values.email !== datosPersonales?.email;
+    const telefonoChanged = values.telefono !== datosPersonales?.telefono;
+
+    if (emailChanged) {
+      solicitarCambio.mutate({ campo: "email", nuevoValor: values.email });
+      actions.setSubmitting(false);
+    } else if (telefonoChanged) {
+      solicitarCambio.mutate({ campo: "telefono", nuevoValor: values.telefono });
+      actions.setSubmitting(false);
+    } else {
+      toast.info("No hay cambios para guardar");
+      actions.setSubmitting(false);
+    }
+  };
+
+  // Manejar la verificación del código
+  const handleVerificarCodigo = (codigo) => {
+    verificarCambio.mutate({ campo: campoAVerificar, codigo });
+  };
+
   return (
     <>
       <BotonVolver />
       <h1 className={styles.title}>Configuración de Cuenta</h1>
+      
+      {/* Modal de verificación */}
+      <ModalVerificacion
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onVerify={handleVerificarCodigo}
+        campo={campoAVerificar}
+        nuevoValor={nuevoValorPendiente}
+        isLoading={verificarCambio.isPending}
+        timeRemaining={timeRemaining}
+      />
+
       <div className={styles.container}>
         <div className={styles.card}>
           <h2>Información personal</h2>
@@ -103,10 +187,7 @@ const ConfiguracionCuenta = () => {
                 telefono: datosPersonales?.telefono || "",
               }}
               validationSchema={personalSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                actualizarDatosPersonales.mutate(values);
-                setSubmitting(false);
-              }}
+              onSubmit={handlePersonalDataSubmit}
             >
               {({ isSubmitting, errors, touched }) => (
                 <Form className={styles.form}>
@@ -145,14 +226,22 @@ const ConfiguracionCuenta = () => {
                       className="formikFieldErrorText"
                     />
                   </div>
+                  <div className={styles.infoBox}>
+                    ℹ️ Al cambiar tu email o teléfono, recibirás un código de 
+                    verificación en tu correo actual.
+                  </div>
                   <Boton
                     variant="primary"
                     type="submit"
                     size="md"
                     fullWidth
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || solicitarCambio.isPending}
                   >
-                    Guardar cambios
+                    {solicitarCambio.isPending ? (
+                      <CircularProgress size={20} color="inherit" />
+                    ) : (
+                      "Guardar cambios"
+                    )}
                   </Boton>
                 </Form>
               )}

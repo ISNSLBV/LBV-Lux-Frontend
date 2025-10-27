@@ -21,6 +21,8 @@ export default function GestionProfesores() {
   const [registro, setRegistro] = useState(false);
   const [edicion, setEdicion] = useState(false);
   const [modoRegistro, setModoRegistro] = useState("dni");
+  const [paginaActual, setPaginaActual] = useState(1);
+  const PROFESORES_POR_PAGINA = 10;
 
   const queryClient = useQueryClient();
 
@@ -48,6 +50,29 @@ export default function GestionProfesores() {
       .toLowerCase()
       .includes(filtro.toLowerCase())
   );
+
+  // Calcular paginación
+  const totalPaginas = Math.ceil(profesoresFiltrados.length / PROFESORES_POR_PAGINA);
+  const indiceInicio = (paginaActual - 1) * PROFESORES_POR_PAGINA;
+  const indiceFin = indiceInicio + PROFESORES_POR_PAGINA;
+  const profesoresPaginados = profesoresFiltrados.slice(indiceInicio, indiceFin);
+
+  // Resetear a página 1 cuando cambie el filtro
+  React.useEffect(() => {
+    setPaginaActual(1);
+  }, [filtro]);
+
+  const irAPagina = (numeroPagina) => {
+    setPaginaActual(numeroPagina);
+  };
+
+  const paginaAnterior = () => {
+    setPaginaActual((prev) => Math.max(prev - 1, 1));
+  };
+
+  const paginaSiguiente = () => {
+    setPaginaActual((prev) => Math.min(prev + 1, totalPaginas));
+  };
 
   return (
     <>
@@ -101,7 +126,7 @@ export default function GestionProfesores() {
                 </td>
               </tr>
             ) : (
-              profesoresFiltrados.map((p) => (
+              profesoresPaginados.map((p) => (
                 <tr key={p.id} className={styles.tablaFila}>
                   <td>{p.persona?.dni}</td>
                   <td>{`${p.persona?.nombre} ${p.persona?.apellido}`}</td>
@@ -159,7 +184,7 @@ export default function GestionProfesores() {
               No se encontraron profesores
             </div>
           ) : (
-            profesoresFiltrados.map((p) => (
+            profesoresPaginados.map((p) => (
               <div key={p.id} className={styles.card}>
                 <div className={styles.cardHeader}>
                   <div className={styles.cardTitle}>
@@ -191,6 +216,51 @@ export default function GestionProfesores() {
             ))
           )}
         </div>
+
+        {/* Controles de paginación */}
+        {!isLoading && profesoresFiltrados.length > 0 && (
+          <div className={styles.paginacion}>
+            <div className={styles.paginacionInfo}>
+              Mostrando {indiceInicio + 1} a{" "}
+              {Math.min(indiceFin, profesoresFiltrados.length)} de{" "}
+              {profesoresFiltrados.length} profesores
+            </div>
+
+            <div className={styles.paginacionControles}>
+              <button
+                className={styles.botonPaginacion}
+                onClick={paginaAnterior}
+                disabled={paginaActual === 1}
+              >
+                ← Anterior
+              </button>
+
+              <div className={styles.numeroPaginas}>
+                {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
+                  (numero) => (
+                    <button
+                      key={numero}
+                      className={`${styles.botonNumero} ${
+                        paginaActual === numero ? styles.paginaActiva : ""
+                      }`}
+                      onClick={() => irAPagina(numero)}
+                    >
+                      {numero}
+                    </button>
+                  )
+                )}
+              </div>
+
+              <button
+                className={styles.botonPaginacion}
+                onClick={paginaSiguiente}
+                disabled={paginaActual === totalPaginas}
+              >
+                Siguiente →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {registro && (

@@ -67,6 +67,146 @@
   border-bottom: none;
 }
 
+.botonExpandir {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.botonExpandir:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.filaExpandida {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.filaExpandida td {
+  padding: 0 !important;
+}
+
+.detallesAlumno {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.infoGeneral {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.estadoAlumno {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.estadoLabel {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.seccionDetalles h4 {
+  margin: 0 0 12px 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.listaCarreras {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.carreraDetalle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  gap: 16px;
+}
+
+.carreraInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.carreraNombre {
+  font-weight: 600;
+  font-size: 15px;
+  color: rgb(96, 165, 250);
+}
+
+.carreraFecha,
+.carreraPlan {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.estadoBadge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.estadoBadge.activo {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: rgb(74, 222, 128);
+}
+
+.estadoBadge.inactivo {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: rgb(248, 113, 113);
+}
+
+.carreraAcciones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.accionesRapidas {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contactoInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.telefono {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -234,6 +374,82 @@
     font-weight: 600;
 }
 
+/* Estilos de paginación */
+.paginacion {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.paginacionInfo {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  text-align: center;
+}
+
+.paginacionControles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.botonPaginacion {
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.botonPaginacion:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.botonPaginacion:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.numeroPaginas {
+  display: flex;
+  gap: 4px;
+}
+
+.botonNumero {
+  min-width: 36px;
+  height: 36px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botonNumero:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.paginaActiva {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  color: rgb(96, 165, 250) !important;
+}
+
 @media (max-width: 768px) {
   .datos {
     flex-direction: column;
@@ -261,6 +477,33 @@
   }
 
   .barraBusqueda {
+    width: 100%;
+  }
+
+  .paginacionControles {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .numeroPaginas {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .carreraDetalle {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .carreraAcciones {
+    width: 100%;
+  }
+
+  .carreraAcciones button {
+    flex: 1;
+  }
+
+  .accionesRapidas button {
     width: 100%;
   }
 }

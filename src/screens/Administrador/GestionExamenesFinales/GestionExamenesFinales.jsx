@@ -48,6 +48,19 @@ const GestionExamenesFinales = () => {
       );
       return data;
     },
+    enabled: modoRegistro === "basico",
+  });
+
+  // Query para materias personalizadas (solo planes no vigentes)
+  const { data: materiasPersonalizadas = [], isLoading: isLoadingMateriasPersonalizadas } = useQuery({
+    queryKey: ["materiasExamenFinalPersonalizadas"],
+    queryFn: async () => {
+      const { data } = await api.get(
+        "/admin/materia/materia-plan/listar-materias?soloNoVigentes=true"
+      );
+      return data;
+    },
+    enabled: modoRegistro === "personalizado",
   });
 
   const { data: profesoresInstituto = [], isLoading: cargandoProfesores } =
@@ -63,10 +76,14 @@ const GestionExamenesFinales = () => {
     ? parseInt(materiaSeleccionada, 10)
     : null;
 
-  const profesoresDisponibles = materiaPlanSeleccionada
+  // Para modo básico: buscar profesores en MateriaPlanCicloLectivo
+  const profesoresDisponibles = materiaPlanSeleccionada && modoRegistro === "basico"
     ? materias.find((m) => m.materiaPlan?.id === materiaPlanSeleccionada)
         ?.profesores || []
     : [];
+
+  // Para modo personalizado: no hay profesores predefinidos
+  const materiasAMostrar = modoRegistro === "basico" ? materias : materiasPersonalizadas;
 
   const registrarExamen = useMutation({
     mutationFn: ({ idMateria, fecha, idProfesor }) =>
@@ -230,7 +247,10 @@ const GestionExamenesFinales = () => {
                         ? styles.modoActivo
                         : styles.modo
                     }
-                    onClick={() => setModoRegistro("basico")}
+                    onClick={() => {
+                      setModoRegistro("basico");
+                      setMateriaSeleccionada("");
+                    }}
                   >
                     Registro básico
                   </button>
@@ -240,10 +260,24 @@ const GestionExamenesFinales = () => {
                         ? styles.modoActivo
                         : styles.modo
                     }
-                    onClick={() => setModoRegistro("personalizado")}
+                    onClick={() => {
+                      setModoRegistro("personalizado");
+                      setMateriaSeleccionada("");
+                    }}
                   >
                     Registro personalizado
                   </button>
+                </div>
+                <div className={styles.modoDescripcion}>
+                  {modoRegistro === "basico" ? (
+                    <p>
+                      <strong>Registro básico:</strong> Para materias del ciclo lectivo actual con profesores asignados.
+                    </p>
+                  ) : (
+                    <p>
+                      <strong>Registro personalizado:</strong> Solo muestra materias de planes de estudio que ya NO están vigentes (ej: Plan 1002/04). Ideal para alumnos que continúan con su plan original.
+                    </p>
+                  )}
                 </div>
                 <Formik
                   initialValues={{
@@ -262,7 +296,7 @@ const GestionExamenesFinales = () => {
                       .transform((curr, orig) => (orig === "" ? null : curr)),
                     asignar_otro_profesor: Yup.boolean(),
                     id_profesor: Yup.string().when("asignar_otro_profesor", {
-                      is: false,
+                      is: (val) => modoRegistro === "basico" && !val,
                       then: (schema) =>
                         schema.required("Este campo es obligatorio"),
                       otherwise: (schema) => schema.notRequired(),
@@ -270,7 +304,7 @@ const GestionExamenesFinales = () => {
                     id_profesor_general: Yup.string().when(
                       "asignar_otro_profesor",
                       {
-                        is: true,
+                        is: (val) => modoRegistro === "personalizado" || val,
                         then: (schema) =>
                           schema.required("Este campo es obligatorio"),
                         otherwise: (schema) => schema.notRequired(),
@@ -280,9 +314,15 @@ const GestionExamenesFinales = () => {
                   onSubmit={(values, { resetForm }) => {
                     const fecha = values.fecha || null;
                     const idMateria = Number(values.id_materia);
-                    const idProfesorSeleccionado = values.asignar_otro_profesor
-                      ? Number(values.id_profesor_general)
-                      : Number(values.id_profesor);
+                    
+                    let idProfesorSeleccionado;
+                    if (modoRegistro === "personalizado") {
+                      idProfesorSeleccionado = Number(values.id_profesor_general);
+                    } else {
+                      idProfesorSeleccionado = values.asignar_otro_profesor
+                        ? Number(values.id_profesor_general)
+                        : Number(values.id_profesor);
+                    }
 
                     registrarExamen.mutate({
                       idMateria,
@@ -292,6 +332,7 @@ const GestionExamenesFinales = () => {
                     resetForm();
                     setRegistro(false);
                     setMateriaSeleccionada("");
+                    setModoRegistro("basico");
                   }}
                 >
                   {({
@@ -326,7 +367,7 @@ const GestionExamenesFinales = () => {
                             }}
                           >
                             <option value="">Seleccioná una materia</option>
-                            {materias.map((m) => {
+                            {modoRegistro === "basico" && materias.map((m) => {
                               const materiaPlanId = m.materiaPlan?.id ?? "";
 
                               return (
@@ -336,6 +377,18 @@ const GestionExamenesFinales = () => {
                                 >
                                   {m.materiaPlan?.materia?.nombre} - (
                                   {m.materiaPlan?.planEstudio?.resolucion})
+                                </option>
+                              );
+                            })}
+                            {modoRegistro === "personalizado" && materiasPersonalizadas.map((mp) => {
+                              const materiaPlanId = mp.id ?? "";
+
+                              return (
+                                <option
+                                  value={materiaPlanId}
+                                  key={materiaPlanId}
+                                >
+                                  {mp.materia?.nombre} - Plan {mp.planEstudio?.resolucion} ({mp.planEstudio?.carrera?.nombre})
                                 </option>
                               );
                             })}
@@ -369,66 +422,72 @@ const GestionExamenesFinales = () => {
                           <label htmlFor="id_profesor">
                             Profesor designado
                           </label>
-                          <Field
-                            as="select"
-                            id="id_profesor"
-                            name="id_profesor"
-                            className={
-                              errors.id_profesor && touched.id_profesor
-                                ? "formikFieldError"
-                                : "formikField"
-                            }
-                            disabled={
-                              values.asignar_otro_profesor ||
-                              !materiaSeleccionada ||
-                              profesoresDisponibles.length === 0
-                            }
-                          >
-                            <option value="">
-                              {!materiaSeleccionada
-                                ? "Primero seleccioná una materia"
-                                : profesoresDisponibles.length === 0
-                                ? "No hay profesores asignados a esta materia"
-                                : "Seleccioná un profesor"}
-                            </option>
-                            {profesoresDisponibles.map((profesor) => (
-                              <option
-                                value={profesor.profesor?.id}
-                                key={profesor.profesor?.id}
-                              >
-                                {profesor.profesor?.persona?.nombre}{" "}
-                                {profesor.profesor?.persona?.apellido}
-                                {profesor.rol && ` (${profesor.rol})`}
-                              </option>
-                            ))}
-                          </Field>
-                          <ErrorMessage
-                            name="id_profesor"
-                            component="div"
-                            className="formikFieldErrorText"
-                          />
-                          <div className={styles.checkboxAlternativo}>
-                            <Field
-                              type="checkbox"
-                              name="asignar_otro_profesor"
-                              checked={values.asignar_otro_profesor}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("asignar_otro_profesor", checked);
-                                if (checked) {
-                                  setFieldValue("id_profesor", "");
-                                } else {
-                                  setFieldValue("id_profesor_general", "");
+                          {modoRegistro === "basico" && (
+                            <>
+                              <Field
+                                as="select"
+                                id="id_profesor"
+                                name="id_profesor"
+                                className={
+                                  errors.id_profesor && touched.id_profesor
+                                    ? "formikFieldError"
+                                    : "formikField"
                                 }
-                              }}
-                            />
-                            <label>Asignar otro profesor</label>
-                          </div>
-                          {values.asignar_otro_profesor && (
-                            <div className={styles.selectAlternativo}>
-                              <label htmlFor="id_profesor_general">
-                                Profesor del instituto
-                              </label>
+                                disabled={
+                                  values.asignar_otro_profesor ||
+                                  !materiaSeleccionada ||
+                                  profesoresDisponibles.length === 0
+                                }
+                              >
+                                <option value="">
+                                  {!materiaSeleccionada
+                                    ? "Primero seleccioná una materia"
+                                    : profesoresDisponibles.length === 0
+                                    ? "No hay profesores asignados a esta materia"
+                                    : "Seleccioná un profesor"}
+                                </option>
+                                {profesoresDisponibles.map((profesor) => (
+                                  <option
+                                    value={profesor.profesor?.id}
+                                    key={profesor.profesor?.id}
+                                  >
+                                    {profesor.profesor?.persona?.nombre}{" "}
+                                    {profesor.profesor?.persona?.apellido}
+                                    {profesor.rol && ` (${profesor.rol})`}
+                                  </option>
+                                ))}
+                              </Field>
+                              <ErrorMessage
+                                name="id_profesor"
+                                component="div"
+                                className="formikFieldErrorText"
+                              />
+                              <div className={styles.checkboxAlternativo}>
+                                <Field
+                                  type="checkbox"
+                                  name="asignar_otro_profesor"
+                                  checked={values.asignar_otro_profesor}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFieldValue("asignar_otro_profesor", checked);
+                                    if (checked) {
+                                      setFieldValue("id_profesor", "");
+                                    } else {
+                                      setFieldValue("id_profesor_general", "");
+                                    }
+                                  }}
+                                />
+                                <label>Asignar otro profesor</label>
+                              </div>
+                            </>
+                          )}
+                          {(modoRegistro === "personalizado" || values.asignar_otro_profesor) && (
+                            <div className={modoRegistro === "personalizado" ? "" : styles.selectAlternativo}>
+                              {modoRegistro === "basico" && (
+                                <label htmlFor="id_profesor_general">
+                                  Profesor del instituto
+                                </label>
+                              )}
                               <Field
                                 as="select"
                                 id="id_profesor_general"

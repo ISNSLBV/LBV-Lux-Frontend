@@ -191,6 +191,125 @@
   font-weight: 500;
 }
 
+.contactoInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.telefono {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+.materiasCell {
+  max-width: 300px;
+}
+
+.materiasLista {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.materiaItem {
+  display: inline-block;
+}
+
+.materiaNombre {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: rgb(96, 165, 250);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sinMaterias {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Estilos de paginación */
+.paginacion {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.paginacionInfo {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  text-align: center;
+}
+
+.paginacionControles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.botonPaginacion {
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.botonPaginacion:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.botonPaginacion:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.numeroPaginas {
+  display: flex;
+  gap: 4px;
+}
+
+.botonNumero {
+  min-width: 36px;
+  height: 36px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botonNumero:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.paginaActiva {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  color: rgb(96, 165, 250) !important;
+}
+
 @media (max-width: 768px) {
   .datos {
     flex-direction: column;
@@ -211,5 +330,15 @@
 
   .cards {
     display: block;
+  }
+
+  .paginacionControles {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .numeroPaginas {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
