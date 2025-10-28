@@ -52,6 +52,27 @@
     flex: 0;
 }
 
+.manual input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    width: 100%;
+}
+
+.manual input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.manual h3 {
+    margin: 12px 0 4px 0;
+    font-size: 1rem;
+    color: #4a90e2;
+    text-align: left;
+    width: 100%;
+}
+
 .dropdown {
     display: flex;
     flex-direction: column;
@@ -75,6 +96,63 @@
 .alumno:hover {
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.datosExamen {
+    margin-top: 20px;
+    padding: 16px;
+    background-color: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.datosExamen h3 {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    color: #4a90e2;
+}
+
+.datosExamen label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 4px;
+    margin-top: 8px;
+}
+
+.datosExamen input,
+.datosExamen select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.datosExamen input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.datosExamen select {
+    cursor: pointer;
+}
+
+.datosExamen select option {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.inputDisabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.anioCalculado {
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width:768px) {

@@ -50,7 +50,6 @@
 
 .logo {
     width: 95px;
-    height: 71px;
 }
 
 .navbarItem {
@@ -107,8 +106,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 90px;
-    padding: 0 24px;
+    height: auto;
+    padding: 12px 24px;
   }
 
   .navbarItem a {

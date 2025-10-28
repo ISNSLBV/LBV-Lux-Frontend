@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Certificados.module.css";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import api from "../../../api/axios";
@@ -10,6 +10,7 @@ const Certificados = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAlumno, setSelectedAlumno] = useState(null);
   const [certificadoSeleccionado, setCertificadoSeleccionado] = useState("");
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
 
   const [isManualMode, setIsManualMode] = useState(false);
   const [manualData, setManualData] = useState({
@@ -18,6 +19,13 @@ const Certificados = () => {
     dni: "",
     carrera: "",
     resolucion: "",
+    // Campos adicionales para certificado de asistencia a examen
+    nombreCarrera: "",
+    anioCarrera: "",
+    nombreMateria: "",
+    diaExamen: "",
+    mesExamen: "",
+    anioExamen: "",
   });
 
   const {
@@ -39,6 +47,39 @@ const Certificados = () => {
     { id: 3, descripcion: "Certificado de Asistencia a Examen" },
   ];
 
+  // Query para obtener detalles del alumno seleccionado incluyendo carreras e inscripciones
+  const {
+    data: alumnoDetalle,
+    isLoading: isLoadingDetalle,
+  } = useQuery({
+    queryKey: ["alumnoDetalle", selectedAlumno?.id],
+    queryFn: () =>
+      api.get(`/usuario/perfil/${selectedAlumno.id}`).then((res) => res.data),
+    enabled: !!selectedAlumno?.id && !isManualMode,
+  });
+
+  // Función para calcular el año de carrera
+  const calcularAnioCarrera = () => {
+    if (!alumnoDetalle || !alumnoDetalle.inscripcionesActuales) {
+      return "";
+    }
+    
+    // Obtener todos los años
+    const anios = alumnoDetalle.inscripcionesActuales.map(i => parseInt(i.anio_carrera) || 0);
+    
+    // Quedarse con el más alto
+    const anioMasAlto = Math.max(...anios);
+
+    // Convertir a texto
+    const aniosTexto = {
+      1: "Primer año",
+      2: "Segundo año",
+      3: "Tercer año",
+    };
+
+    return aniosTexto[anioMasAlto] || "";
+  };
+
   const emitirCertificado = useMutation({
     mutationFn: async ({ alumnoId, certificadoId, datosManual }) => {
       let url;
@@ -54,9 +95,34 @@ const Certificados = () => {
           carrera: datosManual.carrera,
           resolucion: datosManual.resolucion,
         };
+
+        // Si es certificado de asistencia a examen (id 3), agregar campos adicionales
+        if (parseInt(certificadoId) === 3) {
+          params = {
+            ...params,
+            nombreCarrera: datosManual.nombreCarrera,
+            anioCarrera: datosManual.anioCarrera,
+            nombreMateria: datosManual.nombreMateria,
+            diaExamen: datosManual.diaExamen,
+            mesExamen: datosManual.mesExamen,
+            anioExamen: datosManual.anioExamen,
+          };
+        }
       } else {
         // Para alumno registrado - usar path param
         url = `/pdf/certificado/${certificadoId}/${alumnoId}`;
+        
+        // Si es certificado de asistencia a examen, incluir datos del examen como params
+        if (parseInt(certificadoId) === 3 && datosManual) {
+          params = {
+            nombreCarrera: datosManual.nombreCarrera,
+            anioCarrera: datosManual.anioCarrera,
+            nombreMateria: datosManual.nombreMateria,
+            diaExamen: datosManual.diaExamen,
+            mesExamen: datosManual.mesExamen,
+            anioExamen: datosManual.anioExamen,
+          };
+        }
       }
 
       const response = await api.get(url, {
@@ -78,8 +144,10 @@ const Certificados = () => {
   });
 
   const handleEmitirCertificado = () => {
+    const certificadoId = parseInt(certificadoSeleccionado);
+    
     if (isManualMode) {
-      // Validar datos manuales
+      // Validar datos manuales básicos
       if (!manualData.nombre || !manualData.apellido || !manualData.dni) {
         toast.error("Completá nombre, apellido y DNI del alumno");
         return;
@@ -89,21 +157,43 @@ const Certificados = () => {
         return;
       }
 
+      // Validaciones específicas para certificado de asistencia a examen
+      if (certificadoId === 3) {
+        if (!manualData.nombreMateria || !manualData.diaExamen || !manualData.mesExamen || !manualData.anioExamen) {
+          toast.error("Completá todos los datos del examen (materia, día, mes y año)");
+          return;
+        }
+      }
+
       emitirCertificado.mutate({
         certificadoId: certificadoSeleccionado,
         datosManual: manualData,
       });
     } else {
-      // Validar alumno registrado
+      // Alumno registrado
       if (!selectedAlumno?.id || !certificadoSeleccionado) {
         toast.error("Seleccioná un alumno y un tipo de certificado");
         return;
       }
 
-      emitirCertificado.mutate({
-        alumnoId: selectedAlumno.id,
-        certificadoId: certificadoSeleccionado,
-      });
+      // Si es certificado de asistencia a examen, validar datos del examen
+      if (certificadoId === 3) {
+        if (!manualData.nombreMateria || !manualData.diaExamen || !manualData.mesExamen || !manualData.anioExamen) {
+          toast.error("Completá todos los datos del examen (materia, día, mes y año)");
+          return;
+        }
+        
+        emitirCertificado.mutate({
+          alumnoId: selectedAlumno.id,
+          certificadoId: certificadoSeleccionado,
+          datosManual: manualData, // Incluir los datos del examen
+        });
+      } else {
+        emitirCertificado.mutate({
+          alumnoId: selectedAlumno.id,
+          certificadoId: certificadoSeleccionado,
+        });
+      }
     }
   };
 
@@ -111,12 +201,19 @@ const Certificados = () => {
     setIsManualMode(manual);
     setSelectedAlumno(null);
     setSearchTerm("");
+    setCarreraSeleccionada("");
     setManualData({
       nombre: "",
       apellido: "",
       dni: "",
       carrera: "",
       resolucion: "",
+      nombreCarrera: "",
+      anioCarrera: "",
+      nombreMateria: "",
+      diaExamen: "",
+      mesExamen: "",
+      anioExamen: "",
     });
   };
 
@@ -145,6 +242,12 @@ const Certificados = () => {
           dni: "",
           carrera: "",
           resolucion: "",
+          nombreCarrera: "",
+          anioCarrera: "",
+          nombreMateria: "",
+          diaExamen: "",
+          mesExamen: "",
+          anioExamen: "",
         });
       }
     }
@@ -218,6 +321,105 @@ const Certificados = () => {
                     {selectedAlumno.apellido} - {selectedAlumno.dni}
                   </div>
                 )}
+                
+                {/* Campos adicionales para certificado de asistencia a examen */}
+                {!isManualMode && parseInt(certificadoSeleccionado) === 3 && selectedAlumno && (
+                  <div className={styles.datosExamen}>
+                    <h3>Datos del Examen</h3>
+                    
+                    {/* Select de carreras */}
+                    {isLoadingDetalle ? (
+                      <p>Cargando carreras...</p>
+                    ) : alumnoDetalle?.informacionPersonal?.carrera ? (
+                      <>
+                        <label>Carrera *</label>
+                        <select
+                          value={carreraSeleccionada}
+                          onChange={(e) => {
+                            const nombreCarrera = e.target.value;
+                            setCarreraSeleccionada(nombreCarrera);
+                            
+                            // Calcular año automáticamente
+                            const anio = calcularAnioCarrera();
+                            
+                            setManualData((prev) => ({
+                              ...prev,
+                              nombreCarrera: nombreCarrera,
+                              anioCarrera: anio,
+                            }));
+                          }}
+                        >
+                          <option value="">Seleccione una carrera</option>
+                          {alumnoDetalle.informacionPersonal.carrera.split(", ").map((carrera, index) => (
+                            <option key={index} value={carrera}>
+                              {carrera}
+                            </option>
+                          ))}
+                        </select>
+                        
+                        {/* Año calculado automáticamente */}
+                        {carreraSeleccionada !== "" && (
+                          <div className={styles.anioCalculado}>
+                            <label>Año de carrera</label>
+                            <input
+                              type="text"
+                              value={manualData.anioCarrera || "No se pudo calcular"}
+                              disabled
+                              className={styles.inputDisabled}
+                            />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <p>No se encontraron carreras para este alumno</p>
+                    )}
+                    
+                    <input
+                      type="text"
+                      placeholder="Nombre de la materia *"
+                      value={manualData.nombreMateria}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          nombreMateria: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Día del examen *"
+                      value={manualData.diaExamen}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          diaExamen: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Mes del examen (ej: octubre) *"
+                      value={manualData.mesExamen}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          mesExamen: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Año del examen *"
+                      value={manualData.anioExamen}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          anioExamen: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               // Modo manual para alumno no registrado
@@ -225,7 +427,7 @@ const Certificados = () => {
                 <h2>Datos del Alumno No Registrado</h2>
                 <input
                   type="text"
-                  placeholder="Nombre"
+                  placeholder="Nombre *"
                   value={manualData.nombre}
                   onChange={(e) =>
                     setManualData((prev) => ({ ...prev, nombre: e.target.value }))
@@ -233,7 +435,7 @@ const Certificados = () => {
                 />
                 <input
                   type="text"
-                  placeholder="Apellido"
+                  placeholder="Apellido *"
                   value={manualData.apellido}
                   onChange={(e) =>
                     setManualData((prev) => ({
@@ -244,34 +446,112 @@ const Certificados = () => {
                 />
                 <input
                   type="text"
-                  placeholder="DNI"
+                  placeholder="DNI *"
                   value={manualData.dni}
                   onChange={(e) =>
                     setManualData((prev) => ({ ...prev, dni: e.target.value }))
                   }
                 />
-                <input
-                  type="text"
-                  placeholder="Carrera (opcional)"
-                  value={manualData.carrera}
-                  onChange={(e) =>
-                    setManualData((prev) => ({
-                      ...prev,
-                      carrera: e.target.value,
-                    }))
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Resolución del plan (opcional)"
-                  value={manualData.resolucion}
-                  onChange={(e) =>
-                    setManualData((prev) => ({
-                      ...prev,
-                      resolucion: e.target.value,
-                    }))
-                  }
-                />
+                
+                {/* Campos específicos según tipo de certificado */}
+                {parseInt(certificadoSeleccionado) === 1 && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Carrera (opcional)"
+                      value={manualData.carrera}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          carrera: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Resolución del plan (opcional)"
+                      value={manualData.resolucion}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          resolucion: e.target.value,
+                        }))
+                      }
+                    />
+                  </>
+                )}
+                
+                {parseInt(certificadoSeleccionado) === 3 && (
+                  <>
+                    <h3>Datos del Examen</h3>
+                    <input
+                      type="text"
+                      placeholder="Nombre de la carrera"
+                      value={manualData.nombreCarrera}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          nombreCarrera: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Año de la carrera (ej: primer año)"
+                      value={manualData.anioCarrera}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          anioCarrera: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Nombre de la materia *"
+                      value={manualData.nombreMateria}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          nombreMateria: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Día del examen *"
+                      value={manualData.diaExamen}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          diaExamen: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Mes del examen (ej: octubre) *"
+                      value={manualData.mesExamen}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          mesExamen: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Año del examen *"
+                      value={manualData.anioExamen}
+                      onChange={(e) =>
+                        setManualData((prev) => ({
+                          ...prev,
+                          anioExamen: e.target.value,
+                        }))
+                      }
+                    />
+                  </>
+                )}
               </div>
             )}
           </div>

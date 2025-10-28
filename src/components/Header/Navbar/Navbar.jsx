@@ -3,7 +3,7 @@ import styles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import logo from "../../../assets/logo.png";
+import logo from "../../../assets/logo2.png";
 import { useAuth } from "../../../contexts/AuthContext";
 import { toast } from "react-toastify";
 
