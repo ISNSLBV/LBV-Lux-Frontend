@@ -226,11 +226,12 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                             variant="success"
                             disabled={actualizarCalificacionMutation.isLoading}
                           >
-                            Guardar
+                            {actualizarCalificacionMutation.isLoading ? "Guardando..." : "Guardar"}
                           </Boton>
                           <Boton
                             onClick={() => handleCancel(cal.id_inscripcion)}
                             variant="cancel"
+                            disabled={actualizarCalificacionMutation.isLoading}
                           >
                             Cancelar
                           </Boton>
@@ -238,34 +239,46 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                       ) : (
                         <div className={styles.accionesVer}>
                           {cal.asistencia === "PRESENTE" && canEdit && (
-                            <Boton
-                              onClick={() =>
-                                handleEdit(cal.id_inscripcion, cal.calificacion)
-                              }
-                              title={
-                                cal.bloqueada
-                                  ? "Editar (como administrador)"
-                                  : "Editar calificación"
-                              }
-                            >
-                              Editar
-                            </Boton>
+                            <>
+                              <Boton
+                                variant="primary"
+                                onClick={() =>
+                                  handleEdit(cal.id_inscripcion, cal.calificacion)
+                                }
+                                title={
+                                  cal.bloqueada && canEditBlocked
+                                    ? "Editar calificación (bloqueada - solo administrador)"
+                                    : cal.bloqueada
+                                    ? "Calificación bloqueada"
+                                    : "Editar calificación"
+                                }
+                              >
+                                {cal.calificacion !== null && cal.calificacion !== undefined
+                                  ? "Modificar"
+                                  : "Calificar"}
+                              </Boton>
+                              {canEditBlocked && (
+                                <Boton
+                                  onClick={() =>
+                                    handleToggleBloqueo(cal.id_inscripcion, cal.bloqueada)
+                                  }
+                                  variant={cal.bloqueada ? "success" : "warning"}
+                                  disabled={bloquearCalificacionMutation.isLoading}
+                                  title={
+                                    cal.bloqueada
+                                      ? "Desbloquear calificación"
+                                      : "Bloquear calificación"
+                                  }
+                                >
+                                  {cal.bloqueada ? "Desbloquear" : "Bloquear"}
+                                </Boton>
+                              )}
+                            </>
                           )}
                           {cal.asistencia !== "PRESENTE" && (
                             <span className={styles.noDisponible}>
                               No disponible (ausente)
                             </span>
-                          )}
-                          {canEditBlocked && cal.asistencia === "PRESENTE" && (
-                            <Boton
-                              onClick={() =>
-                                handleToggleBloqueo(cal.id_inscripcion, cal.bloqueada)
-                              }
-                              variant={cal.bloqueada ? "success" : "primary"}
-                              disabled={bloquearCalificacionMutation.isLoading}
-                            >
-                              {cal.bloqueada ? "Desbloquear" : "Bloquear"}
-                            </Boton>
                           )}
                         </div>
                       )}

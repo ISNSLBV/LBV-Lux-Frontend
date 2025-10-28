@@ -102,6 +102,7 @@
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 24px;
+  align-items: center;
 }
 
 .barraBusqueda {
@@ -109,7 +110,38 @@
   min-width: 0;
 }
 
+.filtroAnio {
+  flex: 0 0 auto;
+}
+
+.selectAnio {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.selectAnio option {
+  background-color: #1a1a1a;
+  color: white;
+}
+
 @media (max-width: 768px) {
+  .barraAcciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtroAnio {
+    width: 100%;
+  }
+
+  .selectAnio {
+    width: 100%;
+  }
+
   .carreraSelector {
     flex-direction: column;
     gap: 16px;

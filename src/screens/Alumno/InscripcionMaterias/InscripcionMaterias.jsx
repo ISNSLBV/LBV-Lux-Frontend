@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./InscripcionMaterias.module.css";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { toast } from "react-toastify";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver"
+
+const obtenerCarreras = async () => {
+  const { data } = await api.get("/alumno/carreras");
+  return data;
+};
 
 const obtenerPlanEstudio = async () => {
   const { data } = await api.get(
@@ -34,6 +39,16 @@ const verificarEstadoInscripciones = async (planId) => {
 };
 
 const InscripcionMaterias = () => {
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState("todas");
+
+  const { data: carreras, isLoading: carrerasLoading } = useQuery({
+    queryKey: ["carrerasInscripto"],
+    queryFn: obtenerCarreras,
+    onError: (error) => {
+      console.error("Error al obtener las carreras: ", error);
+    },
+  });
+
   const { data: planId, isLoading: planLoading } = useQuery({
     queryKey: ["planEstudio"],
     queryFn: obtenerPlanEstudio,
@@ -76,12 +91,14 @@ const InscripcionMaterias = () => {
     },
     onError: (error) => {
       console.error("Error al registrar la inscripción: ", error);
+      const mensajeError = error.response?.data?.error || "Error al registrar la inscripción";
+      toast.error(mensajeError);
     },
   });
 
   const queryClient = useQueryClient();
 
-  if (planLoading || materiasLoading || estadoLoading) {
+  if (carrerasLoading || planLoading || materiasLoading || estadoLoading) {
     return <div>Cargando...</div>;
   }
 
@@ -141,6 +158,21 @@ const InscripcionMaterias = () => {
     return "Inscribirse";
   };
 
+  // Filtrar materias que NO estén aprobadas y por carrera seleccionada
+  const filtrarMaterias = (materiasArray) => {
+    return materiasArray?.filter((materia) => {
+      const estado = estadoMateriasMap.get(materia.id);
+      // Excluir materias ya aprobadas
+      if (estado?.yaAprobado) return false;
+      
+      // Filtrar por carrera si hay una seleccionada
+      // if (carreraSeleccionada !== "todas") {
+      //   return materia.idCarrera === parseInt(carreraSeleccionada);
+      // }
+      return true;
+    });
+  };
+
   return (
     <>
       <BotonVolver />
@@ -149,15 +181,31 @@ const InscripcionMaterias = () => {
       </div>
 
       <div className={styles.listaMaterias}>
-        {materias?.filter((materia) => {
+        {filtrarMaterias(materias)?.filter((materia) => {
           const estado = estadoMateriasMap.get(materia.id);
           return estado?.puedeInscribirse;
         }).length > 0 && (
           <div className={styles.seccionMaterias}>
-            <h2 className={styles.tituloSeccion}>
-              Materias disponibles para inscripción
-            </h2>
-            {materias
+            <div className={styles.headerSeccion}>
+              <h2 className={styles.tituloSeccion}>
+                Materias disponibles para inscripción
+              </h2>
+              {carreras && carreras.length > 1 && (
+                <select
+                  className={styles.filtroCarrera}
+                  value={carreraSeleccionada}
+                  onChange={(e) => setCarreraSeleccionada(e.target.value)}
+                >
+                  <option value="todas">Todas las carreras</option>
+                  {carreras.map((carrera) => (
+                    <option key={carrera.id} value={carrera.id}>
+                      {carrera.nombre}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+            {filtrarMaterias(materias)
               ?.filter((materia) => {
                 const estado = estadoMateriasMap.get(materia.id);
                 return estado?.puedeInscribirse;
@@ -222,13 +270,29 @@ const InscripcionMaterias = () => {
           </div>
         )}
 
-        {materias?.filter((materia) => {
+        {filtrarMaterias(materias)?.filter((materia) => {
           const estado = estadoMateriasMap.get(materia.id);
           return !estado?.puedeInscribirse;
         }).length > 0 && (
           <div className={styles.seccionMaterias}>
-            <h2 className={styles.tituloSeccion}>Materias no disponibles</h2>
-            {materias
+            <div className={styles.headerSeccion}>
+              <h2 className={styles.tituloSeccion}>Materias no disponibles</h2>
+              {carreras && carreras.length > 1 && (
+                <select
+                  className={styles.filtroCarrera}
+                  value={carreraSeleccionada}
+                  onChange={(e) => setCarreraSeleccionada(e.target.value)}
+                >
+                  <option value="todas">Todas las carreras</option>
+                  {carreras.map((carrera) => (
+                    <option key={carrera.id} value={carrera.id}>
+                      {carrera.nombre}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+            {filtrarMaterias(materias)
               ?.filter((materia) => {
                 const estado = estadoMateriasMap.get(materia.id);
                 return !estado?.puedeInscribirse;

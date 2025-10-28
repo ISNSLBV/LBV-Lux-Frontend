@@ -67,18 +67,6 @@
   vertical-align: middle;
 }
 
-.tabla tr.bloqueada {
-  background: #fef3c7;
-}
-
-.tabla tr.aprobado {
-  background: #f0fdf4;
-}
-
-.tabla tr.desaprobado {
-  background: #fef2f2;
-}
-
 .alumno {
   display: flex;
   align-items: center;

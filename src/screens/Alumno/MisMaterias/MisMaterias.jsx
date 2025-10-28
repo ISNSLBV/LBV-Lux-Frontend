@@ -11,6 +11,7 @@ import { getMensajeAyuda } from "../../../utils/estadosInscripcion";
 const MisMaterias = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
   const [filtro, setFiltro] = useState("");
+  const [anioSeleccionado, setAnioSeleccionado] = useState("todos");
 
   const { data: carreras, isLoading: isLoadingCarreras } = useQuery({
     queryKey: ["carrerasAlumno"],
@@ -41,9 +42,15 @@ const MisMaterias = () => {
     enabled: !!carreraSeleccionada,
   });
 
-  const materiasFiltradas = materias.filter((m) =>
-    m.nombre.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const materiasFiltradas = materias.filter((m) => {
+    const coincideNombre = m.nombre.toLowerCase().includes(filtro.toLowerCase());
+    const coincideAnio = anioSeleccionado === "todos" || 
+                        (m.anio && m.anio.toString() === anioSeleccionado);
+    return coincideNombre && coincideAnio;
+  });
+
+  // Obtener años únicos de las materias para el filtro
+  const aniosDisponibles = [...new Set(materias.map(m => m.anio).filter(Boolean))].sort((a, b) => b - a);
 
   return (
     <>
@@ -61,6 +68,22 @@ const MisMaterias = () => {
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
               />
+            </div>
+            
+            <div className={styles.filtroAnio}>
+              <select
+                id="anio-select"
+                value={anioSeleccionado}
+                onChange={(e) => setAnioSeleccionado(e.target.value)}
+                className={styles.selectAnio}
+              >
+                <option value="todos">Todos los años</option>
+                {aniosDisponibles.map((anio) => (
+                  <option key={anio} value={anio}>
+                    {anio}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

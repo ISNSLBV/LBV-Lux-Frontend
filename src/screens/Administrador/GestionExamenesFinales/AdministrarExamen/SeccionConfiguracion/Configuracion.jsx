@@ -18,7 +18,6 @@ const validationSchema = Yup.object({
       if (!value) return false;
       const hoy = new Date();
       const fechaSeleccionada = new Date(value);
-      // Comparar solo las fechas sin horas
       const hoySoloFecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
       const fechaSoloFecha = new Date(fechaSeleccionada.getFullYear(), fechaSeleccionada.getMonth(), fechaSeleccionada.getDate());
       return fechaSoloFecha >= hoySoloFecha;
@@ -38,8 +37,6 @@ const Configuracion = ({ examen }) => {
   const { idExamen } = useParams();
   const queryClient = useQueryClient();
   const [showConfirmation, setShowConfirmation] = useState(false);
-
-  const isAdmin = user?.rol === "Administrador";
 
   const {
     data: profesores = [],
@@ -75,18 +72,6 @@ const Configuracion = ({ examen }) => {
     const valores = JSON.parse(document.getElementById('pending-values').dataset.values);
     actualizarConfiguracionMutation.mutate(valores);
   };
-
-  if (!isAdmin) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.noPermission}>
-          <AlertTriangle size={48} />
-          <h3>Acceso restringido</h3>
-          <p>Solo los administradores pueden modificar la configuración del examen.</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!examen) {
     return (

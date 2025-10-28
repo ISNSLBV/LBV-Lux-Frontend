@@ -9,6 +9,7 @@ import SeccionAlumnos from "./SeccionAlumnos/Alumnos";
 import SeccionCalificaciones from "./SeccionCalificaciones/CalificacionesExamen";
 import SeccionConfiguracion from "./SeccionConfiguracion/Configuracion";
 import { formatearFechaSinZonaHoraria } from "../../../../utils/dateUtils";
+import { useAuth } from "../../../../contexts/AuthContext";
 
 const fetchExamen = async (id) => {
   const { data } = await api.get(
@@ -26,8 +27,18 @@ const SECCIONES = [
 const AdministrarExamen = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [seccion, setSeccion] = useState("alumnosInscriptos");
   const { idExamen } = useParams();
+
+  // Filtrar secciones según el rol del usuario
+  const seccionesFiltradas = SECCIONES.filter(sec => {
+    // Solo mostrar configuración a Administradores
+    if (sec.key === 'configuracion') {
+      return user?.rol === 'Administrador';
+    }
+    return true;
+  });
 
   const {
     data: examen,
@@ -68,7 +79,7 @@ const AdministrarExamen = () => {
         </div>
       )}
       <nav className={styles.navbar}>
-        {SECCIONES.map((sec) => (
+        {seccionesFiltradas.map((sec) => (
           <button
             key={sec.key}
             className={seccion === sec.key ? styles.active : ""}
