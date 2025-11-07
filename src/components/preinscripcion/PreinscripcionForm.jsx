@@ -34,10 +34,7 @@ const PreinscripcionForm = () => {
 
   const registrarPreinscripcion = useMutation({
     mutationFn: async (values) => {
-      const res = await api.post(
-        `${import.meta.env.VITE_API_URL}/preinscripcion`,
-        values
-      );
+      const res = await api.post('/preinscripcion', values);
       return res.data;
     },
   });

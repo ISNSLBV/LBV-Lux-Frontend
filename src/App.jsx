@@ -135,7 +135,7 @@ function IndexRedirect() {
 
 function App() {
   return (
-    <Router basename="/lux/">
+    <Router>
       <AuthProvider>
         <ToastContainer
           position="bottom-right"
