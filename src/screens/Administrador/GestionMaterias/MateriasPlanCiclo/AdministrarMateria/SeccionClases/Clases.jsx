@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Clases.module.css";
 import Boton from "../../../../../../components/Boton/Boton";
-import { Plus, Loader2, Info, SquarePen } from "lucide-react";
+import { Plus, Loader2, Info, SquarePen, X } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  MenuItem,
-} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import api from "../../../../../../api/axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../../../../contexts/AuthContext";
@@ -32,17 +24,6 @@ const Clases = ({ materiaId }) => {
   const [modalInfo, setModalInfo] = useState(false);
   const [modalRegistrarAsistencia, setModalRegistrarAsistencia] =
     useState(false);
-
-  const { data: detalleMateria, isLoading: cargandoMateria } = useQuery({
-    queryKey: ["detalleMateria", materiaId],
-    queryFn: async () => {
-      const { data } = await api.get(
-        `/admin/materia/materia-plan-ciclo/${materiaId}/detalle`
-      );
-      return data;
-    },
-    enabled: !!materiaId && modalRegistrarAsistencia,
-  });
 
   const {
     data: clases = [],
@@ -167,6 +148,7 @@ const Clases = ({ materiaId }) => {
     if (modalRegistrarAsistencia && detalle?.alumnos) {
       const initial = {};
       detalle.alumnos.forEach((alumno) => {
+        // Marcar como presente solo si el estado es explícitamente "Presente"
         initial[alumno.id_usuario] = alumno.asistencia === "Presente";
       });
       setAsistencia(initial);
@@ -228,16 +210,6 @@ const Clases = ({ materiaId }) => {
                   <span className={styles.fecha}>
                     {detalle.fecha.split("T")[0].split("-").reverse().join("/")}
                   </span>
-                  <Boton
-                    icono={<SquarePen />}
-                    variant="onlyIcon"
-                    title="Agregar información"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setClaseSeleccionada(detalle);
-                      setModalInfo(true);
-                    }}
-                  />
                 </li>
               ))}
             </ul>
@@ -281,7 +253,7 @@ const Clases = ({ materiaId }) => {
                   </p>
                   <Boton
                     variant="success"
-                    onClick={() => setModalAgregarTema(true)}
+                    onClick={() => setModalInfo(true)}
                   >
                     Agregar tema
                   </Boton>
@@ -306,11 +278,11 @@ const Clases = ({ materiaId }) => {
                 </div>
                 <ul className={styles.listaAlumnos}>
                   {detalle.alumnos.length === 0 ? (
-                    <li>Sin registro de asistencia</li>
+                    <li>No hay alumnos inscriptos en esta materia</li>
                   ) : (
                     detalle.alumnos.map((a, i) => (
                       <li key={i}>
-                        {a.nombre} {a.apellido} - {a.asistencia}
+                        {a.nombre} {a.apellido} - {a.asistencia || "Sin registrar"}
                       </li>
                     ))
                   )}
@@ -322,166 +294,212 @@ const Clases = ({ materiaId }) => {
       </div>
 
       {/* Modal agregar clase */}
-      <Dialog open={modalAgregar} onClose={() => setModalAgregar(false)}>
-        <DialogTitle>Agregar nueva clase</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Fecha"
-            type="date"
-            value={fechaNuevaClase}
-            onChange={(e) => setFechaNuevaClase(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Boton onClick={() => setModalAgregar(false)}>Cancelar</Boton>
-          <Boton
-            variant="success"
-            onClick={() => agregarClase.mutate(fechaNuevaClase)}
-            disabled={!fechaNuevaClase || agregarClase.isLoading}
-          >
-            {agregarClase.isLoading ? (
-              <Loader2 className="spin" size={18} />
-            ) : (
-              "Agregar"
-            )}
-          </Boton>
-        </DialogActions>
-      </Dialog>
+      {modalAgregar && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>Agregar nueva clase</h3>
+              <button
+                className={styles.closeButton}
+                onClick={() => setModalAgregar(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <label className={styles.label}>
+                Fecha
+                <input
+                  type="date"
+                  className={styles.input}
+                  value={fechaNuevaClase}
+                  onChange={(e) => setFechaNuevaClase(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className={styles.modalActions}>
+              <Boton
+                fullWidth
+                variant="success"
+                onClick={() => agregarClase.mutate(fechaNuevaClase)}
+                disabled={!fechaNuevaClase || agregarClase.isLoading}
+              >
+                {agregarClase.isLoading ? (
+                  <Loader2 className="spin" size={18} />
+                ) : (
+                  "Agregar"
+                )}
+              </Boton>
+              <Boton fullWidth onClick={() => setModalAgregar(false)}>
+                Cancelar
+              </Boton>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal agregar info clase */}
-      <Dialog open={modalInfo} onClose={() => setModalInfo(false)}>
-        <DialogTitle>Agregar información a la clase</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Tema"
-            value={tema}
-            onChange={(e) => setTema(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            select
-            label="Profesor"
-            value={idProfesor}
-            onChange={(e) => setIdProfesor(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            <MenuItem value="">Sin profesor</MenuItem>
-            {profesores.map((p, i) => (
-              <MenuItem
-                key={i}
-                value={p.id_usuario_profesor || p.id_usuario || p.id}
+      {modalInfo && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>Agregar información a la clase</h3>
+              <button
+                className={styles.closeButton}
+                onClick={() => setModalInfo(false)}
               >
-                {p.nombre} {p.apellido} ({p.rol})
-              </MenuItem>
-            ))}
-          </TextField>
-        </DialogContent>
-        <DialogActions>
-          <Boton onClick={() => setModalInfo(false)}>Cancelar</Boton>
-          <Boton
-            variant="success"
-            onClick={() =>
-              agregarInfoClase.mutate({
-                idClase: claseSeleccionada.id,
-                tema,
-                idProfesor: idProfesor || undefined,
-              })
-            }
-            disabled={!tema || agregarInfoClase.isLoading}
-          >
-            {agregarInfoClase.isLoading ? (
-              <Loader2 className="spin" size={18} />
-            ) : (
-              "Guardar"
-            )}
-          </Boton>
-        </DialogActions>
-      </Dialog>
+                <X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <label className={styles.label}>
+                Tema
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={tema}
+                  onChange={(e) => setTema(e.target.value)}
+                />
+              </label>
+              <label className={styles.label}>
+                Profesor
+                <select
+                  className={styles.select}
+                  value={idProfesor}
+                  onChange={(e) => setIdProfesor(e.target.value)}
+                >
+                  <option value="">Sin profesor</option>
+                  {profesores.map((p, i) => (
+                    <option
+                      key={i}
+                      value={p.id_usuario_profesor || p.id_usuario || p.id}
+                    >
+                      {p.nombre} {p.apellido} ({p.rol})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className={styles.modalActions}>
+              <Boton
+                fullWidth
+                variant="success"
+                onClick={() =>
+                  agregarInfoClase.mutate({
+                    idClase: claseSeleccionada.id,
+                    tema,
+                    idProfesor: idProfesor || undefined,
+                  })
+                }
+                disabled={!tema || agregarInfoClase.isLoading}
+              >
+                {agregarInfoClase.isLoading ? (
+                  <Loader2 className="spin" size={18} />
+                ) : (
+                  "Guardar"
+                )}
+              </Boton>
+              <Boton fullWidth onClick={() => setModalInfo(false)}>
+                Cancelar
+              </Boton>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal registrar asistencia */}
       {modalRegistrarAsistencia && (
-        <div className={styles.modalAsistenciaOverlay}>
-          <div className={styles.modalAsistencia}>
-            <h3>
-              Registrar asistencia del día{" "}
-              {claseSeleccionada?.fecha
-                ? claseSeleccionada.fecha
-                    .split("T")[0]
-                    .split("-")
-                    .reverse()
-                    .join("/")
-                : ""}
-            </h3>
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>
+                Registrar asistencia del día{" "}
+                {claseSeleccionada?.fecha
+                  ? claseSeleccionada.fecha
+                      .split("T")[0]
+                      .split("-")
+                      .reverse()
+                      .join("/")
+                  : ""}
+              </h3>
+              <button
+                className={styles.closeButton}
+                onClick={() => setModalRegistrarAsistencia(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
             {asistenciaYaRegistrada && user.rol === "Profesor" && (
-              <div style={{ color: "#f39c12", marginBottom: 12 }}>
+              <div className={styles.warningMessage}>
                 Ya registraste la asistencia para esta clase. En caso de error
                 contactá a un administrador.
               </div>
             )}
-            {cargandoMateria ? (
-              <div style={{ textAlign: "center", margin: "2rem" }}>
-                <CircularProgress />
-              </div>
-            ) : (
-              <>
-                <div className={styles.selectAllRow}>
-                  <label>Marcar todos como presentes</label>
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAll}
-                    disabled={!puedeRegistrar}
-                  />
+            <div className={styles.modalBody}>
+              {cargandoDetalle ? (
+                <div style={{ textAlign: "center", margin: "2rem" }}>
+                  <CircularProgress />
                 </div>
-                <ul className={styles.listaAlumnosAsistencia}>
-                  {(detalle?.alumnos || []).map((a) => (
-                    <li key={a.id_usuario} className={styles.asistenciaItem}>
-                      <label>
-                        {a.nombre} {a.apellido}
-                      </label>
-                      <input
-                        type="checkbox"
-                        checked={asistencia[a.id_usuario] === true}
-                        onChange={() =>
-                          setAsistencia((prev) => ({
-                            ...prev,
-                            [a.id_usuario]: !prev[a.id_usuario],
-                          }))
-                        }
-                        disabled={!puedeRegistrar}
-                      />
-                    </li>
-                  ))}
-                </ul>
-                <div className={styles.botonesAsistencia}>
-                  <Boton
-                    fullWidth
-                    variant="success"
-                    onClick={handleRegistrarAsistencia}
-                    disabled={!puedeRegistrar || registrarAsistencia.isLoading}
-                  >
-                    {registrarAsistencia.isLoading ? (
-                      <Loader2 className="spin" size={18} />
-                    ) : user.rol === "Administrador" ? (
-                      "Actualizar asistencia"
-                    ) : (
-                      "Registrar asistencia"
-                    )}
-                  </Boton>
-                  <Boton
-                    fullWidth
-                    variant="cancel"
-                    onClick={() => setModalRegistrarAsistencia(false)}
-                  >
-                    Cancelar
-                  </Boton>
+              ) : (detalle?.alumnos || []).length === 0 ? (
+                <div style={{ color: "#888", textAlign: "center", padding: "2rem" }}>
+                  No hay alumnos inscriptos en esta materia
                 </div>
-              </>
-            )}
+              ) : (
+                <>
+                  <div className={styles.selectAllRow}>
+                    <label>Marcar todos como presentes</label>
+                    <input
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      disabled={!puedeRegistrar}
+                    />
+                  </div>
+                  <ul className={styles.listaAlumnosAsistencia}>
+                    {(detalle?.alumnos || []).map((a) => (
+                      <li key={a.id_usuario} className={styles.asistenciaItem}>
+                        <label>
+                          {a.nombre} {a.apellido}
+                        </label>
+                        <input
+                          type="checkbox"
+                          checked={asistencia[a.id_usuario] === true}
+                          onChange={() =>
+                            setAsistencia((prev) => ({
+                              ...prev,
+                              [a.id_usuario]: !prev[a.id_usuario],
+                            }))
+                          }
+                          disabled={!puedeRegistrar}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+            <div className={styles.modalActions}>
+              <Boton
+                fullWidth
+                variant="success"
+                onClick={handleRegistrarAsistencia}
+                disabled={!puedeRegistrar || registrarAsistencia.isLoading}
+              >
+                {registrarAsistencia.isLoading ? (
+                  <Loader2 className="spin" size={18} />
+                ) : user.rol === "Administrador" ? (
+                  "Actualizar asistencia"
+                ) : (
+                  "Registrar asistencia"
+                )}
+              </Boton>
+              <Boton
+                fullWidth
+                onClick={() => setModalRegistrarAsistencia(false)}
+              >
+                Cancelar
+              </Boton>
+            </div>
           </div>
         </div>
       )}
