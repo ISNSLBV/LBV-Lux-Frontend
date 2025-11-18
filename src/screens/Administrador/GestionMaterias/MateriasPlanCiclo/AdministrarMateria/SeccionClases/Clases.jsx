@@ -242,7 +242,7 @@ const Clases = ({ materiaId }) => {
                   {detalle.profesores.length === 0
                     ? "Sin profesor/a"
                     : detalle.profesores
-                        .map((p) => `${p.nombre} ${p.apellido} (${p.rol})`)
+                        .map((p) => `${p.nombre} ${p.apellido}`)
                         .join(", ")}
                 </p>
               </div>
@@ -372,7 +372,7 @@ const Clases = ({ materiaId }) => {
                   {profesores.map((p, i) => (
                     <option
                       key={i}
-                      value={p.id_usuario_profesor || p.id_usuario || p.id}
+                      value={p.id_usuario}
                     >
                       {p.nombre} {p.apellido} ({p.rol})
                     </option>

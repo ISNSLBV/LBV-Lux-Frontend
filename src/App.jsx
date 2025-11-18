@@ -120,6 +120,7 @@ const InscripcionMaterias = lazy(() =>
 const InscripcionFinales = lazy(() =>
   import("./screens/Alumno/InscripcionFinales/InscripcionFinales")
 );
+const Ayuda = lazy(() => import("./screens/Ayuda/Ayuda"));
 
 function IndexRedirect() {
   const { user } = useAuth();
@@ -197,6 +198,7 @@ function App() {
                 {/* ---- Ruta usuario ---- */}
                 <Route index element={<IndexRedirect />} />
                 <Route path="cuenta" element={<ConfiguracionCuenta />} />
+                <Route path="ayuda" element={<Ayuda />} />
                 {/* ---- Ruta Alumno ---- */}
                 <Route path="alumno" element={<RutaPrivada rol={["Alumno"]} />}>
                   <Route index element={<PanelAlumno />} />

@@ -22,6 +22,8 @@ const fetchMateriasPlanCiclo = async () => {
 
 const GestionMateriasPlanCiclo = () => {
   const [filtro, setFiltro] = useState("");
+  const [filtroPlan, setFiltroPlan] = useState("");
+  const [filtroAnio, setFiltroAnio] = useState("");
   const [registro, setRegistro] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -85,16 +87,29 @@ const GestionMateriasPlanCiclo = () => {
         fechaCierre,
         tipoAprobacion,
       }),
-    onSuccess: () => {
+    onSuccess: (message) => {
       queryClient.invalidateQueries({ queryKey: ["materiasPlanCiclo"] });
-      toast.success("Materia registrada");
+      toast.success(message?.data?.message || "Materia registrada");
     },
-    onError: () => toast.error("Error al registrar la materia"),
+    onError: (error) => {
+      const mensaje = error.response?.data?.error || "Error al registrar la materia";
+      toast.error(mensaje);
+    },
   });
 
-  const materiasFiltradas = materiasPlanCiclo.filter((m) =>
-    m.materiaPlan?.materia?.nombre?.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const materiasFiltradas = materiasPlanCiclo.filter((m) => {
+    const nombreMateria = m.materiaPlan?.materia?.nombre?.toLowerCase() || "";
+    const resolucionPlan = m.materiaPlan?.planEstudio?.resolucion || "";
+    const carrera = m.materiaPlan?.planEstudio?.carrera?.nombre?.toLowerCase() || "";
+    const planCompleto = `${resolucionPlan} - ${carrera}`.toLowerCase();
+    const anio = m.ciclo_lectivo?.toString() || "";
+
+    const cumpleNombre = nombreMateria.includes(filtro.toLowerCase());
+    const cumplePlan = filtroPlan === "" || planCompleto.includes(filtroPlan.toLowerCase());
+    const cumpleAnio = filtroAnio === "" || anio === filtroAnio;
+
+    return cumpleNombre && cumplePlan && cumpleAnio;
+  });
 
   return (
     <>
@@ -135,7 +150,33 @@ const GestionMateriasPlanCiclo = () => {
             )}
           </div>
           <div className={styles.listaMaterias}>
-            <h2>Listado de materias</h2>
+            <div className={styles.headerListado}>
+              <h2>Listado de materias</h2>
+              <div className={styles.filtrosListado}>
+                <select
+                  value={filtroPlan}
+                  onChange={(e) => setFiltroPlan(e.target.value)}
+                  className={styles.selectFiltro}
+                >
+                  <option value="">Todos los planes</option>
+                  {[...new Set(materiasPlanCiclo.map(m => 
+                    `${m.materiaPlan?.planEstudio?.resolucion} - ${m.materiaPlan?.planEstudio?.carrera?.nombre}`
+                  ))].sort().map((plan, idx) => (
+                    <option key={idx} value={plan}>{plan}</option>
+                  ))}
+                </select>
+                <select
+                  value={filtroAnio}
+                  onChange={(e) => setFiltroAnio(e.target.value)}
+                  className={styles.selectFiltro}
+                >
+                  <option value="">Todos los años</option>
+                  {[...new Set(materiasPlanCiclo.map(m => m.ciclo_lectivo))].sort((a, b) => b - a).map((anio, idx) => (
+                    <option key={idx} value={anio}>{anio}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
             {isLoading ? (
               <div className={styles.mensaje}>Cargando materias...</div>
             ) : isError ? (

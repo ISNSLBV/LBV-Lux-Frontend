@@ -42,7 +42,6 @@ const Navbar = () => {
     {
       titulo: "Ayuda",
       redir: "/ayuda",
-      rol: "Administrador",
     },
     {
       titulo: "Cerrar sesión",
@@ -55,9 +54,18 @@ const Navbar = () => {
     },
   ];
 
-  const opcionesFiltradas = opciones.filter(
-    (o) => !o.rol || (user && user?.rol === o.rol)
-  );
+  const opcionesFiltradas = opciones.filter((o) => {
+    if (o.titulo === "Preguntas frecuentes") {
+      return !user || !user.rol;
+    }
+    if (o.titulo === "Ayuda") {
+      return user && user.rol;
+    }
+    if (o.rol) {
+      return user && user.rol === o.rol;
+    }
+    return true;
+  });
 
   if (checking) return null;
 
