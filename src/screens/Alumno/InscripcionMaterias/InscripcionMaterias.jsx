@@ -38,8 +38,21 @@ const verificarEstadoInscripciones = async (planId) => {
   return data;
 };
 
+const obtenerConfiguracionSistema = async () => {
+  const { data } = await api.get("/admin/configuracion/publica");
+  return data;
+};
+
 const InscripcionMaterias = () => {
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("todas");
+
+  const { data: configuracion, isLoading: configuracionLoading } = useQuery({
+    queryKey: ["configuracionSistema"],
+    queryFn: obtenerConfiguracionSistema,
+    onError: (error) => {
+      console.error("Error al obtener configuración: ", error);
+    },
+  });
 
   const { data: carreras, isLoading: carrerasLoading } = useQuery({
     queryKey: ["carrerasInscripto"],
@@ -98,8 +111,28 @@ const InscripcionMaterias = () => {
 
   const queryClient = useQueryClient();
 
-  if (carrerasLoading || planLoading || materiasLoading || estadoLoading) {
+  if (carrerasLoading || planLoading || materiasLoading || estadoLoading || configuracionLoading) {
     return <div>Cargando...</div>;
+  }
+
+  // Verificar si las inscripciones a materias están cerradas
+  if (configuracion && configuracion.inscripciones_materias_abiertas === 0) {
+    return (
+      <>
+        <BotonVolver />
+        <div className={styles.titulo}>
+          <h1>Inscripción a materias</h1>
+        </div>
+        <div className={styles.mensajeVacio}>
+          <h2>Las inscripciones a materias se encuentran cerradas</h2>
+          <p>Para más información comunicate con secretaría por los siguientes medios:</p>
+          <div style={{ marginTop: '1rem' }}>
+            <p>Email: <strong>terciario@lujanbuenviaje.edu.ar</strong></p>
+            <p>Teléfono: <strong>(011) 5263-2395</strong></p>
+          </div>
+        </div>
+      </>
+    );
   }
 
   const { materias, planEstudio, cicloLectivo, total } = response || {};
@@ -107,11 +140,13 @@ const InscripcionMaterias = () => {
 
   const estadoMateriasMap = new Map();
   estadoMaterias?.forEach((estado) => {
+    // Usar idMateriaPlanCicloLectivo como clave principal
     if (estado?.idMateriaPlanCicloLectivo) {
       estadoMateriasMap.set(estado.idMateriaPlanCicloLectivo, estado);
     }
+    // También guardar por idMateriaPlan como fallback
     if (estado?.idMateriaPlan) {
-      estadoMateriasMap.set(estado.idMateriaPlan, estado);
+      estadoMateriasMap.set(`plan_${estado.idMateriaPlan}`, estado);
     }
   });
 
@@ -161,7 +196,10 @@ const InscripcionMaterias = () => {
   // Filtrar materias que NO estén aprobadas y por carrera seleccionada
   const filtrarMaterias = (materiasArray) => {
     return materiasArray?.filter((materia) => {
-      const estado = estadoMateriasMap.get(materia.id);
+      // Buscar el estado usando el ID correcto de la materia
+      const estado = estadoMateriasMap.get(materia.id) || 
+                     estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
+      
       // Excluir materias ya aprobadas
       if (estado?.yaAprobado) return false;
       
@@ -181,10 +219,15 @@ const InscripcionMaterias = () => {
       </div>
 
       <div className={styles.listaMaterias}>
-        {filtrarMaterias(materias)?.filter((materia) => {
-          const estado = estadoMateriasMap.get(materia.id);
+        {!materias || materias.length === 0 ? (
+          <div className={styles.mensajeVacio}>
+            <p>No hay materias disponibles en el ciclo lectivo actual</p>
+          </div>
+        ) : filtrarMaterias(materias)?.filter((materia) => {
+          const estado = estadoMateriasMap.get(materia.id) || 
+                        estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
           return estado?.puedeInscribirse;
-        }).length > 0 && (
+        }).length > 0 ? (
           <div className={styles.seccionMaterias}>
             <div className={styles.headerSeccion}>
               <h2 className={styles.tituloSeccion}>
@@ -207,11 +250,13 @@ const InscripcionMaterias = () => {
             </div>
             {filtrarMaterias(materias)
               ?.filter((materia) => {
-                const estado = estadoMateriasMap.get(materia.id);
+                const estado = estadoMateriasMap.get(materia.id) || 
+                              estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
                 return estado?.puedeInscribirse;
               })
               .map((materia) => {
-                const estado = estadoMateriasMap.get(materia.id);
+                const estado = estadoMateriasMap.get(materia.id) || 
+                              estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
 
                 return (
                   <div key={materia.id} className={styles.materiaCard}>
@@ -268,10 +313,15 @@ const InscripcionMaterias = () => {
                 );
               })}
           </div>
+        ) : (
+          <div className={styles.mensajeVacio}>
+            <p>No hay materias disponibles para inscribirse</p>
+          </div>
         )}
 
-        {filtrarMaterias(materias)?.filter((materia) => {
-          const estado = estadoMateriasMap.get(materia.id);
+        {materias && materias.length > 0 && filtrarMaterias(materias)?.filter((materia) => {
+          const estado = estadoMateriasMap.get(materia.id) || 
+                        estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
           return !estado?.puedeInscribirse;
         }).length > 0 && (
           <div className={styles.seccionMaterias}>
@@ -294,11 +344,13 @@ const InscripcionMaterias = () => {
             </div>
             {filtrarMaterias(materias)
               ?.filter((materia) => {
-                const estado = estadoMateriasMap.get(materia.id);
+                const estado = estadoMateriasMap.get(materia.id) || 
+                              estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
                 return !estado?.puedeInscribirse;
               })
               .map((materia) => {
-                const estado = estadoMateriasMap.get(materia.id);
+                const estado = estadoMateriasMap.get(materia.id) || 
+                              estadoMateriasMap.get(materia.idMateriaPlanCicloLectivo);
 
                 return (
                   <div key={materia.id} className={styles.materiaCard}>

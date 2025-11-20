@@ -38,3 +38,30 @@
     padding: 8px;
     border-radius: 8px;
 }
+
+.mensajeVacio {
+    text-align: center;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.mensajeVacio h2 {
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.mensajeVacio p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0.5rem 0;
+}
+
+.titulo {
+    margin-bottom: 1rem;
+}
+
+.titulo h1 {
+    color: #fff;
+}

@@ -31,8 +31,21 @@ const inscribirseExamenFinal = async ({ idExamenFinal, idInscripcionMateria }) =
   return data;
 };
 
+const obtenerConfiguracionSistema = async () => {
+  const { data } = await api.get("/admin/configuracion/publica");
+  return data;
+};
+
 const InscripcionFinales = () => {
   const queryClient = useQueryClient();
+
+  const { data: configuracion, isLoading: configuracionLoading } = useQuery({
+    queryKey: ["configuracionSistema"],
+    queryFn: obtenerConfiguracionSistema,
+    onError: (error) => {
+      console.error("Error al obtener configuración: ", error);
+    },
+  });
 
   const { data: planId, isLoading: planLoading } = useQuery({
     queryKey: ["planId"],
@@ -65,8 +78,28 @@ const InscripcionFinales = () => {
     inscripcionMutation.mutate({ idExamenFinal, idInscripcionMateria });
   };
 
-  if (planLoading || requisitosLoading) {
+  if (planLoading || requisitosLoading || configuracionLoading) {
     return <div>Cargando...</div>;
+  }
+
+  // Verificar si las inscripciones a finales están cerradas
+  if (configuracion && configuracion.inscripciones_finales_abiertas === 0) {
+    return (
+      <>
+        <BotonVolver />
+        <div className={styles.titulo}>
+          <h1>Inscripción a exámenes finales</h1>
+        </div>
+        <div className={styles.mensajeVacio}>
+          <h2>Las inscripciones a exámenes finales se encuentran cerradas</h2>
+          <p>Para más información comunicate con secretaría por los siguientes medios:</p>
+          <div style={{ marginTop: '1rem' }}>
+            <p>Email: <strong>terciario@lujanbuenviaje.edu.ar</strong></p>
+            <p>Teléfono: <strong>(011) 5263-2395</strong></p>
+          </div>
+        </div>
+      </>
+    );
   }
 
   const finalesDisponibles = requisitosData?.estadosFinales?.filter((final) => !final.yaInscriptoFinal) || [];

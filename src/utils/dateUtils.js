@@ -12,14 +12,21 @@ export const formatearFechaSinZonaHoraria = (fecha, options = {}) => {
   if (!fecha) return "Sin fecha asignada";
   
   try {
-    // Extraer año, mes y día de la fecha ISO string
+    // Extraer componentes de la fecha ISO string incluyendo hora
     const fechaStr = fecha.toString();
-    const match = fechaStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+    const match = fechaStr.match(/(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2}))?/);
     
     if (match) {
-      const [, year, month, day] = match;
+      const [, year, month, day, hour = '00', minute = '00', second = '00'] = match;
       // Crear fecha local usando los componentes extraídos
-      const fechaLocal = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const fechaLocal = new Date(
+        parseInt(year), 
+        parseInt(month) - 1, 
+        parseInt(day),
+        parseInt(hour),
+        parseInt(minute),
+        parseInt(second)
+      );
       
       const defaultOptions = {
         day: "2-digit",
@@ -27,7 +34,7 @@ export const formatearFechaSinZonaHoraria = (fecha, options = {}) => {
         year: "numeric",
       };
       
-      return fechaLocal.toLocaleDateString("es-ES", { ...defaultOptions, ...options });
+      return fechaLocal.toLocaleString("es-ES", { ...defaultOptions, ...options });
     }
     
     // Fallback al método anterior si no es formato ISO
@@ -38,7 +45,7 @@ export const formatearFechaSinZonaHoraria = (fecha, options = {}) => {
       year: "numeric",
     };
     
-    return fechaObj.toLocaleDateString("es-ES", { ...defaultOptions, ...options });
+    return fechaObj.toLocaleString("es-ES", { ...defaultOptions, ...options });
   } catch (error) {
     return "Fecha inválida";
   }
@@ -55,22 +62,16 @@ export const formatearFechaParaInput = (fecha) => {
   try {
     // Extraer componentes de fecha ISO
     const fechaStr = fecha.toString();
-    const match = fechaStr.match(/(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+    const match = fechaStr.match(/(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2}))?/);
     
     if (match) {
       const [, year, month, day, hour = '00', minute = '00'] = match;
       return `${year}-${month}-${day}T${hour}:${minute}`;
     }
     
-    // Fallback
-    const fechaObj = new Date(fecha);
-    const year = fechaObj.getFullYear();
-    const month = String(fechaObj.getMonth() + 1).padStart(2, '0');
-    const day = String(fechaObj.getDate()).padStart(2, '0');
-    const hour = String(fechaObj.getHours()).padStart(2, '0');
-    const minute = String(fechaObj.getMinutes()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}T${hour}:${minute}`;
+    // Fallback - NO usar new Date() porque aplica zona horaria
+    // Intentar parsear manualmente para evitar conversión UTC
+    return "";
   } catch (error) {
     return "";
   }
