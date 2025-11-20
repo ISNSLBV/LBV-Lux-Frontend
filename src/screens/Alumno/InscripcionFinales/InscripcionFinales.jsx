@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./InscripcionFinales.module.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../api/axios";
@@ -9,51 +9,29 @@ import EstadoBadge from "../../../components/EstadoBadge/EstadoBadge";
 import { toast } from "react-toastify";
 
 const obtenerPlanEstudio = async () => {
-  const { data } = await api.get(
-    "/admin/plan-estudio/alumno/obtener-plan-asignado"
-  );
-
-  const planId =
-    data?.carreras?.[0]?.plan?.id ??
-    data?.carreras?.[0]?.idPlanAsignado ??
-    null;
-
-  return planId;
-};
-
-const obtenerFinales = async (planId) => {
-  const { data } = await api.get(`/alumno/planes-estudio/${planId}/finales`);
-  return data;
+  const { data } = await api.get("/admin/plan-estudio/alumno/obtener-plan-asignado");
+  return data?.carreras?.[0]?.plan?.id ?? data?.carreras?.[0]?.idPlanAsignado ?? null;
 };
 
 const validarRequisitosInscripcion = async (planId) => {
   try {
-    const { data } = await api.get(
-      `/alumno/planes-estudio/${planId}/finales/estado`
-    );
+    const { data } = await api.get(`/alumno/planes-estudio/${planId}/finales/estado`);
     return data;
   } catch (error) {
-    const mensaje =
-      error?.response?.data?.message ??
-      "No se pudo validar los requisitos para este examen.";
     return {
       success: false,
-      data: { puedeInscribirse: false },
-      message: mensaje,
+      estadosFinales: [],
+      message: error?.response?.data?.message ?? "No se pudo validar los requisitos.",
     };
   }
 };
 
 const inscribirseExamenFinal = async ({ idExamenFinal, idInscripcionMateria }) => {
-  const { data } = await api.post(
-    `/alumno/examen-final/inscripcion/${idExamenFinal}`,
-    { idInscripcionMateria }
-  );
+  const { data } = await api.post(`/alumno/examen-final/inscripcion/${idExamenFinal}`, { idInscripcionMateria });
   return data;
 };
 
 const InscripcionFinales = () => {
-  const [mensaje, setMensaje] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: planId, isLoading: planLoading } = useQuery({
@@ -61,17 +39,7 @@ const InscripcionFinales = () => {
     queryFn: obtenerPlanEstudio,
   });
 
-  const { data: finales, isLoading: finalesLoading } = useQuery({
-    queryKey: ["finales", planId],
-    queryFn: () => obtenerFinales(planId),
-    enabled: !!planId,
-  });
-
-  const {
-    data: requisitosData,
-    isLoading: requisitosLoading,
-    isError: requisitosError,
-  } = useQuery({
+  const { data: requisitosData, isLoading: requisitosLoading } = useQuery({
     queryKey: ["requisitosFinales", planId],
     queryFn: () => validarRequisitosInscripcion(planId),
     enabled: !!planId,
@@ -80,15 +48,12 @@ const InscripcionFinales = () => {
 
   const inscripcionMutation = useMutation({
     mutationFn: inscribirseExamenFinal,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(["finales", planId]);
+    onSuccess: () => {
       queryClient.invalidateQueries(["requisitosFinales", planId]);
       toast.success("Inscripción realizada con éxito");
     },
     onError: (error) => {
-      const mensajeError =
-        error?.response?.data?.message || "Error al realizar la inscripción";
-      toast.error(mensajeError);
+      toast.error(error?.response?.data?.message || "Error al realizar la inscripción");
     },
   });
 
@@ -100,30 +65,24 @@ const InscripcionFinales = () => {
     inscripcionMutation.mutate({ idExamenFinal, idInscripcionMateria });
   };
 
-  if (
-    finalesLoading ||
-    planLoading ||
-    requisitosLoading)
+  if (planLoading || requisitosLoading) {
     return <div>Cargando...</div>;
+  }
 
-  if (!finales || finales.length === 0) {
+  const finalesDisponibles = requisitosData?.estadosFinales?.filter((final) => !final.yaInscriptoFinal) || [];
+
+  if (finalesDisponibles.length === 0) {
     return (
-      <div className={styles.container}>
+      <>
+        <BotonVolver />
         <div className={styles.titulo}>
           <h1>Inscripción a exámenes finales</h1>
         </div>
         <div className={styles.mensaje}>
           <p>No hay exámenes finales disponibles</p>
         </div>
-      </div>
+      </>
     );
-  }
-
-  const requisitosMap = new Map();
-  if (requisitosData?.success && requisitosData?.data) {
-    requisitosData.data.forEach((requisito) => {
-      requisitosMap.set(requisito.idExamenFinal, requisito);
-    });
   }
 
   return (
@@ -133,28 +92,22 @@ const InscripcionFinales = () => {
         <h1>Inscripción a exámenes finales</h1>
       </div>
       <div className={styles.listaFinales}>
-        {finales.map((final, index) => {
-          const requisito = requisitosMap.get(final.id);
-          const puedeInscribirse = requisito?.puedeInscribirse ?? false;
-          const razonBloqueo = requisito?.razonBloqueo;
-          const mensajeBloqueo = requisitosError
-            ? "No se pudo validar los requisitos."
-            : requisitosData?.success === false
-            ? requisitosData?.message
-            : razonBloqueo;
+        {finalesDisponibles.map((final) => {
+          const puedeInscribirse = final.puedeInscribirse ?? false;
+          const mensajeBloqueo = final.razonBloqueo || "No disponible";
+
           return (
-            <div key={final.id} className={styles.card}>
+            <div key={final.idExamenFinal} className={styles.card}>
               <div className={styles.cardHeader}>
-                <h3>{final.materiaPlan?.materia?.nombre}</h3>
-                <EstadoBadge estado={final.estado} />
+                <h3>{final.materia?.nombre}</h3>
+                <EstadoBadge estado={final.estadoExamen} />
               </div>
               <div className={styles.datosAdicionales}>
                 <div>
                   <p>Profesor</p>
                   <p>
                     <strong>
-                      {final.Profesor?.persona?.nombre}{" "}
-                      {final.Profesor?.persona?.apellido}
+                      {final.profesor?.nombre} {final.profesor?.apellido}
                     </strong>
                   </p>
                 </div>
@@ -169,31 +122,20 @@ const InscripcionFinales = () => {
                 <div className={styles.botonInscribirse}>
                   <Boton
                     variant="primary"
-                    disabled={
-                      requisitosLoading ||
-                      requisitosError ||
-                      puedeInscribirse === false ||
-                      inscripcionMutation.isPending
-                    }
+                    disabled={!puedeInscribirse || inscripcionMutation.isPending}
                     title={mensajeBloqueo}
-                    onClick={() => handleInscribirse(final.id, requisito?.idInscripcionMateria)}
+                    onClick={() => handleInscribirse(final.idExamenFinal, final.idInscripcionMateria)}
                   >
-                    {inscripcionMutation.isPending
-                      ? "Inscribiendo..."
-                      : requisitosLoading
-                      ? "Validando..."
-                      : puedeInscribirse
-                      ? "Inscribirse"
-                      : "No disponible"}
+                    {inscripcionMutation.isPending ? "Inscribiendo..." : puedeInscribirse ? "Inscribirse" : "No disponible"}
                   </Boton>
                 </div>
               </div>
-              {razonBloqueo && (
+              {final.razonBloqueo && (
                 <div className={styles.observaciones}>
                   <p>
                     <strong>Observaciones:</strong>
                   </p>
-                  <p>{razonBloqueo}</p>
+                  <p>{final.razonBloqueo}</p>
                 </div>
               )}
             </div>
