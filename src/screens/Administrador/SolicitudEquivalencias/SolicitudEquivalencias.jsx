@@ -24,10 +24,6 @@ const SolicitudEquivalencias = () => {
     try {
       setLoading(true);
       const response = await api.get("/equivalencia/admin/alumnos");
-      console.log("Solicitudes recibidas del backend:", response.data.data);
-      if (response.data.data && response.data.data.length > 0) {
-        console.log("Primera solicitud:", response.data.data[0]);
-      }
       setSolicitudes(response.data.data);
       setFilteredSolicitudes(response.data.data);
     } catch (err) {

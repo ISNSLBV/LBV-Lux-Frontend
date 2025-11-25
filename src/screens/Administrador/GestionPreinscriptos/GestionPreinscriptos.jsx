@@ -12,6 +12,7 @@ import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 export default function GestionPreinscriptos() {
   const [personaSeleccionada, setPersonaSeleccionada] = useState(null);
   const [showAceptarModal, setShowAceptarModal] = useState(false);
+  const [fichaCompletada, setFichaCompletada] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Pendiente");
   const [visibilityFilter, setVisibilityFilter] = useState("1");
@@ -81,10 +82,18 @@ export default function GestionPreinscriptos() {
     
     setShowAceptarModal(false);
     setPersonaSeleccionada(null);
+    setFichaCompletada(false);
   };
 
   const ocultar = (p) => {
     ocultarMutation.mutate(p.id);
+  };
+
+  const descargarFicha = async () => {
+    if (!personaSeleccionada) return;
+    
+    const url = `${import.meta.env.VITE_API_URL}/admin/preinscripcion/${personaSeleccionada.id}/ficha`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -160,11 +169,33 @@ export default function GestionPreinscriptos() {
             <p style={{ fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.7)", marginTop: "8px" }}>
               El alumno será inscripto como <strong>Regular</strong> en el plan de estudios vigente de la carrera.
             </p>
+            
+            <div className={styles.fichaSection}>
+              <Boton
+                variant="primary"
+                onClick={descargarFicha}
+                fullWidth
+              >
+                📄 Ver Ficha de Inscripción
+              </Boton>
+              
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={fichaCompletada}
+                  onChange={(e) => setFichaCompletada(e.target.checked)}
+                  className={styles.checkbox}
+                />
+                <span>El alumno completó y entregó la ficha de inscripción</span>
+              </label>
+            </div>
+            
             <div className={styles.modalActions}>
               <Boton
                 variant="success"
                 onClick={aceptar}
                 fullWidth
+                disabled={!fichaCompletada}
               >
                 Confirmar inscripción
               </Boton>
@@ -173,6 +204,7 @@ export default function GestionPreinscriptos() {
                 onClick={() => {
                   setShowAceptarModal(false);
                   setPersonaSeleccionada(null);
+                  setFichaCompletada(false);
                 }}
                 fullWidth
               >

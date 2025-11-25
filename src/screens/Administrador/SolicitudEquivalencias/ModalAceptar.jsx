@@ -1,79 +1,77 @@
-import React, { useState, useEffect } from 'react'
-import styles from './ModalAceptar.module.css'
-import api from '../../../api/axios'
+import React, { useState, useEffect } from "react";
+import styles from "./ModalAceptar.module.css";
+import api from "../../../api/axios";
 
 const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
-  const [materiasPlan, setMateriasPlan] = useState([])
-  const [idMateriaPlanCicloLectivo, setIdMateriaPlanCicloLectivo] = useState('')
-  const [notaFinal, setNotaFinal] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [loadingMaterias, setLoadingMaterias] = useState(false)
-  const [error, setError] = useState('')
+  const [materiasPlan, setMateriasPlan] = useState([]);
+  const [idMateriaPlanCicloLectivo, setIdMateriaPlanCicloLectivo] =
+    useState("");
+  const [notaFinal, setNotaFinal] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loadingMaterias, setLoadingMaterias] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (isOpen && solicitud) {
       // Establecer la calificación de origen como valor por defecto
-      setNotaFinal(solicitud.origen_calificacion || '')
-      cargarMateriasPlan()
+      setNotaFinal(solicitud.origen_calificacion || "");
+      cargarMateriasPlan();
     }
-  }, [isOpen, solicitud])
+  }, [isOpen, solicitud]);
 
   const cargarMateriasPlan = async () => {
     try {
-      setLoadingMaterias(true)
-      
-      console.log('Solicitud completa:', solicitud);
-      console.log('ID Usuario Alumno:', solicitud.id_usuario_alumno);
-      
+      setLoadingMaterias(true);
+
       // Obtener las carreras del alumno
-      const responseAlumno = await api.get(`/equivalencia/admin/usuario/${solicitud.id_usuario_alumno}/carreras`)
-      
-      console.log('Respuesta carreras:', responseAlumno.data);
-      
+      const responseAlumno = await api.get(
+        `/equivalencia/admin/usuario/${solicitud.id_usuario_alumno}/carreras`
+      );
+
       if (!responseAlumno.data || responseAlumno.data.length === 0) {
-        setError('No se pudo obtener el plan de estudio del alumno')
-        return
+        setError("No se pudo obtener el plan de estudio del alumno");
+        return;
       }
 
-      const planId = responseAlumno.data[0].id_plan_estudio_asignado
+      const planId = responseAlumno.data[0].id_plan_estudio_asignado;
 
       if (!planId) {
-        setError('El alumno no tiene un plan de estudio asignado')
-        return
+        setError("El alumno no tiene un plan de estudio asignado");
+        return;
       }
 
-      console.log('Plan ID:', planId);
-
       // Obtener las materias del plan en el ciclo lectivo actual
-      const responseMaterias = await api.get(`/admin/materia/materia-plan-ciclo/${planId}/materias-ciclo-actual`)
-      console.log('Respuesta materias:', responseMaterias.data);
-      setMateriasPlan(responseMaterias.data.materias || [])
-      
+      const responseMaterias = await api.get(
+        `/admin/materia/materia-plan-ciclo/${planId}/materias-ciclo-actual`
+      );
+      setMateriasPlan(responseMaterias.data.materias || []);
     } catch (err) {
-      console.error('Error al cargar materias:', err)
-      console.error('Error response:', err.response?.data)
-      setError(err.response?.data?.message || 'Error al cargar las materias del plan')
+      console.error("Error al cargar materias:", err);
+      console.error("Error response:", err.response?.data);
+      setError(
+        err.response?.data?.message || "Error al cargar las materias del plan"
+      );
     } finally {
-      setLoadingMaterias(false)
+      setLoadingMaterias(false);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!idMateriaPlanCicloLectivo) {
-      setError('Debe seleccionar una materia destino')
-      return
+      setError("Debe seleccionar una materia destino");
+      return;
     }
 
     if (!notaFinal || notaFinal < 0 || notaFinal > 10) {
-      setError('Debe ingresar una nota final válida (0-10)')
-      return
+      setError("Debe ingresar una nota final válida (0-10)");
+      return;
     }
 
-    setLoading(true)
-    setError('')
-    
+    setLoading(true);
+    setError("");
+
     try {
       await onConfirm({
         idMateriaPlanCicloLectivo: parseInt(idMateriaPlanCicloLectivo),
@@ -81,24 +79,24 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
         origenInstitucion: solicitud.origen_institucion,
         origenMateria: solicitud.origen_materia,
         origenCalificacion: solicitud.origen_calificacion,
-        resolucion: solicitud.resolucion
-      })
-      handleClose()
+        resolucion: solicitud.resolucion,
+      });
+      handleClose();
     } catch (err) {
-      setError(err.message || 'Error al aprobar la solicitud')
+      setError(err.message || "Error al aprobar la solicitud");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleClose = () => {
-    setIdMateriaPlanCicloLectivo('')
-    setNotaFinal('')
-    setError('')
-    onClose()
-  }
+    setIdMateriaPlanCicloLectivo("");
+    setNotaFinal("");
+    setError("");
+    onClose();
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className={styles.overlay} onClick={handleClose}>
@@ -112,10 +110,20 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
 
         <div className={styles.content}>
           <div className={styles.alumnoInfo}>
-            <p><strong>Alumno:</strong> {solicitud?.alumno?.persona?.apellido}, {solicitud?.alumno?.persona?.nombre}</p>
-            <p><strong>Materia de Origen:</strong> {solicitud?.origen_materia}</p>
-            <p><strong>Institución:</strong> {solicitud?.origen_institucion}</p>
-            <p><strong>Calificación Obtenida:</strong> {solicitud?.origen_calificacion}</p>
+            <p>
+              <strong>Alumno:</strong> {solicitud?.alumno?.persona?.apellido},{" "}
+              {solicitud?.alumno?.persona?.nombre}
+            </p>
+            <p>
+              <strong>Materia de Origen:</strong> {solicitud?.origen_materia}
+            </p>
+            <p>
+              <strong>Institución:</strong> {solicitud?.origen_institucion}
+            </p>
+            <p>
+              <strong>Calificación Obtenida:</strong>{" "}
+              {solicitud?.origen_calificacion}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -159,7 +167,9 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
                 step="0.01"
                 disabled={loading}
               />
-              <small className={styles.hint}>Valor por defecto: calificación obtenida en origen</small>
+              <small className={styles.hint}>
+                Valor por defecto: calificación obtenida en origen
+              </small>
             </div>
 
             {error && <div className={styles.error}>{error}</div>}
@@ -178,14 +188,14 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
                 className={styles.btnAceptar}
                 disabled={loading || loadingMaterias}
               >
-                {loading ? 'Aprobando...' : 'Confirmar Aprobación'}
+                {loading ? "Aprobando..." : "Confirmar Aprobación"}
               </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ModalAceptar
+export default ModalAceptar;

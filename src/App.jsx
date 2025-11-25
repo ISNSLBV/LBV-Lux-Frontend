@@ -121,6 +121,12 @@ const InscripcionFinales = lazy(() =>
   import("./screens/Alumno/InscripcionFinales/InscripcionFinales")
 );
 const Ayuda = lazy(() => import("./screens/Ayuda/Ayuda"));
+const RecuperarContrasena = lazy(() =>
+  import("./screens/RecuperarContrasena/RecuperarContrasena")
+);
+const RestablecerContrasena = lazy(() =>
+  import("./screens/RestablecerContrasena/RestablecerContrasena")
+);
 
 function IndexRedirect() {
   const { user } = useAuth();
@@ -180,6 +186,22 @@ function App() {
               element={
                 <RutaPublica>
                   <Login />
+                </RutaPublica>
+              }
+            />
+            <Route
+              path="/recuperar-contrasena"
+              element={
+                <RutaPublica>
+                  <RecuperarContrasena />
+                </RutaPublica>
+              }
+            />
+            <Route
+              path="/restablecer-contrasena"
+              element={
+                <RutaPublica>
+                  <RestablecerContrasena />
                 </RutaPublica>
               }
             />

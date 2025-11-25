@@ -164,7 +164,7 @@ const Login = () => {
               Iniciar sesión
             </Boton>
             <div className={styles.actionContainer}>
-              <Link className={styles.link} to="/">
+              <Link className={styles.link} to="/recuperar-contrasena">
                 Olvidé mi contraseña
               </Link>
               <hr />
