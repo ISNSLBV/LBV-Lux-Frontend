@@ -1,5 +1,4 @@
 # Etapa 1: Construcción (Build)
-# Usamos Node 22 como pediste
 FROM node:22-alpine as build
 
 WORKDIR /app
@@ -14,19 +13,15 @@ RUN npm install
 COPY . .
 
 # Construimos la app para producción
-# IMPORTANTE: Vite genera la carpeta '/app/dist'
 RUN npm run build
 
 # Etapa 2: Servidor Web (Nginx)
 FROM nginx:alpine
 
 # Copiamos los archivos construidos desde la etapa anterior
-# Nota el cambio: usamos /app/dist en lugar de /app/build
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Configuración de Nginx "al vuelo"
-# 1. try_files $uri $uri/ /index.html; -> Esto arregla el problema de recargar la página en React (SPA)
-# 2. location /api -> Esto redirige las peticiones del front al back automáticamente
 RUN echo 'server { \
     listen 80; \
     \
