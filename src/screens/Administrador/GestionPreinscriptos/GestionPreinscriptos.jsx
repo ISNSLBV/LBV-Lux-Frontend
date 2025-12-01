@@ -8,6 +8,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
+import { FilePen } from "lucide-react";
 
 export default function GestionPreinscriptos() {
   const [preinscripcionSeleccionada, setPreinscripcionSeleccionada] = useState(null);
@@ -181,23 +182,24 @@ export default function GestionPreinscriptos() {
               <strong>
                 {preinscripcionSeleccionada.nombre} {preinscripcionSeleccionada.apellido}
               </strong>{" "}
-              en la carrera de{" "}
+              a la carrera {" "}
               <strong>
                 {preinscripcionSeleccionada.preinscripcion?.carrera?.nombre || "No especificada"}
               </strong>
               ?
             </p>
             <p style={{ fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.7)", marginTop: "8px" }}>
-              El alumno será inscripto como <strong>Regular</strong> en el plan de estudios vigente de la carrera.
+              El alumno será inscripto en el plan de estudios vigente de la carrera.
             </p>
             
             <div className={styles.fichaSection}>
               <Boton
+                icono={<FilePen />}
                 variant="primary"
                 onClick={descargarFicha}
                 fullWidth
               >
-                📄 Ver Ficha de Inscripción
+                 Imprimir ficha de inscripción
               </Boton>
               
               <label className={styles.checkboxLabel}>

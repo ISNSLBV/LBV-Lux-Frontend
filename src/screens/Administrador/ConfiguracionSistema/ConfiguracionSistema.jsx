@@ -6,8 +6,10 @@ import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 const ConfiguracionSistema = () => {
   const [estadoPreinscripciones, setEstadoPreinscripciones] = useState(false);
-  const [estadoInscripcionesMaterias, setEstadoInscripcionesMaterias] = useState(false);
-  const [estadoInscripcionesFinales, setEstadoInscripcionesFinales] = useState(false);
+  const [estadoInscripcionesMaterias, setEstadoInscripcionesMaterias] =
+    useState(false);
+  const [estadoInscripcionesFinales, setEstadoInscripcionesFinales] =
+    useState(false);
   const [cargando, setCargando] = useState(true);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [tipoToggle, setTipoToggle] = useState(null); // 'preinscripciones', 'materias', 'finales'
@@ -22,8 +24,12 @@ const ConfiguracionSistema = () => {
       setCargando(true);
       const response = await api.get("/admin/configuracion");
       setEstadoPreinscripciones(response.data.preinscripciones_abiertas === 1);
-      setEstadoInscripcionesMaterias(response.data.inscripciones_materias_abiertas === 1);
-      setEstadoInscripcionesFinales(response.data.inscripciones_finales_abiertas === 1);
+      setEstadoInscripcionesMaterias(
+        response.data.inscripciones_materias_abiertas === 1
+      );
+      setEstadoInscripcionesFinales(
+        response.data.inscripciones_finales_abiertas === 1
+      );
     } catch (error) {
       console.error("Error al obtener configuración del sistema:", error);
     } finally {
@@ -40,7 +46,7 @@ const ConfiguracionSistema = () => {
     try {
       setProcesando(true);
       let endpoint = "";
-      
+
       switch (tipoToggle) {
         case "preinscripciones":
           endpoint = "/admin/configuracion/toggle-preinscripciones";
@@ -56,20 +62,26 @@ const ConfiguracionSistema = () => {
       }
 
       const response = await api.post(endpoint);
-      
+
       // Actualizar el estado correspondiente
       switch (tipoToggle) {
         case "preinscripciones":
-          setEstadoPreinscripciones(response.data.preinscripciones_abiertas === 1);
+          setEstadoPreinscripciones(
+            response.data.preinscripciones_abiertas === 1
+          );
           break;
         case "materias":
-          setEstadoInscripcionesMaterias(response.data.inscripciones_materias_abiertas === 1);
+          setEstadoInscripcionesMaterias(
+            response.data.inscripciones_materias_abiertas === 1
+          );
           break;
         case "finales":
-          setEstadoInscripcionesFinales(response.data.inscripciones_finales_abiertas === 1);
+          setEstadoInscripcionesFinales(
+            response.data.inscripciones_finales_abiertas === 1
+          );
           break;
       }
-      
+
       setMostrarModal(false);
     } catch (error) {
       console.error("Error al cambiar configuración:", error);
@@ -117,9 +129,7 @@ const ConfiguracionSistema = () => {
         <div className={styles.opcionConfiguracion}>
           <div className={styles.descripcionOpcion}>
             <h3>Inscripciones a materias</h3>
-            <p>
-              Abrí o cerrá las inscripciones de los alumnos a las materias
-            </p>
+            <p>Abrí o cerrá las inscripciones de los alumnos a las materias</p>
           </div>
           <div className={styles.controlOpcion}>
             {cargando ? (
@@ -144,7 +154,8 @@ const ConfiguracionSistema = () => {
           <div className={styles.descripcionOpcion}>
             <h3>Inscripciones a exámenes finales</h3>
             <p>
-              Abrí o cerrá las inscripciones de los alumnos a los exámenes finales
+              Abrí o cerrá las inscripciones de los alumnos a los exámenes
+              finales
             </p>
           </div>
           <div className={styles.controlOpcion}>
@@ -175,23 +186,29 @@ const ConfiguracionSistema = () => {
             <p>
               ¿Estás seguro que deseas{" "}
               {(tipoToggle === "preinscripciones" && estadoPreinscripciones) ||
-               (tipoToggle === "materias" && estadoInscripcionesMaterias) ||
-               (tipoToggle === "finales" && estadoInscripcionesFinales)
+              (tipoToggle === "materias" && estadoInscripcionesMaterias) ||
+              (tipoToggle === "finales" && estadoInscripcionesFinales)
                 ? "cerrar"
                 : "abrir"}{" "}
               {tipoToggle === "preinscripciones" && "las preinscripciones"}
               {tipoToggle === "materias" && "las inscripciones a materias"}
-              {tipoToggle === "finales" && "las inscripciones a exámenes finales"}?
+              {tipoToggle === "finales" &&
+                "las inscripciones a exámenes finales"}
+              ?
             </p>
             <div className={styles.botonesModal}>
               <Boton
-                variant="secondary"
+                variant="cancel"
                 onClick={cancelarCambio}
                 disabled={procesando}
               >
                 Cancelar
               </Boton>
-              <Boton onClick={confirmarCambio} disabled={procesando}>
+              <Boton
+                variant="success"
+                onClick={confirmarCambio}
+                disabled={procesando}
+              >
                 {procesando ? "Procesando..." : "Confirmar"}
               </Boton>
             </div>

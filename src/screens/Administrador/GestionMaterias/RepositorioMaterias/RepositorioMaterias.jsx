@@ -1,11 +1,7 @@
 import React from "react";
 import styles from "./RepositorioMaterias.module.css";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
-import {
-  Plus,
-  X,
-  SquarePen,
-} from "lucide-react";
+import { Plus, X, SquarePen } from "lucide-react";
 import Boton from "../../../../components/Boton/Boton";
 import { useState } from "react";
 import api from "../../../../api/axios";

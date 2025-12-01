@@ -240,7 +240,11 @@ const GestionCorrelativas = () => {
                 <Boton type="submit" variant="success">
                   Crear
                 </Boton>
-                <Boton type="button" onClick={() => setRegistro(false)}>
+                <Boton
+                  variant="cancel"
+                  type="button"
+                  onClick={() => setRegistro(false)}
+                >
                   Cancelar
                 </Boton>
               </div>

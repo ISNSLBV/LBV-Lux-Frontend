@@ -41,9 +41,9 @@ const GestionMateriasPlanCiclo = () => {
 
       const fechaObj = new Date(fecha);
       if (isNaN(fechaObj.getTime())) return "—";
-      
-      const dia = String(fechaObj.getDate()).padStart(2, '0');
-      const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+
+      const dia = String(fechaObj.getDate()).padStart(2, "0");
+      const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
       const año = fechaObj.getFullYear();
       return `${dia}/${mes}/${año}`;
     } catch (error) {
@@ -93,7 +93,8 @@ const GestionMateriasPlanCiclo = () => {
       toast.success(message?.data?.message || "Materia registrada");
     },
     onError: (error) => {
-      const mensaje = error.response?.data?.error || "Error al registrar la materia";
+      const mensaje =
+        error.response?.data?.error || "Error al registrar la materia";
       toast.error(mensaje);
     },
   });
@@ -101,12 +102,14 @@ const GestionMateriasPlanCiclo = () => {
   const materiasFiltradas = materiasPlanCiclo.filter((m) => {
     const nombreMateria = m.materiaPlan?.materia?.nombre?.toLowerCase() || "";
     const resolucionPlan = m.materiaPlan?.planEstudio?.resolucion || "";
-    const carrera = m.materiaPlan?.planEstudio?.carrera?.nombre?.toLowerCase() || "";
+    const carrera =
+      m.materiaPlan?.planEstudio?.carrera?.nombre?.toLowerCase() || "";
     const planCompleto = `${resolucionPlan} - ${carrera}`.toLowerCase();
     const anio = m.ciclo_lectivo?.toString() || "";
 
     const cumpleNombre = nombreMateria.includes(filtro.toLowerCase());
-    const cumplePlan = filtroPlan === "" || planCompleto.includes(filtroPlan.toLowerCase());
+    const cumplePlan =
+      filtroPlan === "" || planCompleto.includes(filtroPlan.toLowerCase());
     const cumpleAnio = filtroAnio === "" || anio === filtroAnio;
 
     return cumpleNombre && cumplePlan && cumpleAnio;
@@ -160,11 +163,20 @@ const GestionMateriasPlanCiclo = () => {
                   className={styles.selectFiltro}
                 >
                   <option value="">Todos los planes</option>
-                  {[...new Set(materiasPlanCiclo.map(m => 
-                    `${m.materiaPlan?.planEstudio?.resolucion} - ${m.materiaPlan?.planEstudio?.carrera?.nombre}`
-                  ))].sort().map((plan, idx) => (
-                    <option key={idx} value={plan}>{plan}</option>
-                  ))}
+                  {[
+                    ...new Set(
+                      materiasPlanCiclo.map(
+                        (m) =>
+                          `${m.materiaPlan?.planEstudio?.resolucion} - ${m.materiaPlan?.planEstudio?.carrera?.nombre}`
+                      )
+                    ),
+                  ]
+                    .sort()
+                    .map((plan, idx) => (
+                      <option key={idx} value={plan}>
+                        {plan}
+                      </option>
+                    ))}
                 </select>
                 <select
                   value={filtroAnio}
@@ -172,9 +184,13 @@ const GestionMateriasPlanCiclo = () => {
                   className={styles.selectFiltro}
                 >
                   <option value="">Todos los años</option>
-                  {[...new Set(materiasPlanCiclo.map(m => m.ciclo_lectivo))].sort((a, b) => b - a).map((anio, idx) => (
-                    <option key={idx} value={anio}>{anio}</option>
-                  ))}
+                  {[...new Set(materiasPlanCiclo.map((m) => m.ciclo_lectivo))]
+                    .sort((a, b) => b - a)
+                    .map((anio, idx) => (
+                      <option key={idx} value={anio}>
+                        {anio}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -500,7 +516,11 @@ const GestionMateriasPlanCiclo = () => {
                         >
                           {isSubmitting ? "Creando..." : "Crear"}
                         </Boton>
-                        <Boton type="button" onClick={() => setRegistro(false)}>
+                        <Boton
+                          variant="cancel"
+                          type="button"
+                          onClick={() => setRegistro(false)}
+                        >
                           Cancelar
                         </Boton>
                       </div>

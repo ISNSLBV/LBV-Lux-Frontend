@@ -154,7 +154,7 @@ const Profesores = ({ profesores = [], idMateria }) => {
       )}
 
       <ul className={styles.listaProfesores}>
-        {profesores.length === 0 && <li>No hay profesores asignados.</li>}
+        {profesores.length === 0 && <p>No hay profesores asignados.</p>}
         {profesores.map((prof, idx) => (
           <li key={prof.dni} className={styles.profesorItem}>
             <div className={styles.profesorNombre}>
@@ -179,6 +179,7 @@ const Profesores = ({ profesores = [], idMateria }) => {
                 </select>
                 <div className={styles.botonesRol}>
                   <Boton
+                    variant="success"
                     fullWidth
                     onClick={() =>
                       modificarRol.mutate({
@@ -203,6 +204,7 @@ const Profesores = ({ profesores = [], idMateria }) => {
                 {user.rol === "Administrador" && (
                   <>
                     <Boton
+                      variant="primary"
                       onClick={() => {
                         setEditIndex(idx);
                         setEditRol(prof.rol);

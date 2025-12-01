@@ -277,7 +277,10 @@ const GestionPlanes = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="anio_implementacion" className="block mb-1">
+                      <label
+                        htmlFor="anio_implementacion"
+                        className="block mb-1"
+                      >
                         Año de implementación
                       </label>
                       <Field
@@ -285,7 +288,8 @@ const GestionPlanes = () => {
                         id="anio_implementacion"
                         name="anio_implementacion"
                         className={
-                          errors.anio_implementacion && touched.anio_implementacion
+                          errors.anio_implementacion &&
+                          touched.anio_implementacion
                             ? "formikFieldError"
                             : "formikField"
                         }
@@ -412,7 +416,8 @@ const GestionPlanes = () => {
                         id="anio_implementacion-edit"
                         name="anio_implementacion"
                         className={
-                          errors.anio_implementacion && touched.anio_implementacion
+                          errors.anio_implementacion &&
+                          touched.anio_implementacion
                             ? "formikFieldError"
                             : "formikField"
                         }
@@ -497,7 +502,7 @@ const GestionPlanes = () => {
               >
                 Sí, confirmar
               </Boton>
-              <Boton variant="danger" onClick={() => setConfirmarVigente(null)}>
+              <Boton variant="cancel" onClick={() => setConfirmarVigente(null)}>
                 Cancelar
               </Boton>
             </div>

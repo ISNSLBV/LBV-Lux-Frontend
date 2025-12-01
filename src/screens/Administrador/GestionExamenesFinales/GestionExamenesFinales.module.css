@@ -130,9 +130,9 @@
 }
 
 .modoDescripcion {
-  background-color: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   padding: 12px;
   margin-bottom: 16px;
 }
@@ -140,12 +140,7 @@
 .modoDescripcion p {
   margin: 0;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
   line-height: 1.5;
-}
-
-.modoDescripcion strong {
-  color: rgb(96, 165, 250);
 }
 
 .modoActivo {

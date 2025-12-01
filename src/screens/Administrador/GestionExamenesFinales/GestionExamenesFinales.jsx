@@ -272,11 +272,11 @@ const GestionExamenesFinales = () => {
                 <div className={styles.modoDescripcion}>
                   {modoRegistro === "basico" ? (
                     <p>
-                      <strong>Registro básico:</strong> Para materias del ciclo lectivo actual con profesores asignados.
+                      <strong>Registro normal:</strong> Para materias de planes de estudio que están vigentes.
                     </p>
                   ) : (
                     <p>
-                      <strong>Registro personalizado:</strong> Solo muestra materias de planes de estudio que ya NO están vigentes (ej: Plan 1002/04). Ideal para alumnos que continúan con su plan original.
+                      <strong>Registro personalizado:</strong> Para materias de planes de estudio que no están vigentes.
                     </p>
                   )}
                 </div>
@@ -536,6 +536,7 @@ const GestionExamenesFinales = () => {
                           {isSubmitting ? "Registrando..." : "Registrar"}
                         </Boton>
                         <Boton
+                          variant="cancel"
                           type="button"
                           onClick={() => {
                             setRegistro(false);

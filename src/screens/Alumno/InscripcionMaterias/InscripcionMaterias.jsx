@@ -316,7 +316,7 @@ const InscripcionMaterias = () => {
 
                       <Boton
                         variant={
-                          estado?.puedeInscribirse ? "success" : "secondary"
+                          estado?.puedeInscribirse ? "success" : "primary"
                         }
                         disabled={
                           !estado?.puedeInscribirse ||

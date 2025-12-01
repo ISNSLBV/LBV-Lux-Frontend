@@ -147,7 +147,7 @@ const Configuracion = ({ idMateriaPlanCiclo }) => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px' }}>
                 <div>
                     <label htmlFor="fechaInicio" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                        Fecha de inicio <span style={{ fontWeight: 'normal', color: '#666' }}>(opcional)</span>
+                        Fecha de inicio
                     </label>
                     <input 
                         type="date" 
@@ -187,8 +187,8 @@ const Configuracion = ({ idMateriaPlanCiclo }) => {
                         }}
                     />
                     {!fechaInicio && (
-                        <span style={{ color: '#666', fontSize: '0.875rem', marginTop: '0.25rem', fontStyle: 'italic' }}>
-                            Primero debe establecer una fecha de inicio
+                        <span style={{ fontSize: '0.875rem', marginTop: '0.25rem', fontStyle: 'italic' }}>
+                            Para establecer una fecha de cierre se debe definir una fecha de inicio
                         </span>
                     )}
                     {errores.fechaCierre && (

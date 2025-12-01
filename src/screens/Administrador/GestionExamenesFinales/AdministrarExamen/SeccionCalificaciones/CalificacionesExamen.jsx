@@ -262,7 +262,7 @@ const Calificaciones = ({ calificaciones: calificacionesProp = [] }) => {
                                   onClick={() =>
                                     handleToggleBloqueo(cal.id_inscripcion, cal.bloqueada)
                                   }
-                                  variant={cal.bloqueada ? "success" : "warning"}
+                                  variant={cal.bloqueada ? "success" : "cancel"}
                                   disabled={bloquearCalificacionMutation.isLoading}
                                   title={
                                     cal.bloqueada

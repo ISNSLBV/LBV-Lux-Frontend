@@ -486,7 +486,11 @@ const GestionMateriasPlan = () => {
                 >
                   Guardar
                 </Boton>
-                <Boton variant="cancel" type="button" onClick={() => setEdicion(false)}>
+                <Boton
+                  variant="cancel"
+                  type="button"
+                  onClick={() => setEdicion(false)}
+                >
                   Cancelar
                 </Boton>
               </div>

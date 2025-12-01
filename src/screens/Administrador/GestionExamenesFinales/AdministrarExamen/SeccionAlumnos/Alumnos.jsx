@@ -147,7 +147,8 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
                       </span>
                       {admin && (
                         <p className={styles.notaAdmin}>
-                          (Podés modificar la asistencia haciendo clic en los botones)
+                          (Podés modificar la asistencia haciendo clic en los
+                          botones)
                         </p>
                       )}
                     </div>
@@ -164,7 +165,9 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
                       <div className={styles.botonesAsistencia}>
                         <Boton
                           variant={
-                            estadoAsistencia === "presente" ? "success" : "primary"
+                            estadoAsistencia === "presente"
+                              ? "success"
+                              : "primary"
                           }
                           onClick={() =>
                             handleAsistencia(
@@ -181,7 +184,9 @@ const Alumnos = ({ alumnos: alumnosProp = [] }) => {
                         </Boton>
                         <Boton
                           variant={
-                            estadoAsistencia === "ausente" ? "cancel" : "primary"
+                            estadoAsistencia === "ausente"
+                              ? "cancel"
+                              : "primary"
                           }
                           onClick={() =>
                             handleAsistencia(

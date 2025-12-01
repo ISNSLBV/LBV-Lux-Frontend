@@ -195,10 +195,7 @@ const Clases = ({ materiaId }) => {
           ) : errorClases ? (
             <div style={{ color: "red" }}>Error al cargar clases</div>
           ) : clases.length === 0 ? (
-            <div style={{ color: "#888", margin: "2rem" }}>
-              <Info size={20} style={{ verticalAlign: "middle" }} /> No hay
-              clases registradas.
-            </div>
+            <div>No hay clases registradas.</div>
           ) : (
             <ul className={styles.lista}>
               {clases.map((detalle) => (
@@ -218,7 +215,7 @@ const Clases = ({ materiaId }) => {
         <div className={styles.detalleClase}>
           {!claseSeleccionada ? (
             <div style={{ color: "#888" }}>
-              Selecciona una clase para ver el detalle.
+              Seleccioná una clase para ver el detalle.
             </div>
           ) : cargandoDetalle ? (
             <div style={{ textAlign: "center", margin: "2rem" }}>
@@ -251,10 +248,7 @@ const Clases = ({ materiaId }) => {
                   <p>
                     <b>Tema/s</b>
                   </p>
-                  <Boton
-                    variant="success"
-                    onClick={() => setModalInfo(true)}
-                  >
+                  <Boton variant="success" onClick={() => setModalInfo(true)}>
                     Agregar tema
                   </Boton>
                 </div>
@@ -282,7 +276,8 @@ const Clases = ({ materiaId }) => {
                   ) : (
                     detalle.alumnos.map((a, i) => (
                       <li key={i}>
-                        {a.nombre} {a.apellido} - {a.asistencia || "Sin registrar"}
+                        {a.nombre} {a.apellido} -{" "}
+                        {a.asistencia || "Sin registrar"}
                       </li>
                     ))
                   )}
@@ -330,7 +325,11 @@ const Clases = ({ materiaId }) => {
                   "Agregar"
                 )}
               </Boton>
-              <Boton fullWidth onClick={() => setModalAgregar(false)}>
+              <Boton
+                variant="cancel"
+                fullWidth
+                onClick={() => setModalAgregar(false)}
+              >
                 Cancelar
               </Boton>
             </div>
@@ -370,10 +369,7 @@ const Clases = ({ materiaId }) => {
                 >
                   <option value="">Sin profesor</option>
                   {profesores.map((p, i) => (
-                    <option
-                      key={i}
-                      value={p.id_usuario}
-                    >
+                    <option key={i} value={p.id_usuario}>
                       {p.nombre} {p.apellido} ({p.rol})
                     </option>
                   ))}
@@ -399,7 +395,11 @@ const Clases = ({ materiaId }) => {
                   "Guardar"
                 )}
               </Boton>
-              <Boton fullWidth onClick={() => setModalInfo(false)}>
+              <Boton
+                variant="cancel"
+                fullWidth
+                onClick={() => setModalInfo(false)}
+              >
                 Cancelar
               </Boton>
             </div>
@@ -441,7 +441,13 @@ const Clases = ({ materiaId }) => {
                   <CircularProgress />
                 </div>
               ) : (detalle?.alumnos || []).length === 0 ? (
-                <div style={{ color: "#888", textAlign: "center", padding: "2rem" }}>
+                <div
+                  style={{
+                    color: "#888",
+                    textAlign: "center",
+                    padding: "2rem",
+                  }}
+                >
                   No hay alumnos inscriptos en esta materia
                 </div>
               ) : (
@@ -494,6 +500,7 @@ const Clases = ({ materiaId }) => {
                 )}
               </Boton>
               <Boton
+                variant="cancel"
                 fullWidth
                 onClick={() => setModalRegistrarAsistencia(false)}
               >

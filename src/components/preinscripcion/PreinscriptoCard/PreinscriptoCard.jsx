@@ -6,10 +6,14 @@ import { User, GraduationCap, Mail, Check, X, EyeOff } from "lucide-react";
 const PreinscriptoCard = ({ persona, onAceptar, onOcultar }) => {
   const observacion = persona.preinscripcion?.comentario;
   const idCarrera = persona.preinscripcion?.id_carrera;
-  const nombreCarrera = persona.preinscripcion?.carrera?.nombre || "Sin especificar";
-  const idPreinscripcion = persona.preinscripcion?.id || persona.preinscripciones?.[0]?.id;
-  const estado = persona.preinscripcion?.estado || persona.preinscripciones?.[0]?.estado;
-  const visible = persona.preinscripcion?.visible ?? persona.preinscripciones?.[0]?.visible;
+  const nombreCarrera =
+    persona.preinscripcion?.carrera?.nombre || "Sin especificar";
+  const idPreinscripcion =
+    persona.preinscripcion?.id || persona.preinscripciones?.[0]?.id;
+  const estado =
+    persona.preinscripcion?.estado || persona.preinscripciones?.[0]?.estado;
+  const visible =
+    persona.preinscripcion?.visible ?? persona.preinscripciones?.[0]?.visible;
 
   return (
     <div className={styles.card}>
@@ -101,7 +105,7 @@ const PreinscriptoCard = ({ persona, onAceptar, onOcultar }) => {
           <hr />
           <div className={styles.acciones}>
             {visible === 1 && (
-              <Boton icono={<EyeOff />} onClick={onOcultar}>
+              <Boton variant="primary" icono={<EyeOff />} onClick={onOcultar}>
                 Ocultar
               </Boton>
             )}
