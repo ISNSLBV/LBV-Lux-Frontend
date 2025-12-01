@@ -1,19 +1,27 @@
 import React from "react";
 import styles from "./InscripcionFinales.module.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { formatearFechaSinZonaHoraria } from "../../../utils/dateUtils";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 import EstadoBadge from "../../../components/EstadoBadge/EstadoBadge";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../contexts/AuthContext";
 
-const obtenerPlanEstudio = async () => {
+const obtenerCarreras = async () => {
+  const { data } = await api.get("/alumno/carreras");
+  return data;
+};
+
+const obtenerPlanesEstudio = async () => {
   const { data } = await api.get("/admin/plan-estudio/alumno/obtener-plan-asignado");
-  return data?.carreras?.[0]?.plan?.id ?? data?.carreras?.[0]?.idPlanAsignado ?? null;
+  return data?.carreras || [];
 };
 
 const validarRequisitosInscripcion = async (planId) => {
+  if (!planId) return { success: false, estadosFinales: [], message: "No hay plan seleccionado" };
   try {
     const { data } = await api.get(`/alumno/planes-estudio/${planId}/finales/estado`);
     return data;
@@ -37,7 +45,18 @@ const obtenerConfiguracionSistema = async () => {
 };
 
 const InscripcionFinales = () => {
+  const navigate = useNavigate();
+  const { estadoCarreras } = useAuth();
   const queryClient = useQueryClient();
+  const [carreraSeleccionada, setCarreraSeleccionada] = React.useState(null);
+
+  // Verificar si puede acceder
+  React.useEffect(() => {
+    if (estadoCarreras && !estadoCarreras.puedeAcceder) {
+      toast.error("No tienes acceso a esta sección. Estás dado de baja en todas tus carreras.");
+      navigate("/alumno");
+    }
+  }, [estadoCarreras, navigate]);
 
   const { data: configuracion, isLoading: configuracionLoading } = useQuery({
     queryKey: ["configuracionSistema"],
@@ -47,22 +66,49 @@ const InscripcionFinales = () => {
     },
   });
 
-  const { data: planId, isLoading: planLoading } = useQuery({
-    queryKey: ["planId"],
-    queryFn: obtenerPlanEstudio,
+  const { data: carreras, isLoading: carrerasLoading } = useQuery({
+    queryKey: ["carrerasInscripto"],
+    queryFn: obtenerCarreras,
+    onError: (error) => {
+      console.error("Error al obtener las carreras: ", error);
+    },
   });
 
+  // Seleccionar automáticamente la primera carrera cuando se carguen
+  React.useEffect(() => {
+    if (carreras && carreras.length > 0 && !carreraSeleccionada) {
+      setCarreraSeleccionada(carreras[0].id.toString());
+    }
+  }, [carreras, carreraSeleccionada]);
+
+  const { data: planesCarreras, isLoading: planesLoading } = useQuery({
+    queryKey: ["planesEstudio"],
+    queryFn: obtenerPlanesEstudio,
+    onError: (error) => {
+      console.error("Error al obtener los planes de estudio: ", error);
+    },
+  });
+
+  // Obtener el plan de la carrera seleccionada
+  const planSeleccionado = React.useMemo(() => {
+    if (!planesCarreras || !carreraSeleccionada) return null;
+    const carrera = planesCarreras.find(
+      (c) => c.idCarrera === parseInt(carreraSeleccionada)
+    );
+    return carrera?.idPlanAsignado || carrera?.plan?.id || null;
+  }, [planesCarreras, carreraSeleccionada]);
+
   const { data: requisitosData, isLoading: requisitosLoading } = useQuery({
-    queryKey: ["requisitosFinales", planId],
-    queryFn: () => validarRequisitosInscripcion(planId),
-    enabled: !!planId,
+    queryKey: ["requisitosFinales", planSeleccionado],
+    queryFn: () => validarRequisitosInscripcion(planSeleccionado),
+    enabled: !!planSeleccionado,
     retry: false,
   });
 
   const inscripcionMutation = useMutation({
     mutationFn: inscribirseExamenFinal,
     onSuccess: () => {
-      queryClient.invalidateQueries(["requisitosFinales", planId]);
+      queryClient.invalidateQueries(["requisitosFinales", planSeleccionado]);
       toast.success("Inscripción realizada con éxito");
     },
     onError: (error) => {
@@ -78,7 +124,7 @@ const InscripcionFinales = () => {
     inscripcionMutation.mutate({ idExamenFinal, idInscripcionMateria });
   };
 
-  if (planLoading || requisitosLoading || configuracionLoading) {
+  if (carrerasLoading || planesLoading || requisitosLoading || configuracionLoading) {
     return <div>Cargando...</div>;
   }
 
@@ -104,27 +150,35 @@ const InscripcionFinales = () => {
 
   const finalesDisponibles = requisitosData?.estadosFinales?.filter((final) => !final.yaInscriptoFinal) || [];
 
-  if (finalesDisponibles.length === 0) {
-    return (
-      <>
-        <BotonVolver />
-        <div className={styles.titulo}>
-          <h1>Inscripción a exámenes finales</h1>
-        </div>
-        <div className={styles.mensaje}>
-          <p>No hay exámenes finales disponibles</p>
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <BotonVolver />
       <div className={styles.titulo}>
         <h1>Inscripción a exámenes finales</h1>
       </div>
-      <div className={styles.listaFinales}>
+      {carreras && carreras.length > 1 && (
+        <div className={styles.selectorCarrera}>
+          <label htmlFor="carrera-select">Carrera:</label>
+          <select
+            id="carrera-select"
+            value={carreraSeleccionada || ""}
+            onChange={(e) => setCarreraSeleccionada(e.target.value)}
+            className={styles.selectCarrera}
+          >
+            {carreras.map((carrera) => (
+              <option key={carrera.id} value={carrera.id}>
+                {carrera.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+      {finalesDisponibles.length === 0 ? (
+        <div className={styles.mensaje}>
+          <p>No hay exámenes finales disponibles para esta carrera</p>
+        </div>
+      ) : (
+        <div className={styles.listaFinales}>
         {finalesDisponibles.map((final) => {
           const puedeInscribirse = final.puedeInscribirse ?? false;
           const mensajeBloqueo = final.razonBloqueo || "No disponible";
@@ -174,7 +228,8 @@ const InscripcionFinales = () => {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </>
   );
 };

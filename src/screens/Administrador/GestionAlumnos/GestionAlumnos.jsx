@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import styles from "./GestionAlumnos.module.css";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import api from "../../../api/axios";
+import { formatearFecha } from "../../../utils/dateUtils";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { Eye, ChevronDown, ChevronUp, UserX, Edit } from "lucide-react";
@@ -39,6 +40,10 @@ export default function GestionAlumnos() {
   const [filtroCarrera, setFiltroCarrera] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
   const [alumnoExpandido, setAlumnoExpandido] = useState(null);
+  const [showModalPlan, setShowModalPlan] = useState(false);
+  const [showModalBaja, setShowModalBaja] = useState(false);
+  const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
+  const [planSeleccionado, setPlanSeleccionado] = useState("");
   const ALUMNOS_POR_PAGINA = 10;
 
   const {
@@ -58,14 +63,10 @@ export default function GestionAlumnos() {
   });
 
   // Formatear fecha para mostrar
-  const formatearFecha = (fecha) => {
+  const formatearFechaLocal = (fecha) => {
     if (!fecha) return "—";
     try {
-      return new Date(fecha).toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
+      return formatearFecha(fecha);
     } catch (error) {
       return "—";
     }
@@ -117,6 +118,83 @@ export default function GestionAlumnos() {
 
   const toggleAlumnoExpandido = (alumnoId) => {
     setAlumnoExpandido(alumnoExpandido === alumnoId ? null : alumnoId);
+  };
+
+  const handleAbrirModalPlan = (alumno) => {
+    setAlumnoSeleccionado(alumno);
+    const carrera = alumno.carreraSeleccionada || alumno.carreras?.[0];
+    setPlanSeleccionado(carrera?.idPlanEstudioAsignado || "");
+    setShowModalPlan(true);
+  };
+
+  const handleAbrirModalBaja = (alumno) => {
+    setAlumnoSeleccionado(alumno);
+    setShowModalBaja(true);
+  };
+
+  const handleCerrarModales = () => {
+    setShowModalPlan(false);
+    setShowModalBaja(false);
+    setAlumnoSeleccionado(null);
+    setPlanSeleccionado("");
+  };
+
+  const { data: planesDisponibles = [] } = useQuery({
+    queryKey: ["planes", alumnoSeleccionado?.carreraSeleccionada?.id || alumnoSeleccionado?.carreras?.[0]?.id],
+    queryFn: async () => {
+      const carreraId = alumnoSeleccionado?.carreraSeleccionada?.id || alumnoSeleccionado?.carreras?.[0]?.id;
+      if (!carreraId) return [];
+      const { data } = await api.get(`/usuario/carrera/${carreraId}/planes`);
+      return data;
+    },
+    enabled: showModalPlan && !!(alumnoSeleccionado?.carreraSeleccionada?.id || alumnoSeleccionado?.carreras?.[0]?.id),
+  });
+
+  const handleModificarPlan = async () => {
+    if (!planSeleccionado) {
+      toast.error("Debes seleccionar un plan de estudios");
+      return;
+    }
+
+    try {
+      const carreraId = alumnoSeleccionado?.carreraSeleccionada?.id || alumnoSeleccionado?.carreras?.[0]?.id;
+      await api.put(
+        `/usuario/${alumnoSeleccionado.id}/carrera/${carreraId}/modificar-plan`,
+        { idPlanEstudio: planSeleccionado }
+      );
+      toast.success("Plan de estudios actualizado correctamente");
+      handleCerrarModales();
+      refetchAlumnos();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error al modificar el plan de estudios");
+    }
+  };
+
+  const handleDarDeBaja = async () => {
+    try {
+      const carreraId = alumnoSeleccionado?.carreraSeleccionada?.id || alumnoSeleccionado?.carreras?.[0]?.id;
+      await api.put(
+        `/usuario/${alumnoSeleccionado.id}/carrera/${carreraId}/dar-baja`
+      );
+      toast.success("Alumno dado de baja correctamente");
+      handleCerrarModales();
+      refetchAlumnos();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error al dar de baja al alumno");
+    }
+  };
+
+  const handleReactivar = async (alumno) => {
+    try {
+      const carreraId = alumno?.carreraSeleccionada?.id || alumno?.carreras?.[0]?.id;
+      await api.put(
+        `/usuario/${alumno.id}/carrera/${carreraId}/reactivar`
+      );
+      toast.success("Alumno reactivado correctamente");
+      refetchAlumnos();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error al reactivar al alumno");
+    }
   };
 
   return (
@@ -256,10 +334,10 @@ export default function GestionAlumnos() {
                               <span className={styles.estadoLabel}>Estado del alumno:</span>
                               <span
                                 className={`${styles.estadoBadge} ${
-                                  alumno.activo ? styles.activo : styles.inactivo
+                                  alumno.carreras?.some(c => c.activo) ? styles.activo : styles.inactivo
                                 }`}
                               >
-                                {alumno.activo ? "Activo" : "Inactivo"}
+                                {alumno.carreras?.some(c => c.activo) ? "Activo" : "Inactivo"}
                               </span>
                             </div>
                           </div>
@@ -267,39 +345,69 @@ export default function GestionAlumnos() {
                           <div className={styles.seccionDetalles}>
                             <h4>Carreras inscriptas</h4>
                             <div className={styles.listaCarreras}>
-                              <div className={styles.carreraDetalle}>
-                                <div className={styles.carreraInfo}>
-                                  <span className={styles.carreraNombre}>
-                                    {alumno.carrera.nombre}
-                                  </span>
-                                  <span className={styles.carreraFecha}>
-                                    Inscripción: {formatearFecha(alumno.fechaInscripcion)}
-                                  </span>
-                                  <span className={styles.carreraPlan}>
-                                    Plan de estudios asignado: {alumno.resolucionPlanAsignado || "No asignado"}
-                                  </span>
-                                </div>
-                                <div className={styles.carreraAcciones}>
-                                  <Boton
-                                    variant="primary"
-                                    icono={<Edit />}
-                                    onClick={() => {
-                                      toast.info("Función de modificar plan en desarrollo");
-                                    }}
-                                  >
-                                    Modificar plan
-                                  </Boton>
-                                  <Boton
-                                    variant="cancel"
-                                    icono={<UserX />}
-                                    onClick={() => {
-                                      toast.info("Función de dar de baja en desarrollo");
-                                    }}
-                                  >
-                                    Dar de baja
-                                  </Boton>
-                                </div>
-                              </div>
+                              {alumno.carreras && alumno.carreras.length > 0 ? (
+                                alumno.carreras.map((carrera, index) => (
+                                  <div key={index} className={styles.carreraDetalle}>
+                                    <div className={styles.carreraInfo}>
+                                      <span className={styles.carreraNombre}>
+                                        {carrera.nombre}
+                                      </span>
+                                      <span className={styles.carreraFecha}>
+                                        Inscripción: {formatearFecha(carrera.fechaInscripcion)}
+                                      </span>
+                                      <span className={styles.carreraPlan}>
+                                        Plan de estudios asignado: {carrera.resolucionPlanAsignado || "No asignado"}
+                                      </span>
+                                      <span
+                                        className={`${styles.estadoBadge} ${
+                                          carrera.activo ? styles.activo : styles.inactivo
+                                        }`}
+                                        style={{ marginTop: '8px', display: 'inline-block' }}
+                                      >
+                                        {carrera.activo ? "Activa" : "Inactiva"}
+                                      </span>
+                                    </div>
+                                    <div className={styles.carreraAcciones}>
+                                      {carrera.activo ? (
+                                        <>
+                                          <Boton
+                                            variant="primary"
+                                            icono={<Edit />}
+                                            onClick={() => handleAbrirModalPlan({
+                                              ...alumno,
+                                              carreraSeleccionada: carrera
+                                            })}
+                                          >
+                                            Modificar plan
+                                          </Boton>
+                                          <Boton
+                                            variant="cancel"
+                                            icono={<UserX />}
+                                            onClick={() => handleAbrirModalBaja({
+                                              ...alumno,
+                                              carreraSeleccionada: carrera
+                                            })}
+                                          >
+                                            Dar de baja
+                                          </Boton>
+                                        </>
+                                      ) : (
+                                        <Boton
+                                          variant="success"
+                                          onClick={() => handleReactivar({
+                                            ...alumno,
+                                            carreraSeleccionada: carrera
+                                          })}
+                                        >
+                                          Reactivar
+                                        </Boton>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))
+                              ) : (
+                                <p>No tiene carreras asignadas</p>
+                              )}
                             </div>
                           </div>
                           
@@ -346,10 +454,10 @@ export default function GestionAlumnos() {
                   </div>
                   <span
                     className={`${styles.estado} ${
-                      alumno.activo ? styles.activo : styles.inactivo
+                      alumno.carreras?.some(c => c.activo) ? styles.activo : styles.inactivo
                     }`}
                   >
-                    {alumno.activo ? "Activo" : "Inactivo"}
+                    {alumno.carreras?.some(c => c.activo) ? "Activo" : "Inactivo"}
                   </span>
                 </div>
 
@@ -368,19 +476,23 @@ export default function GestionAlumnos() {
                       </span>
                     </div>
                     <div className={styles.cardField}>
-                      <span className={styles.cardLabel}>Carrera:</span>
+                      <span className={styles.cardLabel}>Carreras:</span>
                       <span className={styles.cardValue}>
-                        {alumno.carrera.nombre}
+                        {alumno.carreras && alumno.carreras.length > 0
+                          ? `${alumno.carreras.length} carrera${alumno.carreras.length > 1 ? 's' : ''}`
+                          : 'Sin carreras'}
                       </span>
                     </div>
-                    <div className={styles.cardField}>
-                      <span className={styles.cardLabel}>
-                        Fecha inscripción:
-                      </span>
-                      <span className={styles.cardValue}>
-                        {formatearFecha(alumno.fechaInscripcion)}
-                      </span>
-                    </div>
+                    {alumno.carreras && alumno.carreras.length > 0 && (
+                      <div className={styles.cardField}>
+                        <span className={styles.cardLabel}>
+                          Primera inscripción:
+                        </span>
+                        <span className={styles.cardValue}>
+                          {formatearFecha(alumno.carreras[0].fechaInscripcion)}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className={styles.cardActions}>
@@ -444,6 +556,82 @@ export default function GestionAlumnos() {
           </div>
         )}
       </div>
+
+      {/* Modal: Modificar Plan */}
+      {showModalPlan && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Modificar Plan de Estudios</h3>
+            <p className={styles.modalSubtitle}>
+              Alumno: {alumnoSeleccionado?.nombre} {alumnoSeleccionado?.apellido}
+            </p>
+            <p className={styles.modalSubtitle}>
+              Carrera: {alumnoSeleccionado?.carreraSeleccionada?.nombre || alumnoSeleccionado?.carreras?.[0]?.nombre}
+            </p>
+            
+            <div className={styles.modalField}>
+              <label htmlFor="planSelect">Selecciona el nuevo plan de estudios:</label>
+              <select
+                id="planSelect"
+                value={planSeleccionado}
+                onChange={(e) => setPlanSeleccionado(e.target.value)}
+                className={styles.selectModal}
+              >
+                <option value="">-- Seleccionar plan --</option>
+                {planesDisponibles.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.resolucion} {plan.vigente ? "(Vigente)" : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.modalActions}>
+              <Boton variant="success" onClick={handleModificarPlan}>
+                Confirmar cambio
+              </Boton>
+              <Boton variant="cancel" onClick={handleCerrarModales}>
+                Cancelar
+              </Boton>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Dar de Baja */}
+      {showModalBaja && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Dar de Baja al Alumno</h3>
+            <p className={styles.modalSubtitle}>
+              ¿Estás seguro que deseas dar de baja a{" "}
+              <strong>
+                {alumnoSeleccionado?.nombre} {alumnoSeleccionado?.apellido}
+              </strong>{" "}
+              de la carrera <strong>{alumnoSeleccionado?.carreraSeleccionada?.nombre || alumnoSeleccionado?.carreras?.[0]?.nombre}</strong>?
+            </p>
+            
+            <div className={styles.warningBox}>
+              <p><strong>⚠️ Atención:</strong></p>
+              <p>El alumno dado de baja no podrá:</p>
+              <ul>
+                <li>Inscribirse a materias de esta carrera</li>
+                <li>Inscribirse a exámenes finales de esta carrera</li>
+                <li>Solicitar equivalencias (si esta es su única carrera activa)</li>
+              </ul>
+            </div>
+
+            <div className={styles.modalActions}>
+              <Boton variant="cancel" onClick={handleDarDeBaja}>
+                Confirmar baja
+              </Boton>
+              <Boton variant="primary" onClick={handleCerrarModales}>
+                Cancelar
+              </Boton>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

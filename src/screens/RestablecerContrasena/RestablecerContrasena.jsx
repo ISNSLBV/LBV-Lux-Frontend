@@ -5,27 +5,68 @@ import * as Yup from "yup";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Boton from "../../components/Boton/Boton";
-import logo from "../../assets/logo.png";
 import api from "../../api/axios";
 import CircularProgress from "@mui/material/CircularProgress";
+
+const RECOVERY_TOKEN_KEY = "recoveryToken";
 
 const RestablecerContrasena = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [countdown, setCountdown] = useState(0);
-  const [identifier, setIdentifier] = useState("");
+  const [identificador, setIdentificador] = useState("");
+  const [reenviando, setReenviando] = useState(false);
+  const [recoveryToken, setRecoveryToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Obtener datos del state de navegación
-    const stateData = location.state;
-    
-    if (stateData?.identifier) {
-      setIdentifier(stateData.identifier);
-      if (stateData.expiresIn) {
-        setCountdown(stateData.expiresIn);
+    const initializeFromState = async () => {
+      const stateData = location.state;
+      
+      // Si viene data del state de navegación, usarla
+      if (stateData?.identificador) {
+        setIdentificador(stateData.identificador);
+        if (stateData.expiresIn) {
+          setCountdown(stateData.expiresIn);
+        }
+        if (stateData.recoveryToken) {
+          setRecoveryToken(stateData.recoveryToken);
+        }
+        setLoading(false);
+        return;
       }
-    }
-  }, [location.state]);
+      
+      // Si no hay state, intentar recuperar del localStorage
+      const savedToken = localStorage.getItem(RECOVERY_TOKEN_KEY);
+      
+      if (savedToken) {
+        try {
+          const { data } = await api.post("/auth/verificar-recovery-token", {
+            recoveryToken: savedToken,
+          });
+
+          if (data.valid) {
+            setIdentificador(data.identificador);
+            setCountdown(data.timeRemaining);
+            setRecoveryToken(savedToken);
+            setLoading(false);
+            return;
+          }
+        } catch (error) {
+          // Token inválido
+        }
+        
+        // Si llegamos acá, el token no es válido
+        localStorage.removeItem(RECOVERY_TOKEN_KEY);
+      }
+      
+      // No hay sesión válida, redirigir
+      toast.error("No hay una sesión de recuperación activa. Por favor, iniciá el proceso nuevamente.");
+      navigate("/recuperar-contrasena");
+    };
+
+    initializeFromState();
+  }, [location.state, navigate]);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -43,10 +84,34 @@ const RestablecerContrasena = () => {
     return () => clearInterval(timer);
   }, [countdown]);
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  const handleReenviarCodigo = async () => {
+    if (!identificador) {
+      toast.error("No se puede reenviar el código. Volvé a iniciar el proceso.");
+      navigate("/recuperar-contrasena");
+      return;
+    }
+
+    setReenviando(true);
+    try {
+      const { data } = await api.post("/auth/solicitar-recuperacion", {
+        identificador: identificador,
+        forzarReenvio: true,
+      });
+
+      if (data.sent) {
+        toast.success("Nuevo código enviado a tu email");
+        setCountdown(data.expiresIn || 900); // 15 minutos por defecto
+      } else {
+        toast.info(data.message);
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        "Error al reenviar el código. Intentá nuevamente.";
+      toast.error(message);
+    } finally {
+      setReenviando(false);
+    }
   };
 
   const resetSchema = Yup.object().shape({
@@ -67,10 +132,13 @@ const RestablecerContrasena = () => {
   const handleReset = async (values, { setSubmitting }) => {
     try {
       const { data } = await api.post("/auth/restablecer-contrasena", {
-        identifier: identifier,
+        identificador: identificador,
         codigo: values.codigo,
         nuevaPassword: values.nuevaPassword,
       });
+
+      // Limpiar el token de recuperación del localStorage
+      localStorage.removeItem(RECOVERY_TOKEN_KEY);
 
       toast.success(data.message);
       setTimeout(() => {
@@ -86,14 +154,27 @@ const RestablecerContrasena = () => {
     }
   };
 
+  // Mostrar loading mientras verifica el token
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', padding: '2rem' }}>
+            <CircularProgress size={40} />
+            <p>Verificando sesión...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <img className={styles.logo} src={logo} alt="Logo del Instituto" />
 
-        <h1 className={styles.title}>Restablecer Contraseña</h1>
-        <p className={styles.subtitle}>
-          Ingresá el código de verificación que enviamos a tu email {identifier && `asociado a: ${identifier}`} y tu nueva
+        <h1 className={styles.titulo}>Restablecer Contraseña</h1>
+        <p className={styles.subtitulo}>
+          Ingresá el código de verificación que enviamos a {identificador && `${identificador}`} y tu nueva
           contraseña.
         </p>
 
@@ -130,11 +211,6 @@ const RestablecerContrasena = () => {
                 />
                 {errors.codigo && touched.codigo && (
                   <div className="formikFieldErrorText">{errors.codigo}</div>
-                )}
-                {countdown > 0 && (
-                  <div className={styles.countdown}>
-                    Código válido por: <strong>{formatTime(countdown)}</strong>
-                  </div>
                 )}
               </div>
 
@@ -191,7 +267,7 @@ const RestablecerContrasena = () => {
 
               <div className={styles.actions}>
                 <Boton
-                  variant="primary"
+                  variant="success"
                   type="submit"
                   fullWidth
                   disabled={isSubmitting}
@@ -222,9 +298,10 @@ const RestablecerContrasena = () => {
             ¿No recibiste el código?{" "}
             <button
               className={styles.linkButton}
-              onClick={() => navigate("/recuperar-contrasena")}
+              onClick={handleReenviarCodigo}
+              disabled={reenviando}
             >
-              Solicitar uno nuevo
+              {reenviando ? "Enviando..." : "Solicitar uno nuevo"}
             </button>
           </p>
         </div>

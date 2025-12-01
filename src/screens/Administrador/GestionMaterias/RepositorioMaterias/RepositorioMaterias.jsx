@@ -1,13 +1,9 @@
 import React from "react";
-import DatoCard from "../../../../components/Dato/DatoCard";
-import styles from "./GestionMateriasBase.module.css";
+import styles from "./RepositorioMaterias.module.css";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import {
   Plus,
-  BookOpen,
-  Check,
   X,
-  TriangleAlert,
   SquarePen,
 } from "lucide-react";
 import Boton from "../../../../components/Boton/Boton";
@@ -24,7 +20,7 @@ const fetchMaterias = async () => {
   return data;
 };
 
-const GestionMateriasGenericas = () => {
+const RepositorioMaterias = () => {
   const [nuevaMateria, setNuevaMateria] = useState("");
   const [filtro, setFiltro] = useState("");
   const [edicion, setEdicion] = useState(false);
@@ -38,7 +34,7 @@ const GestionMateriasGenericas = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["materiasGenericas"],
+    queryKey: ["repositorioMaterias"],
     queryFn: fetchMaterias,
   });
 
@@ -64,7 +60,7 @@ const GestionMateriasGenericas = () => {
     mutationFn: (nombre) =>
       api.post("/admin/materia/registrar-materia", { nombre }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["materiasGenericas"] });
+      queryClient.invalidateQueries({ queryKey: ["repositorioMaterias"] });
       toast.success("Materia registrada");
     },
     onError: () => toast.error("Error al registrar la materia"),
@@ -81,7 +77,7 @@ const GestionMateriasGenericas = () => {
   const editarMateria = useMutation({
     mutationFn: ({ id, nombre }) => api.put(`/admin/materia/${id}`, { nombre }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["materiasGenericas"] });
+      queryClient.invalidateQueries({ queryKey: ["repositorioMaterias"] });
       toast.success("Materia editada correctamente");
       setEdicion(false);
     },
@@ -107,7 +103,7 @@ const GestionMateriasGenericas = () => {
     <>
       <BotonVolver />
       <div className={styles.titulo}>
-        <h1>Materias</h1>
+        <h1>Repositorio de Materias</h1>
         <p>
           Registrá y editá los nombres de las materias dictadas en el instituto
         </p>
@@ -126,7 +122,7 @@ const GestionMateriasGenericas = () => {
             icono={<Plus />}
             onClick={() => setRegistro(true)}
           >
-            Agregar Materia
+            Registrar materia
           </Boton>
         </div>
       </div>
@@ -281,4 +277,4 @@ const GestionMateriasGenericas = () => {
   );
 };
 
-export default GestionMateriasGenericas;
+export default RepositorioMaterias;

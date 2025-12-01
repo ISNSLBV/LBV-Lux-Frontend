@@ -93,7 +93,7 @@ const MisMaterias = () => {
               <select
                 id="carrera-select"
                 value={carreraSeleccionada || ""}
-                onChange={(e) => setCarreraSeleccionada(e.target.value)}
+                onChange={(e) => setCarreraSeleccionada(Number(e.target.value))}
               >
                 {carreras.map((carrera) => (
                   <option key={carrera.id} value={carrera.id}>

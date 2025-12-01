@@ -4,7 +4,6 @@
   align-items: center;
   min-height: 100dvh;
   padding: 20px;
-  background-color: var(--color-fondo);
 }
 
 .card {
@@ -20,21 +19,14 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  width: 120px;
-  height: auto;
-  margin-bottom: 8px;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-texto-primario);
+.titulo {
+  font-size: 28px;
+  font-weight: 800;
   margin: 0;
   text-align: center;
 }
 
-.subtitle {
+.subtitulo {
   font-size: 15px;
   color: var(--color-texto-secundario);
   text-align: center;
@@ -62,32 +54,15 @@
   color: var(--color-texto-primario);
 }
 
-.countdown {
-  font-size: 13px;
-  color: var(--color-texto-secundario);
-  text-align: center;
-  padding: 8px;
-  background-color: #fef3c7;
-  border-radius: 4px;
-  border-left: 3px solid #f59e0b;
-}
-
-.countdown strong {
-  color: #d97706;
-}
-
 .infoBox {
-  background-color: #dbeafe;
-  border-left: 4px solid #3b82f6;
+  background-color: rgba(255, 255, 255, 0.05);
   padding: 12px 14px;
   border-radius: 4px;
 }
 
 .infoBox p {
   margin: 0;
-  font-size: 13px;
-  color: #1e40af;
-  line-height: 1.5;
+  font-size: 15px;
 }
 
 .actions {

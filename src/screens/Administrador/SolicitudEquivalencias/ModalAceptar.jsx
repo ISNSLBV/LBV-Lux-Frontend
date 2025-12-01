@@ -23,7 +23,13 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
     try {
       setLoadingMaterias(true);
 
-      // Obtener las carreras del alumno
+      // Validar que la solicitud tenga id_carrera
+      if (!solicitud.id_carrera) {
+        setError("La solicitud no tiene una carrera asociada");
+        return;
+      }
+
+      // Obtener las carreras del alumno para encontrar el plan asignado a esta carrera
       const responseAlumno = await api.get(
         `/equivalencia/admin/usuario/${solicitud.id_usuario_alumno}/carreras`
       );
@@ -33,10 +39,20 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
         return;
       }
 
-      const planId = responseAlumno.data[0].id_plan_estudio_asignado;
+      // Buscar la carrera específica de la solicitud
+      const carreraAlumno = responseAlumno.data.find(
+        (c) => c.id_carrera === solicitud.id_carrera
+      );
+
+      if (!carreraAlumno) {
+        setError("El alumno no está inscripto en la carrera de esta solicitud");
+        return;
+      }
+
+      const planId = carreraAlumno.id_plan_estudio_asignado;
 
       if (!planId) {
-        setError("El alumno no tiene un plan de estudio asignado");
+        setError("El alumno no tiene un plan de estudio asignado para esta carrera");
         return;
       }
 
@@ -113,6 +129,9 @@ const ModalAceptar = ({ isOpen, onClose, onConfirm, solicitud }) => {
             <p>
               <strong>Alumno:</strong> {solicitud?.alumno?.persona?.apellido},{" "}
               {solicitud?.alumno?.persona?.nombre}
+            </p>
+            <p>
+              <strong>Carrera:</strong> {solicitud?.carrera?.nombre || "No especificada"}
             </p>
             <p>
               <strong>Materia de Origen:</strong> {solicitud?.origen_materia}

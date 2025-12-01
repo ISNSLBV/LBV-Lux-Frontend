@@ -6,8 +6,51 @@
     margin-bottom: 16px;
 }
 
+.carreraSelector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.carreraButton {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background-color: white;
+    color: #666;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.carreraButton:hover {
+    background-color: #e8e8e8;
+    color: #333;
+}
+
+.carreraActive {
+    background-color: #007bff !important;
+    color: white !important;
+    font-weight: 600;
+}
+
 @media (max-width: 768px) {
     .estadisticas {
         flex-direction: column;
+    }
+    
+    .carreraSelector {
+        flex-direction: column;
+    }
+    
+    .carreraButton {
+        width: 100%;
     }
 }

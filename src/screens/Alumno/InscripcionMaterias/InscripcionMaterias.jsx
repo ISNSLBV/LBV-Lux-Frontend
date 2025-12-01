@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 import styles from "./InscripcionMaterias.module.css";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import api from "../../../api/axios";
 import Boton from "../../../components/Boton/Boton";
 import { toast } from "react-toastify";
-import BotonVolver from "../../../components/BotonVolver/BotonVolver"
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const obtenerCarreras = async () => {
   const { data } = await api.get("/alumno/carreras");
   return data;
 };
 
-const obtenerPlanEstudio = async () => {
+const obtenerPlanesEstudio = async () => {
   const { data } = await api.get(
     "/admin/plan-estudio/alumno/obtener-plan-asignado"
   );
-
-  const planId =
-    data?.carreras?.[0]?.plan?.id ??
-    data?.carreras?.[0]?.idPlanAsignado ??
-    null;
-
-  return planId;
+  return data?.carreras || [];
 };
 
 const obtenerMateriasCicloActual = async (planId) => {
+  if (!planId) return null;
   const { data } = await api.get(
     `/admin/materia/materia-plan-ciclo/${planId}/materias-ciclo-actual`
   );
@@ -32,6 +29,7 @@ const obtenerMateriasCicloActual = async (planId) => {
 };
 
 const verificarEstadoInscripciones = async (planId) => {
+  if (!planId) return null;
   const { data } = await api.get(
     `/alumno/verificar-estado-inscripciones/${planId}`
   );
@@ -44,7 +42,17 @@ const obtenerConfiguracionSistema = async () => {
 };
 
 const InscripcionMaterias = () => {
-  const [carreraSeleccionada, setCarreraSeleccionada] = useState("todas");
+  const navigate = useNavigate();
+  const { estadoCarreras } = useAuth();
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
+
+  // Verificar si puede acceder
+  React.useEffect(() => {
+    if (estadoCarreras && !estadoCarreras.puedeAcceder) {
+      toast.error("No tienes acceso a esta sección. Estás dado de baja en todas tus carreras.");
+      navigate("/alumno");
+    }
+  }, [estadoCarreras, navigate]);
 
   const { data: configuracion, isLoading: configuracionLoading } = useQuery({
     queryKey: ["configuracionSistema"],
@@ -62,27 +70,43 @@ const InscripcionMaterias = () => {
     },
   });
 
-  const { data: planId, isLoading: planLoading } = useQuery({
-    queryKey: ["planEstudio"],
-    queryFn: obtenerPlanEstudio,
+  // Seleccionar automáticamente la primera carrera cuando se carguen
+  React.useEffect(() => {
+    if (carreras && carreras.length > 0 && !carreraSeleccionada) {
+      setCarreraSeleccionada(carreras[0].id.toString());
+    }
+  }, [carreras, carreraSeleccionada]);
+
+  const { data: planesCarreras, isLoading: planesLoading } = useQuery({
+    queryKey: ["planesEstudio"],
+    queryFn: obtenerPlanesEstudio,
     onError: (error) => {
-      console.error("Error al obtener el plan de estudio: ", error);
+      console.error("Error al obtener los planes de estudio: ", error);
     },
   });
 
+  // Obtener el plan de la carrera seleccionada
+  const planSeleccionado = React.useMemo(() => {
+    if (!planesCarreras || !carreraSeleccionada) return null;
+    const carrera = planesCarreras.find(
+      (c) => c.idCarrera === parseInt(carreraSeleccionada)
+    );
+    return carrera?.idPlanAsignado || carrera?.plan?.id || null;
+  }, [planesCarreras, carreraSeleccionada]);
+
   const { data: response, isLoading: materiasLoading } = useQuery({
-    queryKey: ["materiasCicloActual", planId],
-    queryFn: () => obtenerMateriasCicloActual(planId),
-    enabled: !!planId,
+    queryKey: ["materiasCicloActual", planSeleccionado],
+    queryFn: () => obtenerMateriasCicloActual(planSeleccionado),
+    enabled: !!planSeleccionado,
     onError: (error) => {
       console.error("Error al obtener las materias del ciclo actual: ", error);
     },
   });
 
   const { data: estadoInscripciones, isLoading: estadoLoading } = useQuery({
-    queryKey: ["estadoInscripciones", planId],
-    queryFn: () => verificarEstadoInscripciones(planId),
-    enabled: !!planId,
+    queryKey: ["estadoInscripciones", planSeleccionado],
+    queryFn: () => verificarEstadoInscripciones(planSeleccionado),
+    enabled: !!planSeleccionado,
     onError: (error) => {
       console.error(
         "Error al verificar el estado de las inscripciones: ",
@@ -98,8 +122,8 @@ const InscripcionMaterias = () => {
         data
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries(["estadoInscripciones", planId]);
-      queryClient.invalidateQueries(["materiasCicloActual", planId]);
+      queryClient.invalidateQueries(["estadoInscripciones", planSeleccionado]);
+      queryClient.invalidateQueries(["materiasCicloActual", planSeleccionado]);
       toast.success("Inscripción registrada correctamente");
     },
     onError: (error) => {
@@ -111,7 +135,7 @@ const InscripcionMaterias = () => {
 
   const queryClient = useQueryClient();
 
-  if (carrerasLoading || planLoading || materiasLoading || estadoLoading || configuracionLoading) {
+  if (carrerasLoading || planesLoading || materiasLoading || estadoLoading || configuracionLoading) {
     return <div>Cargando...</div>;
   }
 
@@ -193,7 +217,7 @@ const InscripcionMaterias = () => {
     return "Inscribirse";
   };
 
-  // Filtrar materias que NO estén aprobadas y por carrera seleccionada
+  // Filtrar materias que NO estén aprobadas
   const filtrarMaterias = (materiasArray) => {
     return materiasArray?.filter((materia) => {
       // Buscar el estado usando el ID correcto de la materia
@@ -203,10 +227,6 @@ const InscripcionMaterias = () => {
       // Excluir materias ya aprobadas
       if (estado?.yaAprobado) return false;
       
-      // Filtrar por carrera si hay una seleccionada
-      // if (carreraSeleccionada !== "todas") {
-      //   return materia.idCarrera === parseInt(carreraSeleccionada);
-      // }
       return true;
     });
   };
@@ -236,10 +256,9 @@ const InscripcionMaterias = () => {
               {carreras && carreras.length > 1 && (
                 <select
                   className={styles.filtroCarrera}
-                  value={carreraSeleccionada}
+                  value={carreraSeleccionada || ""}
                   onChange={(e) => setCarreraSeleccionada(e.target.value)}
                 >
-                  <option value="todas">Todas las carreras</option>
                   {carreras.map((carrera) => (
                     <option key={carrera.id} value={carrera.id}>
                       {carrera.nombre}

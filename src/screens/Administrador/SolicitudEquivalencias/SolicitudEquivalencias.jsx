@@ -5,6 +5,7 @@ import SearchBar from "../../../components/SearchBar/SearchBar";
 import api from "../../../api/axios";
 import ModalAceptar from "./ModalAceptar";
 import ModalRechazar from "./ModalRechazar";
+import { formatearFecha } from "../../../utils/dateUtils";
 
 const SolicitudEquivalencias = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -91,11 +92,7 @@ const SolicitudEquivalencias = () => {
 
   const formatFecha = (fecha) => {
     if (!fecha) return "-";
-    return new Date(fecha).toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return formatearFecha(fecha);
   };
 
   const handleAbrirModalAceptar = (solicitud) => {
@@ -236,6 +233,12 @@ const SolicitudEquivalencias = () => {
               <div className={styles.cardBody}>
                 <div className={styles.infoRow}>
                   <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Carrera</span>
+                    <span className={styles.infoValue}>
+                      {solicitud.carrera?.nombre || "No especificada"}
+                    </span>
+                  </div>
+                  <div className={styles.infoItem}>
                     <span className={styles.infoLabel}>
                       Institución de Origen
                     </span>
@@ -243,6 +246,9 @@ const SolicitudEquivalencias = () => {
                       {solicitud.origen_institucion}
                     </span>
                   </div>
+                </div>
+
+                <div className={styles.infoRow}>
                   <div className={styles.infoItem}>
                     <span className={styles.infoLabel}>Materia de Origen</span>
                     <span className={styles.infoValue}>

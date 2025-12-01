@@ -5,6 +5,24 @@
   gap: 20px;
 }
 
+.alertaBaja {
+  background-color: rgba(255, 82, 82, 0.15);
+  border: 2px solid rgba(255, 82, 82, 0.4);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.alertaBaja p {
+  margin: 4px 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.alertaBaja strong {
+  color: #ff5252;
+  font-size: 1.1rem;
+}
+
 .panel {
   display: flex;
   flex-wrap: wrap;

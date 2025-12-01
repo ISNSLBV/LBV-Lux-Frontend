@@ -129,7 +129,7 @@ const GestionCorrelativas = () => {
       <BotonVolver />
       <div className={styles.titulo}>
         <h1>Correlatividades</h1>
-        <p>Gestioná las correlatividades entre materias</p>
+        <p>Registrá y gestioná las correlatividades entre materias</p>
       </div>
       <div className={styles.barraAcciones}>
         <div className={styles.barraBusqueda}>
@@ -145,7 +145,7 @@ const GestionCorrelativas = () => {
             icono={<Plus />}
             onClick={() => setRegistro(true)}
           >
-            Registrar correlativa
+            Registrar correlatividad
           </Boton>
         </div>
       </div>

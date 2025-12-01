@@ -14,6 +14,21 @@ const fetchUser = async () => {
   return data;
 };
 
+const fetchEstadoCarreras = async () => {
+  try {
+    const { data } = await api.get("/usuario/verificar-estado-carreras");
+    return data;
+  } catch (error) {
+    return {
+      puedeAcceder: false,
+      todasInactivas: true,
+      carrerasActivas: [],
+      carrerasInactivas: [],
+      totalCarreras: 0
+    };
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const location = useLocation();
@@ -30,13 +45,32 @@ export const AuthProvider = ({ children }) => {
     retry: false,
   });
 
+  const {
+    data: estadoCarreras,
+    isLoading: isLoadingEstado,
+    refetch: refetchEstado,
+  } = useQuery({
+    queryKey: ["estadoCarreras"],
+    queryFn: fetchEstadoCarreras,
+    enabled: !!user && user.rol === "Alumno",
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    retry: false,
+  });
+
   const refetchUser = async () => {
     await queryClient.invalidateQueries(["user"]);
-    return refetch();
+    await queryClient.invalidateQueries(["estadoCarreras"]);
+    const result = await refetch();
+    await refetchEstado();
+    return result;
   };
 
   useEffect(() => {
     refetch();
+    if (user?.rol === "Alumno") {
+      refetchEstado();
+    }
   }, [location.pathname]);
 
   const login = async (username, password) => {
@@ -76,7 +110,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthCtx.Provider
-      value={{ user, checking: isLoading, logout, login, refetchUser, needsRoleSelection }}
+      value={{ 
+        user, 
+        checking: isLoading || isLoadingEstado, 
+        logout, 
+        login, 
+        refetchUser, 
+        needsRoleSelection,
+        estadoCarreras
+      }}
     >
       {children}
     </AuthCtx.Provider>

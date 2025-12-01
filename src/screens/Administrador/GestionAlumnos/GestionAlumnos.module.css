@@ -507,3 +507,99 @@
     width: 100%;
   }
 }
+
+/* Modales */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalContent {
+  background-color: var(--color-form);
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.modalContent h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+}
+
+.modalSubtitle {
+  margin: 4px 0 16px 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.modalField {
+  margin: 20px 0;
+}
+
+.modalField label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.selectModal {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.selectModal:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modalActions button {
+  flex: 1;
+}
+
+.warningBox {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 6px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.warningBox p {
+  margin: 4px 0;
+}
+
+.warningBox strong {
+  color: #ffc107;
+}
+
+.warningBox ul {
+  margin: 8px 0 0 20px;
+  list-style-type: disc;
+}
+
+.warningBox li {
+  margin: 4px 0;
+  color: rgba(255, 255, 255, 0.8);
+}

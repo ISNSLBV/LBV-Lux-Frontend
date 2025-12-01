@@ -6,8 +6,8 @@ import BotonVolver from "../../../../components/BotonVolver/BotonVolver";
 const GestionMateriasMenu = () => {
   const opciones = [
     {
-      titulo: "Gestionar materias base",
-      redir: "/admin/materias/materias-base",
+      titulo: "Repositorio de materias",
+      redir: "/admin/materias/repositorio-materias",
     },
     {
       titulo: "Gestionar materias por plan de estudio",

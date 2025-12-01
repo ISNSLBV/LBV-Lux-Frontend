@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../api/axios";
+import { formatearFecha } from "../../../utils/dateUtils";
 import styles from "./MisFinales.module.css";
 import { CircularProgress } from "@mui/material";
 import SearchBar from "../../../components/SearchBar/SearchBar";
@@ -99,13 +100,7 @@ const MisFinales = () => {
               : "No asignado";
             
             const fechaFormateada = examen.examenFinal?.fecha
-              ? new Date(examen.examenFinal.fecha).toLocaleDateString("es-AR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+              ? formatearFecha(examen.examenFinal.fecha)
               : "A confirmar";
 
             return (

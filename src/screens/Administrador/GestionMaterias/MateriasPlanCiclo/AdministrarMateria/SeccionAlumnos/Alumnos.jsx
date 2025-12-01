@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import EstadoBadge from "../../../../../../components/EstadoBadge/EstadoBadge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../../../../api/axios";
+import { formatearFecha } from "../../../../../../utils/dateUtils";
 
 const Alumnos = ({ alumnos = [] }) => {
   const { user } = useAuth();
@@ -46,7 +47,7 @@ const Alumnos = ({ alumnos = [] }) => {
               <p className={styles.email}>DNI Nº: {a.dni}</p>
               {a.fecha_inscripcion && (
                 <p className={styles.fechaInscripcion}>
-                  Inscripto: {new Date(a.fecha_inscripcion).toLocaleDateString()}
+                  Inscripto: {formatearFecha(a.fecha_inscripcion)}
                 </p>
               )}
             </div>

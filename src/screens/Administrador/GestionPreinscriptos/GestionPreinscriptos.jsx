@@ -10,7 +10,7 @@ import { CircularProgress } from "@mui/material";
 import BotonVolver from "../../../components/BotonVolver/BotonVolver";
 
 export default function GestionPreinscriptos() {
-  const [personaSeleccionada, setPersonaSeleccionada] = useState(null);
+  const [preinscripcionSeleccionada, setPreinscripcionSeleccionada] = useState(null);
   const [showAceptarModal, setShowAceptarModal] = useState(false);
   const [fichaCompletada, setFichaCompletada] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +18,23 @@ export default function GestionPreinscriptos() {
   const [visibilityFilter, setVisibilityFilter] = useState("1");
 
   const queryClient = useQueryClient();
+
+  // Transformar personas con múltiples preinscripciones en items individuales
+  const transformarPreinscripciones = (personas) => {
+    const preinscripciones = [];
+    personas.forEach(persona => {
+      persona.preinscripciones?.forEach(preinscripcion => {
+        preinscripciones.push({
+          ...persona,
+          preinscripcion: preinscripcion,
+          // ID único combinando persona y preinscripción
+          uniqueId: `${persona.id}-${preinscripcion.id}`,
+          preinscripcionId: preinscripcion.id
+        });
+      });
+    });
+    return preinscripciones;
+  };
 
   const {
     data: allPersonas = [],
@@ -55,11 +72,15 @@ export default function GestionPreinscriptos() {
 
   const personasFiltradas = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    return allPersonas.filter((p) => {
-      const fullName = `${p.nombre} ${p.apellido}`.toLowerCase();
-      const dni = p.dni?.toLowerCase() ?? "";
-      const estado = p.preinscripciones[0]?.estado;
-      const visible = p.preinscripciones[0]?.visible;
+    
+    // Transformar a items individuales por preinscripción
+    const items = transformarPreinscripciones(allPersonas);
+    
+    return items.filter((item) => {
+      const fullName = `${item.nombre} ${item.apellido}`.toLowerCase();
+      const dni = item.dni?.toLowerCase() ?? "";
+      const estado = item.preinscripcion?.estado;
+      const visible = item.preinscripcion?.visible;
       const matchesSearch =
         !term || fullName.includes(term) || dni.includes(term);
       const matchesStatus = !statusFilter || estado === statusFilter;
@@ -71,28 +92,28 @@ export default function GestionPreinscriptos() {
   }, [searchTerm, statusFilter, visibilityFilter, allPersonas]);
 
   const aceptar = () => {
-    if (!personaSeleccionada) return;
-    const carreraId = personaSeleccionada.preinscripciones?.[0]?.id_carrera;
-    const carreraNombre = personaSeleccionada.preinscripciones?.[0]?.carrera?.nombre || 'la carrera seleccionada';
+    if (!preinscripcionSeleccionada) return;
+    const carreraId = preinscripcionSeleccionada.preinscripcion?.id_carrera;
+    const carreraNombre = preinscripcionSeleccionada.preinscripcion?.carrera?.nombre || 'la carrera seleccionada';
     
     aceptarMutation.mutate({
-      id: personaSeleccionada.id,
+      id: preinscripcionSeleccionada.id,
       carreraId,
     });
     
     setShowAceptarModal(false);
-    setPersonaSeleccionada(null);
+    setPreinscripcionSeleccionada(null);
     setFichaCompletada(false);
   };
 
-  const ocultar = (p) => {
-    ocultarMutation.mutate(p.id);
+  const ocultar = (item) => {
+    ocultarMutation.mutate(item.id);
   };
 
   const descargarFicha = async () => {
-    if (!personaSeleccionada) return;
+    if (!preinscripcionSeleccionada) return;
     
-    const url = `${import.meta.env.VITE_API_URL}/admin/preinscripcion/${personaSeleccionada.id}/ficha`;
+    const url = `${import.meta.env.VITE_API_URL}/admin/preinscripcion/${preinscripcionSeleccionada.id}/ficha`;
     window.open(url, '_blank');
   };
 
@@ -138,15 +159,15 @@ export default function GestionPreinscriptos() {
             No se encontraron resultados para los filtros utilizados
           </p>
         ) : (
-          personasFiltradas.map((p) => (
+          personasFiltradas.map((item) => (
             <PreinscriptoCard
-              key={p.id}
-              persona={p}
+              key={item.uniqueId}
+              persona={item}
               onAceptar={() => {
-                setPersonaSeleccionada(p);
+                setPreinscripcionSeleccionada(item);
                 setShowAceptarModal(true);
               }}
-              onOcultar={() => ocultar(p)}
+              onOcultar={() => ocultar(item)}
             />
           ))
         )}
@@ -158,11 +179,11 @@ export default function GestionPreinscriptos() {
             <p>
               ¿Estás seguro que deseas inscribir a{" "}
               <strong>
-                {personaSeleccionada.nombre} {personaSeleccionada.apellido}
+                {preinscripcionSeleccionada.nombre} {preinscripcionSeleccionada.apellido}
               </strong>{" "}
               en la carrera de{" "}
               <strong>
-                {personaSeleccionada.preinscripciones?.[0]?.carrera?.nombre || "No especificada"}
+                {preinscripcionSeleccionada.preinscripcion?.carrera?.nombre || "No especificada"}
               </strong>
               ?
             </p>

@@ -48,6 +48,7 @@ const ModalRechazar = ({ isOpen, onClose, onConfirm, solicitud }) => {
         <div className={styles.content}>
           <div className={styles.alumnoInfo}>
             <p><strong>Alumno:</strong> {solicitud?.alumno?.persona?.apellido}, {solicitud?.alumno?.persona?.nombre}</p>
+            <p><strong>Carrera:</strong> {solicitud?.carrera?.nombre || "No especificada"}</p>
             <p><strong>Materia:</strong> {solicitud?.origen_materia}</p>
             <p><strong>Institución:</strong> {solicitud?.origen_institucion}</p>
           </div>

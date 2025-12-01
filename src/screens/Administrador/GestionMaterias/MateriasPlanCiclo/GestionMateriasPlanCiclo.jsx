@@ -5,6 +5,7 @@ import { Plus, X, SquarePen } from "lucide-react";
 import Boton from "../../../../components/Boton/Boton";
 import { useState } from "react";
 import api from "../../../../api/axios";
+import { formatearFecha } from "../../../../utils/dateUtils";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
@@ -40,11 +41,11 @@ const GestionMateriasPlanCiclo = () => {
 
       const fechaObj = new Date(fecha);
       if (isNaN(fechaObj.getTime())) return "—";
-      return fechaObj.toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
+      
+      const dia = String(fechaObj.getDate()).padStart(2, '0');
+      const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+      const año = fechaObj.getFullYear();
+      return `${dia}/${mes}/${año}`;
     } catch (error) {
       return "—";
     }
@@ -119,8 +120,8 @@ const GestionMateriasPlanCiclo = () => {
           <div className={styles.titulo}>
             {user.rol === "Administrador" ? (
               <>
-                <h1>Materias por plan de estudio</h1>
-                <p>Registrá y editá las materias por plan de estudio</p>
+                <h1>Materias por ciclo lectivo</h1>
+                <p>Registrá y administrá las materias por ciclo lectivo</p>
               </>
             ) : (
               <>

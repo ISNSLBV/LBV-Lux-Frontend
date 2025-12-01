@@ -1,15 +1,40 @@
 import React from "react";
 import styles from "./SolicitarEquivalencias.module.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import Boton from "../../../components/Boton/Boton";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../../../api/axios";
 import { toast } from "react-toastify";
-import BotonVolver from "../../../components/BotonVolver/BotonVolver"
+import BotonVolver from "../../../components/BotonVolver/BotonVolver";
+import { useAuth } from "../../../contexts/AuthContext";
+
+const obtenerCarreras = async () => {
+  const { data } = await api.get("/alumno/carreras");
+  return data;
+};
 
 const SolicitarEquivalencias = () => {
+  const navigate = useNavigate();
+  const { estadoCarreras } = useAuth();
   const queryClient = useQueryClient();
+
+  const { data: carreras = [], isLoading: carrerasLoading } = useQuery({
+    queryKey: ["carrerasInscripto"],
+    queryFn: obtenerCarreras,
+    onError: (error) => {
+      console.error("Error al obtener las carreras: ", error);
+    },
+  });
+
+  // Verificar si puede acceder
+  React.useEffect(() => {
+    if (estadoCarreras && !estadoCarreras.puedeAcceder) {
+      toast.error("No tienes acceso a esta sección. Estás dado de baja en todas tus carreras.");
+      navigate("/alumno");
+    }
+  }, [estadoCarreras, navigate]);
 
   const registrarSolicitud = useMutation({
     mutationFn: (payload) =>
@@ -58,12 +83,16 @@ const SolicitarEquivalencias = () => {
         <h3>Formulario de solicitud de equivalencias</h3>
         <Formik
           initialValues={{
+            idCarrera: carreras.length > 0 ? carreras[0].id : "",
             origenInstitucion: "",
             origenMateria: "",
             origenCalificacion: "",
             resolucion: "",
           }}
           validationSchema={Yup.object({
+            idCarrera: carreras.length > 1
+              ? Yup.string().required("Debes seleccionar una carrera")
+              : Yup.string(),
             origenInstitucion: Yup.string().required(
               "Este campo es obligatorio"
             ),
@@ -88,6 +117,34 @@ const SolicitarEquivalencias = () => {
         >
           {({ isSubmitting, touched, errors }) => (
             <Form>
+              {carreras.length > 1 && (
+                <div>
+                  <label htmlFor="idCarrera">Carrera para la que solicitas la equivalencia</label>
+                  <Field
+                    as="select"
+                    id="idCarrera"
+                    name="idCarrera"
+                    className={
+                      errors.idCarrera && touched.idCarrera
+                        ? "formikFieldError"
+                        : "formikField"
+                    }
+                  >
+                    <option value="">-- Selecciona una carrera --</option>
+                    {carreras.map((carrera) => (
+                      <option key={carrera.id} value={carrera.id}>
+                        {carrera.nombre}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="idCarrera"
+                    component="div"
+                    className="formikFieldErrorText"
+                  />
+                </div>
+              )}
+
               <div>
                 <label htmlFor="origenInstitucion">Instituto de origen</label>
                 <Field

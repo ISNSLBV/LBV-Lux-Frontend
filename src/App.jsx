@@ -34,9 +34,9 @@ const AyudaAlumno = lazy(() =>
 const GestionMateriasMenu = lazy(() =>
   import("./screens/Administrador/GestionMaterias/Menu/GestionMateriasMenu")
 );
-const GestionMateriasBase = lazy(() =>
+const RepositorioMaterias = lazy(() =>
   import(
-    "./screens/Administrador/GestionMaterias/MateriasBase/GestionMateriasBase"
+    "./screens/Administrador/GestionMaterias/RepositorioMaterias/RepositorioMaterias"
   )
 );
 const GestionMateriasPlan = lazy(() =>
@@ -275,8 +275,8 @@ function App() {
                   <Route path="materias" element={<GestionMaterias />}>
                     <Route index element={<GestionMateriasMenu />} />
                     <Route
-                      path="materias-base"
-                      element={<GestionMateriasBase />}
+                      path="repositorio-materias"
+                      element={<RepositorioMaterias />}
                     />
                     <Route
                       path="materias-por-plan"

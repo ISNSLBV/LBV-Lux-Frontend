@@ -70,6 +70,7 @@ const GestionExamenesFinales = () => {
         const { data } = await api.get("/admin/profesor/listar-profesores");
         return data;
       },
+      enabled: user?.rol === "Administrador",
     });
 
   const materiaPlanSeleccionada = materiaSeleccionada

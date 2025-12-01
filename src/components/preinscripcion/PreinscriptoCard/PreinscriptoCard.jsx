@@ -4,12 +4,12 @@ import Boton from "../../Boton/Boton";
 import { User, GraduationCap, Mail, Check, X, EyeOff } from "lucide-react";
 
 const PreinscriptoCard = ({ persona, onAceptar, onOcultar }) => {
-  const observacion = persona.preinscripciones[0]?.comentario;
-  const idCarrera = persona.preinscripciones[0]?.id_carrera;
-  const nombreCarrera = persona.preinscripciones[0]?.carrera?.nombre || "Sin especificar";
-  const idPreinscripcion = persona.preinscripciones[0]?.id;
-  const estado = persona.preinscripciones[0]?.estado;
-  const visible = persona.preinscripciones[0]?.visible;
+  const observacion = persona.preinscripcion?.comentario;
+  const idCarrera = persona.preinscripcion?.id_carrera;
+  const nombreCarrera = persona.preinscripcion?.carrera?.nombre || "Sin especificar";
+  const idPreinscripcion = persona.preinscripcion?.id || persona.preinscripciones?.[0]?.id;
+  const estado = persona.preinscripcion?.estado || persona.preinscripciones?.[0]?.estado;
+  const visible = persona.preinscripcion?.visible ?? persona.preinscripciones?.[0]?.visible;
 
   return (
     <div className={styles.card}>
